@@ -1,0 +1,8 @@
+- login
+- logout
+- post event
+- sign up as user
+- sign up as event hoster
+- accept event hoster request (admin)
+- change password
+- keep adding more as needed, each one is its own package
