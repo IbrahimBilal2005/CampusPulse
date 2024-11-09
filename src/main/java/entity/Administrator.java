@@ -1,6 +1,7 @@
 package entity;
 import entity.Interfaces.AdministratorInterface;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Administrator implements AdministratorInterface {
@@ -8,10 +9,10 @@ public class Administrator implements AdministratorInterface {
     private String password;
     private Map<String, Event> events;
 
-    public Administrator(String username, String password, Map<String, Event> events) {
+    public Administrator(String username, String password) {
         this.username = username;
         this.password = password;
-        this.events = events;
+        this.events = new HashMap<>();
     }
 
     @Override
