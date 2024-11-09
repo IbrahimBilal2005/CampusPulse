@@ -1,9 +1,9 @@
-package entity;
+package entity.Interfaces;
 
 /**
  * The representation of a user in our program.
  */
-public interface User {
+public interface UserInterface {
 
     /**
      * Returns the username of the user.
@@ -18,9 +18,7 @@ public interface User {
     String getPassword();
 
     /**
-     * Returns the type of the user.
-     * @return the type of the user.
+     * Change the password of the user
      */
-    String getType();
-
+    void changePassword(String newPassword);
 }
