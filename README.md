@@ -50,6 +50,21 @@ Req (If only certain people are allowed to participate or certain items need to 
 Location
 Start and end time
 
+
+3 log in screen - user and event poster admin
+Event Poster inherits User
+
+Event Poster:
+ - Needs an event poster screen
+ - Event Description Screen
+ - Profile Screen
+
+user:
+ - Event Description Screen
+ - Profile Screen
+ - 
+Home page
+
 Proposed API for the project:
 [links to one or more APIs your team plans to make use of; include brief notes about what services the API provides and whether you have successfully tried calling the API]
 
