@@ -15,7 +15,7 @@ public class FirebaseInitializer {
     public static void initializeFirebase() {
         try {
             // Replace the path below with the path to your downloaded service account key JSON file
-            FileInputStream serviceAccount = new FileInputStream("path/to/serviceAccountKey.json");
+            FileInputStream serviceAccount = new FileInputStream("APIkey.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
