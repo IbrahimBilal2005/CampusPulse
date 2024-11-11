@@ -22,7 +22,7 @@ User Stories:
 
 - Albert is interested in reading and wants to find clubs that relate to his interest. When he joins CampusPulse, he is able to search for all the clubs related to reading, and see their upcoming events. [Waleed Story]
 
-- Sofia is a third-year student passionate about environmental sustainability. She wants to stay informed about events related to her field of study. Upon logging into CampusPulse, she utilizes the event filtering feature to receive email notifications about specific sustainability-related events happening on campus, ensuring she never misses an opportunity to engage with like-minded individuals. [Tanay story]
+- Sofia is a third-year student passionate about environmental sustainability. She wants to stay informed about events related to her field of study. Upon logging into CampusPul  se, she utilizes the event filtering feature to receive email notifications about specific sustainability-related events happening on campus, ensuring she never misses an opportunity to engage with like-minded individuals. [Tanay story]
 
 - Offensive language prevention, either block posts with language or censor them
 
@@ -31,24 +31,25 @@ Note: Specific team member stories are tentative and can change based on specifi
 Proposed Entities for the Domain:
 [based on your specification, indicate a few potential entities for your domain — including their names and instance variables]  
 
-Account: Creation of an account
-Username 
-Password
+Account: Creation of an account (Interface)
+    Username 
+    Password
 User (Extend Account): Account for someone who is looking for events
-Gender (maybe limit what is shown if certain events are gender specific?)
-Preferences (What category of events they are interested in)
-EventPoster (Extends Account): Account for someone to post event
-CreateEvents (have functions for making, deleting and editing events)
+    Gender (maybe limit what is shown if certain events are gender specific?)
+    Preferences (What category of events they are interested in)
+EventPoster (Extends User): Account for someone to post event
+    CreateEvents (have functions for making, deleting and editing events)
 Administrator (Extends Account)
-ApprovePosters (have functions for approving or changing approval status of event posters)
+    ApprovePosters (have functions for approving or changing approval status of event posters)
 Events: Class used to format events to be posted
-Name
-Image (Optional)
-Link (Link to website with more info)
-Description
-Req (If only certain people are allowed to participate or certain items need to be brought)
-Location
-Start and end time
+    Name
+    Image (Optional)
+    Link (Link to website with more info)
+    Description
+    Req (If only certain people are allowed to participate or certain items need to be brought)
+    Location
+    Start and end time
+    Date
 
 
 3 log in screen - user and event poster admin
