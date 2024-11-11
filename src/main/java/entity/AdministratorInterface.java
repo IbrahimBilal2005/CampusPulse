@@ -1,6 +1,4 @@
-package entity.Interfaces;
-
-import entity.EventPoster;
+package entity;
 
 public interface AdministratorInterface extends EventPosterInterface {
     void approveEventPoster(EventPoster eventPoster);

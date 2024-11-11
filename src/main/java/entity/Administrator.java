@@ -1,5 +1,4 @@
 package entity;
-import entity.Interfaces.AdministratorInterface;
 
 import java.util.HashMap;
 import java.util.Map;

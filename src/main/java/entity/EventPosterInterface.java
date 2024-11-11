@@ -1,6 +1,4 @@
-package entity.Interfaces;
-
-import entity.Event;
+package entity;
 
 /**
  * EventPoster User type interface

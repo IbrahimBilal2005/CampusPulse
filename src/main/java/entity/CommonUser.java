@@ -1,5 +1,4 @@
 package entity;
-import entity.Interfaces.UserInterface;
 
 /**
  * Base user in our program

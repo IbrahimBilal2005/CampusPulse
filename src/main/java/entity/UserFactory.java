@@ -1,4 +1,4 @@
-package entity.Interfaces;
+package entity;
 
 /**
  * Factory for creating users.
