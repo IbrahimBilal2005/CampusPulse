@@ -37,7 +37,7 @@ Account: Creation of an account (Interface)
 User (Extend Account): Account for someone who is looking for events
     Gender (maybe limit what is shown if certain events are gender specific?)
     Preferences (What category of events they are interested in)
-EventPoster (Extends User): Account for someone to post event
+EventPoster (Extends Account): Account for someone to post event
     CreateEvents (have functions for making, deleting and editing events)
 Administrator (Extends Account)
     ApprovePosters (have functions for approving or changing approval status of event posters)
