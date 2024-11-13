@@ -8,66 +8,87 @@ import java.awt.event.ActionListener;
 public class Profile_screen extends JFrame {
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
     public Profile_screen() {
         // Frame settings
         setTitle("CampusPulse - Profile");
-        setSize(screenSize.width,screenSize.height);
+        setSize(screenSize.width, screenSize.height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Main container
+        // Main container with BorderLayout
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Header
         JPanel headerPanel = new JPanel(new BorderLayout());
         JLabel titleLabel = new JLabel("CampusPulse");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 34));
+        headerPanel.add(titleLabel, BorderLayout.WEST);
 
         // Load and resize profile icon
-        JLabel profileIcon = new JLabel(new ImageIcon("src/main/Java/data_access/uoftpic.jpeg")); // Adjust image path
-        profileIcon.setPreferredSize(new Dimension(screenSize.width/15, screenSize.height/15)); // Resize profile icon
-        headerPanel.add(titleLabel);
+        JLabel profileIcon = new JLabel(new ImageIcon("src/main/Java/data_access/uoftpic.jpeg"));
+        profileIcon.setPreferredSize(new Dimension(screenSize.width / 12, screenSize.height / 12));
         headerPanel.add(profileIcon, BorderLayout.EAST);
 
-        // Profile details panel
-        JPanel detailsPanel = new JPanel();
-        detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
-        detailsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Profile details panel with GridBagLayout
+        JPanel detailsPanel = new JPanel(new GridBagLayout());
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
 
         JLabel helloLabel = new JLabel("Hello, 'Name'!");
+        helloLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        gbc.gridwidth = 2;
+        detailsPanel.add(helloLabel, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridy++;
+
         JLabel usernameLabel = new JLabel("Username: ");
-        JLabel nameLabel = new JLabel("Name: ");
-        JLabel genderLabel = new JLabel("Gender: ");
-        JLabel interestsLabel = new JLabel("Interests: ");
-
         JTextField usernameField = new JTextField("username_here");
-        JTextField nameField = new JTextField("name_here");
-        JTextField genderField = new JTextField("gender_here");
-        JTextField interestsField = new JTextField("interest1, interest2, ...");
-
-        int fieldWidth = 200;
-        int fieldHeight = 25;
-
-        usernameField.setMaximumSize(new Dimension(fieldWidth, fieldHeight));
-        nameField.setMaximumSize(new Dimension(fieldWidth, fieldHeight));
-        genderField.setMaximumSize(new Dimension(fieldWidth, fieldHeight));
-        interestsField.setMaximumSize(new Dimension(fieldWidth, fieldHeight));
-
-        // Disable fields to prevent editing
+        usernameField.setPreferredSize(new Dimension(200, 25));
         usernameField.setEditable(false);
+
+        JLabel nameLabel = new JLabel("Name: ");
+        JTextField nameField = new JTextField("name_here");
+        nameField.setPreferredSize(new Dimension(200, 25));
         nameField.setEditable(false);
+
+        JLabel genderLabel = new JLabel("Gender: ");
+        JTextField genderField = new JTextField("gender_here");
+        genderField.setPreferredSize(new Dimension(200, 25));
         genderField.setEditable(false);
+
+        JLabel interestsLabel = new JLabel("Interests: ");
+        JTextField interestsField = new JTextField("interest1, interest2, ...");
+        interestsField.setPreferredSize(new Dimension(200, 25));
         interestsField.setEditable(false);
 
-        mainPanel.add(helloLabel);
-        detailsPanel.add(Box.createVerticalStrut(100)); // Spacer
-        detailsPanel.add(usernameLabel);
-        detailsPanel.add(usernameField);
-        detailsPanel.add(nameLabel);
-        detailsPanel.add(nameField);
-        detailsPanel.add(genderLabel);
-        detailsPanel.add(genderField);
-        detailsPanel.add(interestsLabel);
-        detailsPanel.add(interestsField);
+        // Adding components to details panel with consistent layout
+        detailsPanel.add(usernameLabel, gbc);
+        gbc.gridx = 1;
+        detailsPanel.add(usernameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        detailsPanel.add(nameLabel, gbc);
+        gbc.gridx = 1;
+        detailsPanel.add(nameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        detailsPanel.add(genderLabel, gbc);
+        gbc.gridx = 1;
+        detailsPanel.add(genderField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        detailsPanel.add(interestsLabel, gbc);
+        gbc.gridx = 1;
+        detailsPanel.add(interestsField, gbc);
 
         // Buttons panel
         JPanel buttonPanel = new JPanel();
@@ -77,7 +98,7 @@ public class Profile_screen extends JFrame {
         buttonPanel.add(changePasswordButton);
         buttonPanel.add(editInterestsButton);
 
-        // Action listeners
+        // Add action listeners for buttons
         changePasswordButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -92,7 +113,7 @@ public class Profile_screen extends JFrame {
             }
         });
 
-        // Adding components to main panel
+        // Adding panels to main panel with BorderLayout
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(detailsPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
