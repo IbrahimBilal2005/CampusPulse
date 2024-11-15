@@ -2,17 +2,26 @@ package views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
 public class ActiveEvents_screen extends JFrame {
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private JPanel eventsPanel; // Store the eventsPanel as an instance variable
+    private ArrayList<JPanel> eventPanels; // Store each event panel for easy removal/editing
+
     public ActiveEvents_screen() {
+        // Initialize the event panels list
+        eventPanels = new ArrayList<>();
+
         // Frame settings
         setTitle("CampusPulse - Active Events");
-        setSize(screenSize.width,screenSize.height);
+        setSize(screenSize.width, screenSize.height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -33,12 +42,14 @@ public class ActiveEvents_screen extends JFrame {
         headerPanel.add(profileIcon, BorderLayout.EAST);
 
         // Events list panel
-        JPanel eventsPanel = new JPanel();
+        eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
 
         // Dummy events
         for (int i = 1; i <= 5; i++) {
-            eventsPanel.add(createEventPanel("Event " + i, "Description of Event " + i, "Location " + i, "Date " + i, "path-to-file" + i + ".jpg"));
+            JPanel eventPanel = createEventPanel("Event " + i, "Description of Event " + i, "Location " + i, "Date " + i, "path-to-file" + i + ".jpg");
+            eventPanels.add(eventPanel); // Add to list for future reference
+            eventsPanel.add(eventPanel);
         }
 
         // Scroll pane for events list
@@ -63,31 +74,68 @@ public class ActiveEvents_screen extends JFrame {
 
     private JPanel createEventPanel(String eventName, String description, String location, String date, String imagePath) {
         JPanel eventPanel = new JPanel(new BorderLayout()); // Use BorderLayout for side-by-side alignment
+        eventPanel.setSize(new Dimension(40, 100));
 
         // Event image
-        JLabel eventImageLabel = new JLabel(resizeImage("src/main/Java/data_access/uoftpic.jpeg", screenSize.width/5, screenSize.height/5)); // Adjust event image size as needed
+        JLabel eventImageLabel = new JLabel(resizeImage("src/main/Java/data_access/uoftpic.jpeg", screenSize.width / 10, screenSize.height / 10));
 
-        // Event details
-        JPanel eventDetailsPanel = new JPanel();
-        eventDetailsPanel.setLayout(new BoxLayout(eventDetailsPanel, BoxLayout.Y_AXIS)); // Vertical layout for details
-        eventDetailsPanel.add(new JLabel("Event: " + eventName));
-        eventDetailsPanel.add(new JLabel("Description: " + description));
-        eventDetailsPanel.add(new JLabel("Location: " + location));
-        eventDetailsPanel.add(new JLabel("Date: " + date));
+        // Event details with centered alignment
+        JPanel eventDetailsPanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for centering
+        JPanel detailsContentPanel = new JPanel();
+        detailsContentPanel.setLayout(new BoxLayout(detailsContentPanel, BoxLayout.Y_AXIS)); // Vertical layout for details
+
+        // Set larger font for readability
+        Font font = new Font("Arial", Font.PLAIN, 14);
+
+        JLabel nameLabel = new JLabel("Event: " + eventName);
+        nameLabel.setFont(font);
+        JLabel descriptionLabel = new JLabel("Description: " + description);
+        descriptionLabel.setFont(font);
+        JLabel locationLabel = new JLabel("Location: " + location);
+        locationLabel.setFont(font);
+        JLabel dateLabel = new JLabel("Date: " + date);
+        dateLabel.setFont(font);
+
+        detailsContentPanel.add(nameLabel);
+        detailsContentPanel.add(descriptionLabel);
+        detailsContentPanel.add(locationLabel);
+        detailsContentPanel.add(dateLabel);
+
+        // Center the detailsContentPanel within eventDetailsPanel
+        eventDetailsPanel.add(detailsContentPanel);
 
         // Event buttons
-        JPanel buttons = new JPanel();
-        buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Align buttons to the right
         JButton deleteButton = new JButton("Delete");
         JButton editButton = new JButton("Edit");
-        buttons.add(deleteButton);
-        buttons.add(editButton);
 
+        // Add functionality to delete button
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eventsPanel.remove(eventPanel); // Remove the specific event panel
+                eventPanels.remove(eventPanel); // Remove from the list
+                eventsPanel.revalidate();
+                eventsPanel.repaint();
+            }
+        });
 
-        // Add image to the left and details to the center
+        // Add functionality to edit button (this is a placeholder action)
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Edit functionality for " + eventName + " will be implemented.");
+            }
+        });
+
+        buttonsPanel.add(deleteButton);
+        buttonsPanel.add(editButton);
+
+        // Add image to the left, details in the center with vertical alignment, and buttons at the bottom
         eventPanel.add(eventImageLabel, BorderLayout.WEST);
-        eventPanel.add(eventDetailsPanel, BorderLayout.CENTER);
-        eventPanel.add(buttons, BorderLayout.SOUTH);
+        eventPanel.add(eventDetailsPanel);
+        eventPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
         return eventPanel;
     }
