@@ -1,0 +1,22 @@
+package interface_adapter.general_user_signup;
+
+import interface_adapter.ViewModel;
+
+public class UserSignupViewModel extends ViewModel<UserSignupState> {
+
+    public static final String CANCEL_BUTTON_LABEL = "Cancel";
+    public static final String TITLE_LABEL = "User Signup";
+    public static final String USERNAME_LABEL = "Username";
+    public static final String PASSWORD_LABEL = "Password";
+    public static final String CONFIRM_BUTTON_LABEL = "Confirm Password";
+    public static final String GENDER_LABEL = "Gender";
+    public static final String AGE_LABEL = "Age";
+    public static final String SIGNUP_BUTTON_LABEL = "Sign Up";
+    public static final String NEXT_BUTTON_LABEL = "Next";
+    public static final String BACK_BUTTON = "Back";
+
+    public UserSignupViewModel() {
+        super("User Signup Screen");
+        setState(new UserSignupState());
+    }
+}
