@@ -1,8 +1,8 @@
-package use_case.general_user_signup;
+package use_case.signup.event_poster_signup;
 
 import entity.Account;
 
-public interface UserDataAccessInterface {
+public interface EventPosterUserDataAccessInterface {
     /**
      * Checks if the given username exists.
      * @param username the username to look for

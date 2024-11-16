@@ -1,7 +1,7 @@
 package interface_adapter.event_poster_signup;
 
-import use_case.event_poster_signup.EventPosterSignupInputBoundary;
-import use_case.event_poster_signup.EventPosterSignupInputData;
+import use_case.signup.event_poster_signup.EventPosterSignupInputBoundary;
+import use_case.signup.event_poster_signup.EventPosterSignupInputData;
 
 public class EventPosterSignupController {
 

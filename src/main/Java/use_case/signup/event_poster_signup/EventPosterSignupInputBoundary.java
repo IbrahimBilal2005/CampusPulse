@@ -1,4 +1,4 @@
-package use_case.event_poster_signup;
+package use_case.signup.event_poster_signup;
 
 public interface EventPosterSignupInputBoundary {
 

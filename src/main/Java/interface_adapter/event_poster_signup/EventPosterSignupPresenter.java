@@ -1,8 +1,8 @@
 package interface_adapter.event_poster_signup;
 
 import interface_adapter.ViewManagerModel;
-import use_case.event_poster_signup.EventPosterSignupOutputBoundary;
-import use_case.event_poster_signup.EventPosterSignupOutputData;
+import use_case.signup.event_poster_signup.EventPosterSignupOutputBoundary;
+import use_case.signup.event_poster_signup.EventPosterSignupOutputData;
 
 public class EventPosterSignupPresenter implements EventPosterSignupOutputBoundary {
     private final EventPosterSignupViewModel eventPosterSignupViewModel;

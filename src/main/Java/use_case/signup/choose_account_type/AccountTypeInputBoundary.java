@@ -1,4 +1,4 @@
-package use_case.choose_account_type;
+package use_case.signup.choose_account_type;
 
 /**
  * Input Boundary for actions related to selecting an account type.

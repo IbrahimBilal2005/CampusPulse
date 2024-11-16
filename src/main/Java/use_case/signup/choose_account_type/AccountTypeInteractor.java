@@ -1,6 +1,6 @@
-package use_case.choose_account_type;
+package use_case.signup.choose_account_type;
 
-public class AccountTypeInteractor implements AccountTypeInputBoundary{
+public class AccountTypeInteractor implements AccountTypeInputBoundary {
     private final AccountTypeUserDataAccessInterface userDataAccessObject;
     private final AccountTypeOutputBoundary userPresenter;
 

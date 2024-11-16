@@ -1,11 +1,11 @@
-package use_case.general_user_signup;
+package use_case.signup.event_poster_signup;
 
-public class UserSignupOutputData {
+public class EventPosterSignupOutputData {
     private final String username;
 
     private final boolean useCaseFailed;
 
-    public UserSignupOutputData(String username, boolean useCaseFailed) {
+    public EventPosterSignupOutputData(String username, boolean useCaseFailed) {
         this.username = username;
         this.useCaseFailed = useCaseFailed;
     }

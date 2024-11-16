@@ -1,4 +1,4 @@
-package use_case.general_user_signup;
+package use_case.signup.general_user_signup;
 
 public interface UserSignupOutputBoundary {
     /**

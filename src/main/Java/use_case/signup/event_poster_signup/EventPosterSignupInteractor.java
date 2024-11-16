@@ -1,17 +1,19 @@
-package use_case.event_poster_signup;
+package use_case.signup.event_poster_signup;
 
 // import entity.Account;
 // import entity.UserFactory
 
+import use_case.signup.general_user_signup.UserDataAccessInterface;
+
 public class EventPosterSignupInteractor implements EventPosterSignupInputBoundary{
 
-    private final EventPosterUserDataAccessInterface eventPosterUserDataAccessInterface;
+    private final EventPosterUserDataAccessInterface userDataAccessInterface;
     private final EventPosterSignupOutputBoundary userPresenter;
     // private final Userfactory userFactory;
 
-    public EventPosterSignupInteractor(EventPosterUserDataAccessInterface eventPosterUserDataAccessInterface,
+    public EventPosterSignupInteractor(EventPosterUserDataAccessInterface userDataAccessInterface,
                                        EventPosterSignupOutputBoundary eventPosterSignupOutputBoundary) {
-        this.eventPosterUserDataAccessInterface = eventPosterUserDataAccessInterface;
+        this.userDataAccessInterface = userDataAccessInterface;
         this.userPresenter = eventPosterSignupOutputBoundary;
     }
 

@@ -1,6 +1,6 @@
 package interface_adapter.choose_account_type;
 
-import use_case.choose_account_type.AccountTypeInputBoundary;
+import use_case.signup.choose_account_type.AccountTypeInputBoundary;
 
 public class AccountTypeController {
     private final AccountTypeInputBoundary userAccountTypeUseCaseInteractor;

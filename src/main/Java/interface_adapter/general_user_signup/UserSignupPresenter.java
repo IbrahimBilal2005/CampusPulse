@@ -1,8 +1,8 @@
 package interface_adapter.general_user_signup;
 
 import interface_adapter.ViewManagerModel;
-import use_case.general_user_signup.UserSignupOutputBoundary;
-import use_case.general_user_signup.UserSignupOutputData;
+import use_case.signup.general_user_signup.UserSignupOutputBoundary;
+import use_case.signup.general_user_signup.UserSignupOutputData;
 
 public class UserSignupPresenter implements UserSignupOutputBoundary {
     private final UserSignupViewModel userSignupViewModel;
