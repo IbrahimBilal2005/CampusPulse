@@ -22,8 +22,8 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
     public GeneralUserSignupView(UserSignupViewModel userSignupViewModel) {
         super(userSignupViewModel);
 
-        final LabelTextPanel genderInfo = new LabelTextPanel(new JLabel("Gender"), genderInputField);
-        final LabelTextPanel ageInfo = new LabelTextPanel(new JLabel("Age"), ageInputField);
+        final LabelTextPanel genderInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.GENDER_LABEL), genderInputField);
+        final LabelTextPanel ageInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.AGE_LABEL), ageInputField);
 
         JPanel additionalFieldsPanel = new JPanel();
         additionalFieldsPanel.setLayout(new BoxLayout(additionalFieldsPanel, BoxLayout.Y_AXIS));
