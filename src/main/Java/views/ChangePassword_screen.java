@@ -3,7 +3,7 @@ package views;
 import javax.swing.*;
 import java.awt.*;
 
-public class ChangePassword_screen {
+public class ChangePassword_screen extends JFrame {
     public ChangePassword_screen() {
         // Create the frame
         JFrame frame = new JFrame("CampusPulse");
