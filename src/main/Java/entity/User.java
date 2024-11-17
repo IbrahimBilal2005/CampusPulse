@@ -6,6 +6,10 @@ import java.util.List;
  * A general user in our program.
  */
 public class User implements Account {
+
+    // TODO can we add an email authentification system?
+    //  If this isn't an insane amount of extra work it would be a cool addition
+
     private final String username;
     private final String password;
     private final String firstName;

@@ -12,20 +12,23 @@ public class EventPoster implements Account{
     private final String organizationName;
     private final String sopLink;
     private final List<String> tags;
-    private final Map<String, Event> events;
+    private final Map<Integer, Event> events;
 
     public EventPoster(String username,
                        String password,
                        String organizationName,
                        String sopLink,
                        List<String> tags,
-                       Map<String, Event> events) {
+                       Map<Integer, Event> events) {
 
         this.username = username;
         this.password = password;
         this.organizationName = organizationName;
         this.sopLink = sopLink;
         this.tags = tags;
+
+        // TODO discuss how we want to keep track of each Event Posters Event (My Event Logic)
+        //  Also discuss what the keys should be (id, username, event title, etc)
         this.events = events;
 
     }
@@ -52,7 +55,7 @@ public class EventPoster implements Account{
         return this.tags;
     }
 
-    public Map<String, Event> getEvents() {
+    public Map<Integer, Event> getEvents() {
         return this.events;
     }
 }
