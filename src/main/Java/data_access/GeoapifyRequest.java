@@ -1,4 +1,5 @@
 package data_access;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.InputStream;
@@ -9,37 +10,32 @@ import java.awt.image.BufferedImage;
 
 public class GeoapifyRequest {
 
-    public static void main(String[] args) {
-        // Set up the frame to display the image
-        JFrame frame = new JFrame("Geoapify Static Map Example");
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+    private GeoapifyGeocodingService geocodingService;
 
-        // URL for Geoapify Static Map API
+    public GeoapifyRequest(String apiKey) {
+        this.geocodingService = new GeoapifyGeocodingService(apiKey);
+    }
+
+    // Method to fetch the map image based on location name
+    public BufferedImage getMapImage(String locationName) throws Exception {
+        // Get coordinates from GeoapifyGeocodingService using the location name
+        Location location = geocodingService.getCoordinates(locationName);
+
+        // Convert the coordinates into a string suitable for the Geoapify API
+        String coordinates = location.getLongitude() + "," + location.getLatitude(); // longitude,latitude
+
+        // Build the Geoapify static map URL with the coordinates
         String apiKey = "00b11d0dc6c34c75bb7f719c3d745872";  // Replace with your Geoapify API key
-        String urlString = "https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:-122.304378,47.526022&zoom=14&scaleFactor=2&apiKey=" + apiKey;
+        String urlString = "https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:"
+                + coordinates + "&zoom=14&scaleFactor=2&apiKey=" + apiKey;
 
-        // Fetch the image from the URL
-        try {
-            // Open a connection to the Geoapify API
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+        // Open a connection to the Geoapify API
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
 
-            // Get the input stream and read the image
-            InputStream inputStream = connection.getInputStream();
-            BufferedImage image = ImageIO.read(inputStream);
-
-            // Display the image in a JLabel
-            JLabel label = new JLabel(new ImageIcon(image));
-            frame.getContentPane().add(label, BorderLayout.CENTER);
-
-            // Refresh the frame to show the image
-            frame.revalidate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // Get the input stream and read the image
+        InputStream inputStream = connection.getInputStream();
+        return ImageIO.read(inputStream);
     }
 }
