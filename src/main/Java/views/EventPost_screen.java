@@ -7,7 +7,7 @@ import java.awt.event.FocusListener;
 
 public class EventPost_screen {
     public EventPost_screen() {
-        // Create the frame
+
         JFrame frame = new JFrame("CampusPulse");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
