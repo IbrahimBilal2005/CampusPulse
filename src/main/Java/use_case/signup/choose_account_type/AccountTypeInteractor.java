@@ -1,12 +1,9 @@
 package use_case.signup.choose_account_type;
 
 public class AccountTypeInteractor implements AccountTypeInputBoundary {
-    private final AccountTypeUserDataAccessInterface userDataAccessObject;
     private final AccountTypeOutputBoundary userPresenter;
 
-    public AccountTypeInteractor(AccountTypeUserDataAccessInterface userDataAccessObject,
-                                 AccountTypeOutputBoundary userPresenter) {
-        this.userDataAccessObject = userDataAccessObject;
+    public AccountTypeInteractor(AccountTypeOutputBoundary userPresenter) {
         this.userPresenter = userPresenter;
     }
 
