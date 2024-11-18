@@ -2,7 +2,7 @@ package use_case.signup.general_user_signup;
 
 import entity.Account;
 
-public interface UserDataAccessInterface {
+public interface UserSignupDataAccessInterface {
     /**
      * Checks if the given username exists.
      * @param username the username to look for

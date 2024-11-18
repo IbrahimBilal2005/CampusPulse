@@ -5,13 +5,13 @@ package use_case.signup.general_user_signup;
 
 public class UserSignupInteractor implements UserSignupInputBoundary {
 
-    private final UserDataAccessInterface userDataAccessInterface;
+    private final UserSignupDataAccessInterface userSignupDataAccessInterface;
     private final UserSignupOutputBoundary userPresenter;
     // private final Userfactory userFactory;
 
-    public UserSignupInteractor(UserDataAccessInterface userDataAccessInterface,
+    public UserSignupInteractor(UserSignupDataAccessInterface userSignupDataAccessInterface,
                                 UserSignupOutputBoundary userSignupOutputBoundary) {
-        this.userDataAccessInterface = userDataAccessInterface;
+        this.userSignupDataAccessInterface = userSignupDataAccessInterface;
         this.userPresenter = userSignupOutputBoundary;
     }
 

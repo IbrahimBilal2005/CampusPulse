@@ -3,8 +3,6 @@ package use_case.signup.event_poster_signup;
 // import entity.Account;
 // import entity.UserFactory
 
-import use_case.signup.general_user_signup.UserDataAccessInterface;
-
 public class EventPosterSignupInteractor implements EventPosterSignupInputBoundary{
 
     private final EventPosterUserDataAccessInterface userDataAccessInterface;
