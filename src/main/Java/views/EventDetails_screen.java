@@ -49,29 +49,41 @@ public class EventDetails_screen {
 
         JPanel detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
+        detailsPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align elements to the left
         detailsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JTextArea descriptionArea = new JTextArea("Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae luctus eros, ut tincidunt metus. Pellentesque non ligula quam. Praesent sed magna ornare, vestibulum urna sit amet, sodales massa. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent at sodales lectus, ac rhoncus diam. Aenean interdum lorem quis mauris pretium congue. Nunc malesuada, quam quis convallis viverra, elit diam finibus nulla, eu varius enim sapien nec arcu. Mauris enim dui, ultrices vel magna a, consectetur elementum dolor. Etiam nec arcu at urna viverra aliquam sed at tellus. Nulla fringilla urna vulputate, dictum tortor et, eleifend nunc. Aliquam vel vestibulum orci, sit amet mattis eros. Mauris eu orci ornare, tincidunt est at, porttitor tellus. Nam quis mi sem. Proin suscipit nisi vel suscipit gravida. Vestibulum placerat posuere sem, nec semper quam ullamcorper in. Mauris tristique leo vitae felis ultricies, dapibus tempor leo volutpat.");
+        descriptionArea.setLineWrap(true); // Enable line wrapping
+        descriptionArea.setWrapStyleWord(true); // Wrap words properly
+        descriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        descriptionArea.setEditable(false);
+        descriptionArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JScrollPane scrollPane = new JScrollPane(descriptionArea);
+        scrollPane.setPreferredSize(new Dimension(600, 100));
+        scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT); // Align description to the left
+        detailsPanel.add(scrollPane);
 
         detailsPanel.add(new JLabel("Date:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+        detailsPanel.add(Box.createVerticalStrut(10));
 
         detailsPanel.add(new JLabel("Location:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+        detailsPanel.add(Box.createVerticalStrut(10));
 
         detailsPanel.add(new JLabel("Time:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+        detailsPanel.add(Box.createVerticalStrut(10));
 
         detailsPanel.add(new JLabel("Link:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
-        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+        detailsPanel.add(Box.createVerticalStrut(10));
 
         detailsPanel.add(new JLabel("Add map stuff etc."));
-        // Image panel (right side)
         JPanel imagePanel = new JPanel();
         imagePanel.setPreferredSize(new Dimension(300, 300));
-        imagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add border
+        imagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JLabel imageLabel = new JLabel("image/default image", SwingConstants.CENTER);
         imagePanel.add(imageLabel);
 
@@ -79,7 +91,9 @@ public class EventDetails_screen {
         main_panel.add(eventNameLabel, BorderLayout.NORTH);
         main_panel.add(detailsPanel, BorderLayout.CENTER);
         main_panel.add(imagePanel, BorderLayout.EAST);
-        
+        main_panel.add(eventNameLabel, BorderLayout.NORTH); // Add the event name at the top
+//        main_panel.add(scrollPane, BorderLayout.CENTER);
+
         // Add panels to the frame
         frame.add(bannerPanel, BorderLayout.NORTH);
         frame.add(main_panel, BorderLayout.CENTER);
