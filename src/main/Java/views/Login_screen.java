@@ -17,7 +17,15 @@ public class Login_screen {
         frame.setLocationRelativeTo(null);
 
 
-        
+        JPanel login_panel = new JPanel();
+        login_panel.add(new JLabel("Username:"));
+        login_panel.add(new JTextField(20));
+
+        JPanel password_panel = new JPanel();
+        password_panel.add(new JLabel("Password:"));
+        password_panel.add(new JTextField(20));
+
+       
     }
 }
 
