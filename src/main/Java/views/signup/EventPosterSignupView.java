@@ -1,8 +1,8 @@
 package views.signup;
 
-import interface_adapter.event_poster_signup.EventPosterSignupController;
-import interface_adapter.event_poster_signup.EventPosterSignupState;
-import interface_adapter.event_poster_signup.EventPosterSignupViewModel;
+import interface_adapter.signup.event_poster_signup.EventPosterSignupController;
+import interface_adapter.signup.event_poster_signup.EventPosterSignupState;
+import interface_adapter.signup.event_poster_signup.EventPosterSignupViewModel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

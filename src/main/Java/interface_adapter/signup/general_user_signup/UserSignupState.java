@@ -1,17 +1,18 @@
-package interface_adapter.event_poster_signup;
+package interface_adapter.signup.general_user_signup;
 
 /**
  * The state for the Signup View Model.
  */
-public class EventPosterSignupState {
+public class UserSignupState {
     private String username = "";
     private String usernameError;
     private String password = "";
     private String passwordError;
     private String repeatPassword = "";
     private String repeatPasswordError;
-    private String organizationName;
-    private String sopLink;
+    private String gender;
+    private Integer age;
+    private String ageError;
 
     public String getUsername() {
         return username;
@@ -37,9 +38,11 @@ public class EventPosterSignupState {
         return repeatPasswordError;
     }
 
-    public String getOrganizationName() { return organizationName; }
+    public String getGender() {return gender;}
 
-    public String getSopLink() { return sopLink; }
+    public Integer getAge() { return age; }
+
+    public String getAgeError() { return ageError; }
 
     public void setUsername(String username) {
         this.username = username;
@@ -65,18 +68,20 @@ public class EventPosterSignupState {
         this.repeatPasswordError = repeatPasswordError;
     }
 
-    public void setOrganizationName(String organizationName) { this.organizationName = organizationName; }
+    public void setGender(String gender) { this.gender = gender; }
 
-    public void setSopLink(String sopLink) { this.sopLink = sopLink; }
+    public void setAge(Integer age) { this.age = age; }
+
+    public void setAgeError(String ageError) { this.ageError = ageError; }
 
     @Override
     public String toString() {
-        return "EventPosterSignupState{"
+        return "UserSignupState{"
                 + "username='" + username + '\''
                 + ", password='" + password + '\''
                 + ", repeatPassword='" + repeatPassword + '\''
-                + ", organizationName='" + organizationName + '\''
-                + ", sopLink='" + sopLink + '\''
+                + ", gender='" + gender + '\''
+                + ", age='" + age + '\''
                 + '}';
     }
 }

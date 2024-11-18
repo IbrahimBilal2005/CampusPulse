@@ -1,4 +1,4 @@
-package interface_adapter.event_poster_signup;
+package interface_adapter.signup.event_poster_signup;
 
 import interface_adapter.ViewManagerModel;
 import use_case.signup.event_poster_signup.EventPosterSignupOutputBoundary;

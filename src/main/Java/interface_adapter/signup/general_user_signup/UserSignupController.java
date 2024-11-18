@@ -1,4 +1,4 @@
-package interface_adapter.general_user_signup;
+package interface_adapter.signup.general_user_signup;
 
 import use_case.signup.general_user_signup.UserSignupInputBoundary;
 import use_case.signup.general_user_signup.UserSignupInputData;

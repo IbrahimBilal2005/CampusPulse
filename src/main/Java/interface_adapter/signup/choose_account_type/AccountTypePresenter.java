@@ -1,8 +1,8 @@
-package interface_adapter.choose_account_type;
+package interface_adapter.signup.choose_account_type;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.event_poster_signup.EventPosterSignupViewModel;
-import interface_adapter.general_user_signup.UserSignupViewModel;
+import interface_adapter.signup.event_poster_signup.EventPosterSignupViewModel;
+import interface_adapter.signup.general_user_signup.UserSignupViewModel;
 import use_case.signup.choose_account_type.AccountTypeOutputBoundary;
 
 public class AccountTypePresenter implements AccountTypeOutputBoundary {

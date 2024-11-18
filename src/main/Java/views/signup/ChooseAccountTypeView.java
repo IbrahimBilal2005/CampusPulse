@@ -1,7 +1,7 @@
 package views.signup;
 
-import interface_adapter.choose_account_type.AccountTypeController;
-import interface_adapter.choose_account_type.AccountTypeViewModel;
+import interface_adapter.signup.choose_account_type.AccountTypeController;
+import interface_adapter.signup.choose_account_type.AccountTypeViewModel;
 
 import javax.swing.*;
 import java.awt.*;

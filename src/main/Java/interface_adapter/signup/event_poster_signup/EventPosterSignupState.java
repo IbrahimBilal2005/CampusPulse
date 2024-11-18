@@ -1,18 +1,17 @@
-package interface_adapter.general_user_signup;
+package interface_adapter.signup.event_poster_signup;
 
 /**
  * The state for the Signup View Model.
  */
-public class UserSignupState {
+public class EventPosterSignupState {
     private String username = "";
     private String usernameError;
     private String password = "";
     private String passwordError;
     private String repeatPassword = "";
     private String repeatPasswordError;
-    private String gender;
-    private Integer age;
-    private String ageError;
+    private String organizationName;
+    private String sopLink;
 
     public String getUsername() {
         return username;
@@ -38,11 +37,9 @@ public class UserSignupState {
         return repeatPasswordError;
     }
 
-    public String getGender() {return gender;}
+    public String getOrganizationName() { return organizationName; }
 
-    public Integer getAge() { return age; }
-
-    public String getAgeError() { return ageError; }
+    public String getSopLink() { return sopLink; }
 
     public void setUsername(String username) {
         this.username = username;
@@ -68,20 +65,18 @@ public class UserSignupState {
         this.repeatPasswordError = repeatPasswordError;
     }
 
-    public void setGender(String gender) { this.gender = gender; }
+    public void setOrganizationName(String organizationName) { this.organizationName = organizationName; }
 
-    public void setAge(Integer age) { this.age = age; }
-
-    public void setAgeError(String ageError) { this.ageError = ageError; }
+    public void setSopLink(String sopLink) { this.sopLink = sopLink; }
 
     @Override
     public String toString() {
-        return "UserSignupState{"
+        return "EventPosterSignupState{"
                 + "username='" + username + '\''
                 + ", password='" + password + '\''
                 + ", repeatPassword='" + repeatPassword + '\''
-                + ", gender='" + gender + '\''
-                + ", age='" + age + '\''
+                + ", organizationName='" + organizationName + '\''
+                + ", sopLink='" + sopLink + '\''
                 + '}';
     }
 }

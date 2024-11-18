@@ -1,8 +1,8 @@
 package views.signup;
 
-import interface_adapter.general_user_signup.UserSignupController;
-import interface_adapter.general_user_signup.UserSignupState;
-import interface_adapter.general_user_signup.UserSignupViewModel;
+import interface_adapter.signup.general_user_signup.UserSignupController;
+import interface_adapter.signup.general_user_signup.UserSignupState;
+import interface_adapter.signup.general_user_signup.UserSignupViewModel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

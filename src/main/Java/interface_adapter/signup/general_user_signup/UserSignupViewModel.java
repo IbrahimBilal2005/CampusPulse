@@ -1,4 +1,4 @@
-package interface_adapter.general_user_signup;
+package interface_adapter.signup.general_user_signup;
 
 import interface_adapter.ViewModel;
 

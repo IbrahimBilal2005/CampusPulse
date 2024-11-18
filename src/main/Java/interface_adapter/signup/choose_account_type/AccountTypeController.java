@@ -1,4 +1,4 @@
-package interface_adapter.choose_account_type;
+package interface_adapter.signup.choose_account_type;
 
 import use_case.signup.choose_account_type.AccountTypeInputBoundary;
 
