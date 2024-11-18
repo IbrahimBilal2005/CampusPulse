@@ -39,7 +39,42 @@ public class EventDetails_screen {
         bannerPanel.add(profileButton, BorderLayout.EAST);
         bannerPanel.add(separator, BorderLayout.SOUTH);
 
-        frame.add(bannerPanel);
+        JPanel main_panel = new JPanel();
+        main_panel.setLayout(new BorderLayout());
+        main_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Event name label
+        JLabel eventNameLabel = new JLabel("Event Name");
+        eventNameLabel.setFont(new Font("Arial", Font.BOLD, 30));
+
+        JPanel detailsPanel = new JPanel();
+        detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.Y_AXIS));
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        detailsPanel.add(new JLabel("Date:"));
+        detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+
+        detailsPanel.add(new JLabel("Location:"));
+        detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+
+        detailsPanel.add(new JLabel("Time:"));
+        detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+
+        detailsPanel.add(new JLabel("Link:"));
+        detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+        detailsPanel.add(Box.createVerticalStrut(10)); // Add space
+
+        detailsPanel.add(new JLabel("Add map stuff etc."));
+        
+        main_panel.add(eventNameLabel, BorderLayout.NORTH);
+        main_panel.add(detailsPanel, BorderLayout.CENTER);
+
+        // Add panels to the frame
+        frame.add(bannerPanel, BorderLayout.NORTH);
+        frame.add(main_panel, BorderLayout.CENTER);
         frame.setVisible(true);
 
     }
