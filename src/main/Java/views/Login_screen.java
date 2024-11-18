@@ -25,7 +25,19 @@ public class Login_screen {
         password_panel.add(new JLabel("Password:"));
         password_panel.add(new JTextField(20));
 
-       
+        JPanel button_panel = new JPanel();
+        button_panel.setLayout(new BoxLayout(button_panel, BoxLayout.X_AXIS));
+        button_panel.add(new JButton("Login"));
+
+
+        JPanel main_panel = new JPanel();
+        main_panel.setLayout(new BoxLayout(main_panel, BoxLayout.Y_AXIS));
+        main_panel.add(Box.createVerticalGlue());
+        main_panel.add(login_panel);
+        main_panel.add(password_panel);
+        main_panel.add(button_panel);
+        frame.setContentPane(main_panel);
+        frame.setVisible(true);
     }
 }
 
