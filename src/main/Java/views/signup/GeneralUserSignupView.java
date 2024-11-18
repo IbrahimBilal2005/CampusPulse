@@ -1,5 +1,6 @@
 package views.signup;
 
+import interface_adapter.signup.event_poster_signup.EventPosterSignupViewModel;
 import interface_adapter.signup.general_user_signup.UserSignupController;
 import interface_adapter.signup.general_user_signup.UserSignupState;
 import interface_adapter.signup.general_user_signup.UserSignupViewModel;
@@ -7,6 +8,7 @@ import interface_adapter.signup.general_user_signup.UserSignupViewModel;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -21,6 +23,9 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
     public GeneralUserSignupView(UserSignupViewModel userSignupViewModel) {
         super(userSignupViewModel);
+
+        final JLabel title = new JLabel(EventPosterSignupViewModel.TITLE_LABEL);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel genderInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.GENDER_LABEL), genderInputField);
         final LabelTextPanel ageInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.AGE_LABEL), ageInputField);

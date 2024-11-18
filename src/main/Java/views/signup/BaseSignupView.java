@@ -28,7 +28,6 @@ public abstract class BaseSignupView<T extends ViewModel<?>> extends JPanel impl
     protected final JPanel additionalFieldsContainer; // NEW FIELD
     protected final JPanel additionalButtonsPanel;
 
-
     public BaseSignupView(T viewModel) {
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);

@@ -7,6 +7,7 @@ import interface_adapter.signup.event_poster_signup.EventPosterSignupViewModel;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -21,6 +22,9 @@ public class EventPosterSignupView extends BaseSignupView<EventPosterSignupViewM
 
     public EventPosterSignupView(EventPosterSignupViewModel eventPosterSignupViewModel) {
         super(eventPosterSignupViewModel);
+
+        final JLabel title = new JLabel(EventPosterSignupViewModel.TITLE_LABEL);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel organizationNameInfo = new LabelTextPanel(new JLabel(EventPosterSignupViewModel.ORGANIZATION_NAME_LABEL), organizationNameInputField);
         final LabelTextPanel sopLinkInfo = new LabelTextPanel(new JLabel(EventPosterSignupViewModel.SOP_LINK_LABEL), sopLinkInputField);

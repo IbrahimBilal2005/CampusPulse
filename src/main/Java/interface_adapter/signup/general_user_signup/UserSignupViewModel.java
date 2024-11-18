@@ -6,6 +6,8 @@ public class UserSignupViewModel extends ViewModel<UserSignupState> {
 
     public static final String GENDER_LABEL = "Gender";
     public static final String AGE_LABEL = "Age";
+    public static final String TITLE_LABEL = "General User Signup";
+
 
     public UserSignupViewModel() {
         super("User Signup Screen");
