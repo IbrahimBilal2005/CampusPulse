@@ -14,4 +14,9 @@ public interface AccountTypeInputBoundary {
      * Executes the switch to Event Poster Signup View use case.
      */
     void switchToEventPosterSignupView();
+
+    /**
+     * Executes the switch to Base View use case.
+     */
+    void switchToBaseView();
 }

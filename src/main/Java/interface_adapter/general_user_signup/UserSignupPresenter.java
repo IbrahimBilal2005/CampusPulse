@@ -31,4 +31,9 @@ public class UserSignupPresenter implements UserSignupOutputBoundary {
         // TODO viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void switchToBaseView() {
+        viewManagerModel.firePropertyChanged();
+    }
 }

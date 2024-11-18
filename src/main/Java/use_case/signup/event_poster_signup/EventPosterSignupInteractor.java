@@ -24,8 +24,10 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
     }
 
     @Override
-    public void switchToLoginView() {
-        // TODO userPresenter.switchToLoginView();
+    public void switchToLoginView() { userPresenter.switchToLoginView(); }
 
+    @Override
+    public void switchToBaseView() {
+        userPresenter.switchToBaseView();
     }
 }

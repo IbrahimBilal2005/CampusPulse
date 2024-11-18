@@ -31,4 +31,8 @@ public class UserSignupController {
         userSignupUseCaseInteractor.execute(userSignupInputData);
 
     }
+
+    public void switchToBaseView(){ userSignupUseCaseInteractor.switchToBaseView(); }
+
+    public void switchToLoginView(){ userSignupUseCaseInteractor.switchToLoginView(); }
 }

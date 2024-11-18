@@ -123,11 +123,7 @@ public abstract class BaseSignupView<T extends ViewModel<?>> extends JPanel impl
     protected abstract void addUsernameListener();
     protected abstract void addPasswordListener();
     protected abstract void addConfirmPasswordListener();
-
-
-    private void addCancelButtonListener() {
-        cancel.addActionListener(this);
-    }
+    public abstract void addCancelButtonListener();
 
     @Override
     public void actionPerformed(ActionEvent evt) {

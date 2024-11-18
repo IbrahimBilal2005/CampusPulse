@@ -31,4 +31,9 @@ public class AccountTypePresenter implements AccountTypeOutputBoundary {
         viewManagerModel.setState(eventPosterSignupViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void switchToBaseView() {
+
+    }
 }

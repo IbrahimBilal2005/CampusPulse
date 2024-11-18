@@ -14,5 +14,10 @@ public interface AccountTypeOutputBoundary {
      * Switches to the Event Poster Signup View.
      */
     void switchToEventPosterSignupView();
+
+    /**
+     * Switches to the Base View.
+     */
+    void switchToBaseView();
 }
 

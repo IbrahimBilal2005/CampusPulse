@@ -2,6 +2,7 @@ package use_case.signup.choose_account_type;
 
 /**
  * The Input Data for the Pick Account Type Use Case.
+ * ***TEMP FILE***
  */
 public class AccountTypeInputData {
 

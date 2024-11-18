@@ -19,4 +19,7 @@ public class AccountTypeInteractor implements AccountTypeInputBoundary {
     public void switchToEventPosterSignupView() {
         userPresenter.switchToEventPosterSignupView();
     }
+
+    @Override
+    public void switchToBaseView() { userPresenter.switchToBaseView(); }
 }

@@ -31,4 +31,10 @@ public class EventPosterSignupPresenter implements EventPosterSignupOutputBounda
         // TODO viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void switchToBaseView() {
+        // TODO viewManagerModel.setState(loginViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+    }
 }

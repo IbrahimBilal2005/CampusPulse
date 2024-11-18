@@ -22,4 +22,11 @@ public class AccountTypeController {
     public void switchToEventPosterSignupView() {
         userAccountTypeUseCaseInteractor.switchToEventPosterSignupView();
     }
+
+    /**
+     * Execute the "switch to Base View" Use Case.
+     */
+    public void switchToBaseView() {
+        userAccountTypeUseCaseInteractor.switchToBaseView();
+    }
 }
