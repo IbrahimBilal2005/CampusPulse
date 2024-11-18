@@ -68,10 +68,18 @@ public class EventDetails_screen {
         detailsPanel.add(Box.createVerticalStrut(10)); // Add space
 
         detailsPanel.add(new JLabel("Add map stuff etc."));
-        
+        // Image panel (right side)
+        JPanel imagePanel = new JPanel();
+        imagePanel.setPreferredSize(new Dimension(300, 300));
+        imagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add border
+        JLabel imageLabel = new JLabel("image/default image", SwingConstants.CENTER);
+        imagePanel.add(imageLabel);
+
+        // Add components to the main panel
         main_panel.add(eventNameLabel, BorderLayout.NORTH);
         main_panel.add(detailsPanel, BorderLayout.CENTER);
-
+        main_panel.add(imagePanel, BorderLayout.EAST);
+        
         // Add panels to the frame
         frame.add(bannerPanel, BorderLayout.NORTH);
         frame.add(main_panel, BorderLayout.CENTER);
