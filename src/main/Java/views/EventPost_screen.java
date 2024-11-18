@@ -7,7 +7,7 @@ import java.awt.event.FocusListener;
 
 public class EventPost_screen {
     public EventPost_screen() {
-        // Create the frame
+
         JFrame frame = new JFrame("CampusPulse");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
@@ -28,6 +28,16 @@ public class EventPost_screen {
         eventNamePanel.add(new JLabel("Event Name:"));
         eventNamePanel.add(new JTextField(15));
         panel.add(eventNamePanel);
+
+        // Event Description panel (multiline JTextArea)
+        JPanel eventDescriptionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        eventDescriptionPanel.add(new JLabel("Event Description:"));
+        JTextArea descriptionArea = new JTextArea(3, 15);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(descriptionArea);
+        eventDescriptionPanel.add(scrollPane);
+        panel.add(eventDescriptionPanel);
 
         // Date panel with placeholder
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

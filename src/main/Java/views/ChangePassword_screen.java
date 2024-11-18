@@ -48,7 +48,7 @@ public class ChangePassword_screen extends JFrame {
         finishButton.setAlignmentX(Component.CENTER_ALIGNMENT); // Center align in BoxLayout
         panel.add(finishButton);
 
-        // Add the main panel to the frame
+
         frame.add(panel);
         frame.setVisible(true);
     }
