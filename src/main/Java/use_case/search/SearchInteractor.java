@@ -16,11 +16,11 @@ public class SearchInteractor implements SearchInputBoundary {
 
     @Override
     public void search(SearchInputData inputData) {
-        List<Event> events = searchDAO.searchEvents(inputData.getCategory());
+        List<Event> events = searchDAO.searchEvents(inputData.getCategory(), inputData.getTags());
         if (events.isEmpty()) {
             outputBoundary.setFailView("No events found");
         } else {
-            SearchOutputData outputData = new SearchOutputData(events, false, null);
+            SearchOutputData outputData = new SearchOutputData(events);
             outputBoundary.setPassView(outputData);
         }
     }

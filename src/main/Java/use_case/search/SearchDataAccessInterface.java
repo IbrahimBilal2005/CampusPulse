@@ -1,8 +1,6 @@
 package use_case.search;
 
 import entity.Event;
-import entity.ICatagory;
-
 import java.util.List;
 
 /**
@@ -14,10 +12,11 @@ public interface SearchDataAccessInterface {
     /**
      * Searches for events that match the specified criteria.
      *
-     * @param criteria an object or map containing search filters (e.g., keywords, location, date range).
+     * @param category the category of events to search for.
+     * @param tags a list of tags to filter events by.
      * @return a list of events matching the search criteria.
      */
-    List<Event> searchEvents(String criteria);
+    List<Event> searchEvents(String category, List<String> tags);
 
     /**
      * Retrieves all events in the system (optional, depending on your use case).

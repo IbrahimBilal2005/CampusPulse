@@ -11,20 +11,14 @@ import java.util.List;
 public class SearchOutputData {
 
     private final List<Event> events;
-    private final boolean isFailure;
-    private final String errorMessage;
 
     /**
      * Constructs a new {@code SearchOutputData} instance with the specified details.
      *
      * @param events       the list of events that match the search query.
-     * @param isFailure    {@code true} if the search operation failed, {@code false} otherwise.
-     * @param errorMessage a message describing the error, or {@code null} if the operation succeeded.
      */
-    public SearchOutputData(List<Event> events, boolean isFailure, String errorMessage) {
+    public SearchOutputData(List<Event> events) {
         this.events = events;
-        this.isFailure = isFailure;
-        this.errorMessage = errorMessage;
     }
 
     /**
@@ -36,21 +30,4 @@ public class SearchOutputData {
         return events;
     }
 
-    /**
-     * Returns whether the search operation failed.
-     *
-     * @return {@code true} if the search operation failed, {@code false} otherwise.
-     */
-    public boolean isFailure() {
-        return isFailure;
-    }
-
-    /**
-     * Returns the error message, or {@code null} if the operation succeeded.
-     *
-     * @return the error message or {@code null}.
-     */
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 }

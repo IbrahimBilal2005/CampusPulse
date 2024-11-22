@@ -19,4 +19,8 @@ public interface SearchOutputBoundary {
      * @param error the error message explaining why the friend removal process failed.
      */
     void setFailView(String error);
+
+    SearchOutputData getOutputData();String getErrorMessage();
+
+
 }
