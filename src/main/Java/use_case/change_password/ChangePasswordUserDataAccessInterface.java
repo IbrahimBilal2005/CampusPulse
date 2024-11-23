@@ -9,8 +9,9 @@ import entity.Account;
 public interface ChangePasswordUserDataAccessInterface {
     /**
      * Updates the system to record this user's password.
-     * @param user the user whose password is to be updated
      */
+    Account getAccountByUsername(String username);
+
     void changePassword(Account user);
 }
 

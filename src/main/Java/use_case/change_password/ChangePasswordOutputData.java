@@ -1,20 +1,13 @@
 package use_case.change_password;
 
 public class ChangePasswordOutputData {
-    private final String username;
+    private final String message;
 
-    private final boolean useCaseFailed;
-
-    public ChangePasswordOutputData(String username, boolean useCaseFailed) {
-        this.username = username;
-        this.useCaseFailed = useCaseFailed;
+    public ChangePasswordOutputData(String message) {
+        this.message = message;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public boolean isUseCaseFailed() {
-        return useCaseFailed;
+    public String getMessage() {
+        return message;
     }
 }
