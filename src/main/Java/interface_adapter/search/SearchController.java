@@ -3,6 +3,7 @@ package interface_adapter.search;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInputData;
 
+import java.util.List;
 import java.util.Map;
 
 public class SearchController {
@@ -13,7 +14,11 @@ public class SearchController {
     }
 
     public void search(String keyword, Map<String, String> filters) {
-        SearchInputData inputData = new SearchInputData(keyword);
+        // Assuming keyword represents category and filters contains tags
+        String category = keyword;
+        List<String> tags = List.of(filters.get("tags").split(","));
+
+        SearchInputData inputData = new SearchInputData(category, tags);
         interactor.search(inputData);
     }
 }
