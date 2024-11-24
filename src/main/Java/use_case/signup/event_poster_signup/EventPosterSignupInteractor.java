@@ -2,14 +2,15 @@ package use_case.signup.event_poster_signup;
 
 import entity.Account;
 import entity.AccountCreationStrategy;
+import use_case.signup.UserSignupDataAccessInterface;
 
 public class EventPosterSignupInteractor implements EventPosterSignupInputBoundary{
 
-    private final EventPosterUserDataAccessInterface userDataAccessObject;
+    private final UserSignupDataAccessInterface userDataAccessObject;
     private final EventPosterSignupOutputBoundary userPresenter;
     private final AccountCreationStrategy accountCreator;
 
-    public EventPosterSignupInteractor(EventPosterUserDataAccessInterface userDataAccessObject,
+    public EventPosterSignupInteractor(UserSignupDataAccessInterface userDataAccessObject,
                                        EventPosterSignupOutputBoundary eventPosterSignupOutputBoundary,
                                        AccountCreationStrategy accountCreator) {
         this.userDataAccessObject = userDataAccessObject;

@@ -2,6 +2,7 @@ package use_case.signup.general_user_signup;
 
 import entity.Account;
 import entity.AccountCreationStrategy;
+import use_case.signup.UserSignupDataAccessInterface;
 
 public class UserSignupInteractor implements UserSignupInputBoundary {
 
