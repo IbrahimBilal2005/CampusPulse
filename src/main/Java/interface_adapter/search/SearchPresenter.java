@@ -20,7 +20,7 @@ public class SearchPresenter implements SearchOutputBoundary {
     public void setPassView(SearchOutputData outputData) {
         this.outputData = outputData;
         this.errorMessage = null;  // Reset the error message when passing data
-        viewModel.setSearchResults(outputData.getEvents());
+        viewModel.setSearchResults(outputData.getEvents() != null ? outputData.getEvents() : Collections.emptyList());
         viewModel.setError(null);
     }
 
