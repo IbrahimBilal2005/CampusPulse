@@ -1,18 +1,15 @@
 package use_case.signup.general_user_signup;
 
 import data_access.InMemoryUserDataAccessObject;
-import entity.EventPosterCreationStrategy;
 import org.junit.jupiter.api.Test;
 import entity.Account;
 import entity.UserCreationStrategy;
 import entity.AccountCreationStrategy;
 import use_case.signup.UserSignupDataAccessInterface;
-import use_case.signup.event_poster_signup.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-//import data_access.DATA_ACCESS_FILE
 
-public class UserSignupInteractorTest {
+class UserSignupInteractorTest {
 
     @Test
     void successTest() {
@@ -21,8 +18,8 @@ public class UserSignupInteractorTest {
         UserSignupOutputBoundary successPresenter = new UserSignupOutputBoundary() {
 
             @Override
-            public void prepareSuccessView(UserSignupOutputData eventPoster) {
-                assertEquals("username", eventPoster.getUsername());
+            public void prepareSuccessView(UserSignupOutputData user) {
+                assertEquals("username", user.getUsername());
                 assertTrue(userRepository.existsByName("username"));
             }
 
@@ -41,7 +38,7 @@ public class UserSignupInteractorTest {
                 //expected
             }
         };
-        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
+        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, successPresenter, new UserCreationStrategy());
         interactor.execute(inputData);
     }
     @Test
@@ -51,7 +48,7 @@ public class UserSignupInteractorTest {
         UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
 
             @Override
-            public void prepareSuccessView(UserSignupOutputData eventPoster) {
+            public void prepareSuccessView(UserSignupOutputData user) {
                 fail("User case failure is unexpected.");
             }
 
@@ -70,9 +67,42 @@ public class UserSignupInteractorTest {
                 //expected
             }
         };
-        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
+        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, failurePresenter, new UserCreationStrategy());
         interactor.execute(inputData);
     }
 
+    @Test
+    void failureUserExistsTest() {
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18);
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
+        AccountCreationStrategy accountCreator = new UserCreationStrategy();
+        Account user = accountCreator.createAccount("username", "password", "password", "Organization Name", "sopLink");
+        userRepository.save(user);
+
+        UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
+
+            @Override
+            public void prepareSuccessView(UserSignupOutputData user) {
+                fail("User case failure is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals("User already exists.", errorMessage);
+            }
+
+            @Override
+            public void switchToLoginView() {
+                //expected
+            }
+
+            @Override
+            public void switchToBaseView() {
+                //expected
+            }
+        };
+        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, failurePresenter, new UserCreationStrategy());
+        interactor.execute(inputData);
+    }
 }
