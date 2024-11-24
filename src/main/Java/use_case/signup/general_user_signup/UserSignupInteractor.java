@@ -1,25 +1,46 @@
 package use_case.signup.general_user_signup;
 
-// import entity.Account;
-// import entity.UserFactory
+import entity.Account;
+import entity.AccountCreationStrategy;
 
 public class UserSignupInteractor implements UserSignupInputBoundary {
 
-    private final UserSignupDataAccessInterface userSignupDataAccessInterface;
+    private final UserSignupDataAccessInterface userDataAccessObject;
     private final UserSignupOutputBoundary userPresenter;
-    // private final Userfactory userFactory;
+    private final AccountCreationStrategy accountCreator;
 
-    public UserSignupInteractor(UserSignupDataAccessInterface userSignupDataAccessInterface,
-                                UserSignupOutputBoundary userSignupOutputBoundary) {
-        this.userSignupDataAccessInterface = userSignupDataAccessInterface;
+    public UserSignupInteractor(UserSignupDataAccessInterface userDataAccessObject,
+                                UserSignupOutputBoundary userSignupOutputBoundary,
+                                AccountCreationStrategy accountCreator) {
+        this.userDataAccessObject = userDataAccessObject;
         this.userPresenter = userSignupOutputBoundary;
+        this.accountCreator = accountCreator;
     }
 
 
     @Override
     public void execute(UserSignupInputData userSignupInputData) {
-        // Logic for creating the event poster user. Dependent on database and user factories.
-        // will work on implementing this next.
+        if (userDataAccessObject.existsByName(userSignupInputData.getUsername())) {
+            userPresenter.prepareFailView("User already exists");
+        }
+        else if (!userSignupInputData.getPassword().equals(userSignupInputData.getRepeatPassword())){
+            userPresenter.prepareFailView("Passwords do not match");
+        }
+        else if (userSignupInputData.getAge() < 18) {
+            userPresenter.prepareFailView("Age must be at least 18");
+        }
+        else {
+            final Account user = accountCreator.createAccount(
+                    userSignupInputData.getUsername(),
+                    userSignupInputData.getPassword(),
+                    userSignupInputData.getRepeatPassword(),
+                    userSignupInputData.getAge(),
+                    userSignupInputData.getGender());
+
+            userDataAccessObject.save(user);
+            final UserSignupOutputData signupOutputData= new UserSignupOutputData(user.getUsername(), false);
+            userPresenter.prepareSuccessView(signupOutputData);
+        }
     }
 
     @Override
