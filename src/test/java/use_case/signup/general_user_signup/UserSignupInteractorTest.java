@@ -44,4 +44,35 @@ public class UserSignupInteractorTest {
         UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
         interactor.execute(inputData);
     }
+    @Test
+    void failurePasswordMismatchTest() {
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18);
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
+
+            @Override
+            public void prepareSuccessView(UserSignupOutputData eventPoster) {
+                fail("User case failure is unexpected.");
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals("Passwords don't match.", errorMessage);
+            }
+
+            @Override
+            public void switchToLoginView() {
+                //expected
+            }
+
+            @Override
+            public void switchToBaseView() {
+                //expected
+            }
+        };
+        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
+        interactor.execute(inputData);
+    }
+
+
 }
