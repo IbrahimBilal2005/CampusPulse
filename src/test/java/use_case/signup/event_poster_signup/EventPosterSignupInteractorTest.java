@@ -38,7 +38,7 @@ class EventPosterSignupInteractorTest {
                 //expected
             }
         };
-        EventPosterSignupInteractor interactor = new EventPosterSignupInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
+        EventPosterSignupInputBoundary interactor = new EventPosterSignupInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
         interactor.execute(inputData);
     }
 
@@ -68,7 +68,7 @@ class EventPosterSignupInteractorTest {
                 //expected
             }
         };
-        EventPosterSignupInteractor interactor = new EventPosterSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
+        EventPosterSignupInputBoundary interactor = new EventPosterSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
         interactor.execute(inputData);
     }
 
