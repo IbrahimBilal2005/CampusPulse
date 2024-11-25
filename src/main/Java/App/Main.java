@@ -1,7 +1,7 @@
 package App;
 
-import App.config.FirebaseInitializer;
-import App.auth.AuthService;
+import data_access.config.FirebaseInitializer;
+import data_access.auth.AuthService;
 
 public class Main {
     public static void main(String[] args) {
