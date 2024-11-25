@@ -1,4 +1,4 @@
-package App.auth;
+package data_access.auth;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
