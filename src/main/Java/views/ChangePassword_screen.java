@@ -24,6 +24,12 @@ public class ChangePassword_screen extends JFrame {
         panel.add(Box.createVerticalStrut(20)); // Spacer
 
         // Current password panel
+        JPanel usernamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        usernamePanel.add(new JLabel("Username:"));
+        usernamePanel.add(new JPasswordField(15));
+        panel.add(usernamePanel);
+
+        // Current password panel
         JPanel currentPasswordPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         currentPasswordPanel.add(new JLabel("Current password:"));
         currentPasswordPanel.add(new JPasswordField(15));

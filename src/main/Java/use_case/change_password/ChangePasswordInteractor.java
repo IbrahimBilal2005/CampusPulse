@@ -20,7 +20,7 @@ public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
         }
 
         // Retrieve the account by username
-        Account account = userDataAccess.getAccountByUsername(inputData.getUsername());
+        Account account = userDataAccess.getAccountByUsername(inputData.getUsername()); // retrieving from database
         if (account == null) {
             presenter.presentFailure("Account not found.");
             return;
