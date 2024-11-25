@@ -2,7 +2,6 @@ package use_case.signup.general_user_signup;
 
 public class UserSignupOutputData {
     private final String username;
-
     private final boolean useCaseFailed;
 
     public UserSignupOutputData(String username, boolean useCaseFailed) {
