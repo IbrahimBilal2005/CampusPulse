@@ -17,6 +17,7 @@ public class User implements Account {
     private final Integer age;
     private final String gender;
     private final List<String> interests;
+    private final String role;
 
     public User(String username,
                 String password,
@@ -24,7 +25,8 @@ public class User implements Account {
                 String lastName,
                 Integer age,
                 String gender,
-                List<String> interests) {
+                List<String> interests,
+                String role) {
 
         this.username = username;
         this.password = password;
@@ -33,6 +35,7 @@ public class User implements Account {
         this.age = age;
         this.gender = gender;
         this.interests = interests;
+        this.role = role;
     }
 
     @Override
@@ -64,5 +67,7 @@ public class User implements Account {
     public List<String> getInterests() {
         return this.interests;
     }
+
+    public String getRole() { return this.role; }
 }
 
