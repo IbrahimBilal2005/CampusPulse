@@ -1,46 +1,37 @@
 package use_case.search;
 
 import org.junit.jupiter.api.Test;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class SearchInputDataTest {
+public class SearchInputDataTest {
 
     @Test
-    void testConstructorAndGetters() {
-        // Arrange
-        String searchQuery = "reading";
-        List<String> tags = List.of("fiction", "book club");
+    public void testConstructorAndGetter() {
+        // Test constructor and getter for search query
+        String query = "Tech";
+        SearchInputData inputData = new SearchInputData(query);
 
-        // Act
-        SearchInputData inputData = new SearchInputData(searchQuery);
-
-        // Assert
-        assertEquals("reading", inputData.getQuery());
+        assertNotNull(inputData, "Input data should not be null.");
+        assertEquals(query, inputData.getQuery(), "Query should match the input.");
     }
 
     @Test
-    void testEmptyTags() {
-        // Arrange
-        String searchQuery = "movies";
+    public void testEmptyQuery() {
+        // Test empty query scenario
+        String query = "";
+        SearchInputData inputData = new SearchInputData(query);
 
-        // Act
-        SearchInputData inputData = new SearchInputData(searchQuery);
-
-        // Assert
-        assertEquals("movies", inputData.getQuery());
+        assertNotNull(inputData, "Input data should not be null.");
+        assertEquals(query, inputData.getQuery(), "Query should be empty.");
     }
 
     @Test
-    void testNullTags() {
-        // Arrange
-        String searchQuery = "coding";
+    public void testNullQuery() {
+        // Test null query scenario
+        String query = null;
+        SearchInputData inputData = new SearchInputData(query);
 
-        // Act
-        SearchInputData inputData = new SearchInputData(searchQuery);
-
-        // Assert
-        assertEquals("coding", inputData.getQuery());
+        assertNotNull(inputData, "Input data should not be null.");
+        assertNull(inputData.getQuery(), "Query should be null.");
     }
 }

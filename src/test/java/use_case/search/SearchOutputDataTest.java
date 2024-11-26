@@ -2,65 +2,45 @@ package use_case.search;
 
 import entity.Event;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
 
-class SearchOutputDataTest {
+public class SearchOutputDataTest {
 
     @Test
-    void testValidOutputDataConstruction() {
-        Event event = new Event(
-                1,
-                "Book Reading Club",
-                "A gathering for book enthusiasts.",
-                "Library Hall A",
-                LocalDateTime.of(2024, 11, 18, 18, 0),
-                LocalDateTime.of(2024, 11, 18, 20, 0),
-                List.of("reading", "books")
+    public void testConstructorAndGetter() {
+        // Test constructor and getter for events
+        List<Event> events = Arrays.asList(
+                new Event(1, "Hackathon", "A tech competition", "Tech Center", LocalDateTime.now(), LocalDateTime.now().plusHours(3), Arrays.asList("Tech", "Competition")),
+                new Event(2, "Sports Day", "Outdoor sports event", "Sports Field", LocalDateTime.now(), LocalDateTime.now().plusHours(4), Arrays.asList("Sports", "Outdoor"))
         );
-        SearchOutputData outputData = new SearchOutputData(List.of(event));
+        SearchOutputData outputData = new SearchOutputData(events);
 
-        assertEquals(1, outputData.getEvents().size());
-        assertEquals("Book Reading Club", outputData.getEvents().get(0).getName());
-        assertEquals("Library Hall A", outputData.getEvents().get(0).getLocation());
-        assertEquals(List.of("reading", "books"), outputData.getEvents().get(0).getTags());
+        assertNotNull(outputData, "Output data should not be null.");
+        assertEquals(events, outputData.getEvents(), "Events should match the input.");
     }
 
     @Test
-    void testEmptyOutputData() {
-        SearchOutputData outputData = new SearchOutputData(new ArrayList<>());
+    public void testEmptyEventsList() {
+        // Test case where no events are found
+        List<Event> emptyEvents = Arrays.asList();
+        SearchOutputData outputData = new SearchOutputData(emptyEvents);
 
-        assertTrue(outputData.getEvents().isEmpty());
+        assertNotNull(outputData, "Output data should not be null.");
+        assertTrue(outputData.getEvents().isEmpty(), "Event list should be empty.");
     }
 
     @Test
-    void testMultipleEventsOutput() {
-        Event event1 = new Event(
-                1,
-                "Book Reading Club",
-                "A gathering for book enthusiasts.",
-                "Library Hall A",
-                LocalDateTime.of(2024, 11, 18, 18, 0),
-                LocalDateTime.of(2024, 11, 18, 20, 0),
-                List.of("reading", "books")
-        );
-        Event event2 = new Event(
-                2,
-                "Poetry Night",
-                "An evening of poetic expressions.",
-                "Auditorium B",
-                LocalDateTime.of(2024, 11, 20, 19, 0),
-                LocalDateTime.of(2024, 11, 20, 21, 0),
-                List.of("poetry", "writing")
-        );
-        SearchOutputData outputData = new SearchOutputData(List.of(event1, event2));
+    public void testSingleEvent() {
+        // Test case with a single event
+        Event event = new Event(1, "Concert", "Music concert", "City Hall", LocalDateTime.now(), LocalDateTime.now().plusHours(5), Arrays.asList("Music", "Entertainment"));
+        List<Event> singleEventList = Arrays.asList(event);
+        SearchOutputData outputData = new SearchOutputData(singleEventList);
 
-        assertEquals(2, outputData.getEvents().size());
-        assertEquals("Poetry Night", outputData.getEvents().get(1).getName());
-        assertEquals("Auditorium B", outputData.getEvents().get(1).getLocation());
+        assertNotNull(outputData, "Output data should not be null.");
+        assertEquals(1, outputData.getEvents().size(), "There should be exactly one event.");
+        assertTrue(outputData.getEvents().contains(event), "Event list should contain the specified event.");
     }
 }
