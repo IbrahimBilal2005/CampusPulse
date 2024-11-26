@@ -1,14 +1,13 @@
 package data_access;
 
 import entity.Account;
-import entity.User;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class InMemoryDAO implements ChangePasswordUserDataAccessInterface {
+public class InMemoryDAOCP implements ChangePasswordUserDataAccessInterface {
     private final Map<String, Account> accounts = new HashMap<>();
 
     @Override
