@@ -1,6 +1,7 @@
 package use_case.signup.general_user_signup;
 
 import data_access.InMemoryUserDataAccessObject;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import entity.Account;
 import entity.UserCreationStrategy;
@@ -47,29 +48,7 @@ class UserSignupInteractorTest {
     void failurePasswordMismatchTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "wrong", "firstName", "lastName", 18, "gender", List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
-        UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
-
-            @Override
-            public void prepareSuccessView(UserSignupOutputData user) {
-                fail("User case failure is unexpected.");
-            }
-
-            @Override
-            public void prepareFailView(String errorMessage) {
-                assertEquals("Passwords do not match", errorMessage);
-            }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
-            }
-        };
-        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, failurePresenter, new UserCreationStrategy());
+        UserSignupInputBoundary interactor = getUserSignupInputBoundary("Passwords do not match", userRepository);
         interactor.execute(inputData);
     }
 
@@ -82,6 +61,12 @@ class UserSignupInteractorTest {
         Account user = accountCreator.createAccount("username", "password", "firstName", "lastName", 18, "gender", List.of("art"));
         userRepository.save(user);
 
+        UserSignupInputBoundary interactor = getUserSignupInputBoundary("User already exists", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @NotNull
+    private static UserSignupInputBoundary getUserSignupInputBoundary(String userAlreadyExists, UserSignupDataAccessInterface userRepository) {
         UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
 
             @Override
@@ -91,7 +76,7 @@ class UserSignupInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("User already exists", errorMessage);
+                assertEquals(userAlreadyExists, errorMessage);
             }
 
             @Override
@@ -104,7 +89,6 @@ class UserSignupInteractorTest {
                 //expected
             }
         };
-        UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, failurePresenter, new UserCreationStrategy());
-        interactor.execute(inputData);
+        return new UserSignupInteractor(userRepository, failurePresenter, new UserCreationStrategy());
     }
 }
