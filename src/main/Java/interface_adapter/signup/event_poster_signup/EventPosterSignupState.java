@@ -1,5 +1,10 @@
 package interface_adapter.signup.event_poster_signup;
 
+import entity.Event;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The state for the Signup View Model.
  */
@@ -12,6 +17,7 @@ public class EventPosterSignupState {
     private String repeatPasswordError;
     private String organizationName;
     private String sopLink;
+    private Map<String, Event> events = new HashMap<String, Event>();
 
     public String getUsername() {
         return username;
@@ -40,6 +46,8 @@ public class EventPosterSignupState {
     public String getOrganizationName() { return organizationName; }
 
     public String getSopLink() { return sopLink; }
+
+    public Map<String, Event> getEvents() { return events; }
 
     public void setUsername(String username) {
         this.username = username;
@@ -77,6 +85,7 @@ public class EventPosterSignupState {
                 + ", repeatPassword='" + repeatPassword + '\''
                 + ", organizationName='" + organizationName + '\''
                 + ", sopLink='" + sopLink + '\''
+                + ", events='" + events + '\''
                 + '}';
     }
 }

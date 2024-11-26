@@ -30,9 +30,9 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
             final Account eventPoster = accountCreator.createAccount(
                     eventPosterSignupInputData.getUsername(),
                     eventPosterSignupInputData.getPassword(),
-                    eventPosterSignupInputData.getRepeatPassword(),
                     eventPosterSignupInputData.getOrganizationName(),
-                    eventPosterSignupInputData.getSopLink());
+                    eventPosterSignupInputData.getSopLink(),
+                    eventPosterSignupInputData.getEvents());
 
             userDataAccessObject.save(eventPoster);
             final EventPosterSignupOutputData signupOutputData = new EventPosterSignupOutputData(eventPoster.getUsername(), false);
