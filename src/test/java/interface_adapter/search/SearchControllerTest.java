@@ -1,64 +1,70 @@
 package interface_adapter.search;
-import interface_adapter.search.SearchController;
+
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInputData;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SearchControllerTest {
+
+    static class MockSearchInputBoundary implements SearchInputBoundary {
+        private SearchInputData receivedInput;
+
+        @Override
+        public void search(SearchInputData inputData) {
+            this.receivedInput = inputData;
+        }
+
+        public SearchInputData getReceivedInput() {
+            return receivedInput;
+        }
+    }
+
     @Test
     void testSearchController() {
-        // Mock the SearchInputBoundary
-        SearchInputBoundary mockInteractor = Mockito.mock(SearchInputBoundary.class);
+        // Create a mock interactor
+        MockSearchInputBoundary mockInteractor = new MockSearchInputBoundary();
 
         // Create the controller
         SearchController controller = new SearchController(mockInteractor);
 
         // Define input
         String keyword = "Sports";
-        Map<String, String> filters = new HashMap<>();
-        filters.put("tags", "outdoor,fun");
 
         // Invoke the method
         controller.search(keyword);
 
         // Verify behavior
-        verify(mockInteractor).search(argThat(input ->
-                input.getQuery().equals("Sports")
-        ));
+        SearchInputData receivedInput = mockInteractor.getReceivedInput();
+        assertNotNull(receivedInput, "Input data should not be null.");
+        assertEquals("Sports", receivedInput.getQuery(), "Query should match the keyword.");
     }
 
     @Test
     void testSearchControllerNoFilters() {
-        // Mock the SearchInputBoundary
-        SearchInputBoundary mockInteractor = Mockito.mock(SearchInputBoundary.class);
+        // Create a mock interactor
+        MockSearchInputBoundary mockInteractor = new MockSearchInputBoundary();
 
         // Create the controller
         SearchController controller = new SearchController(mockInteractor);
 
         // Define input with no filters
         String keyword = "Music";
-        Map<String, String> filters = new HashMap<>();
 
         // Invoke the method
         controller.search(keyword);
 
         // Verify behavior
-        verify(mockInteractor).search(argThat(input ->
-                input.getQuery().equals("Music")
-        ));
+        SearchInputData receivedInput = mockInteractor.getReceivedInput();
+        assertNotNull(receivedInput, "Input data should not be null.");
+        assertEquals("Music", receivedInput.getQuery(), "Query should match the keyword.");
     }
 
     @Test
     void testSearchControllerNullFilters() {
-        // Mock the SearchInputBoundary
-        SearchInputBoundary mockInteractor = Mockito.mock(SearchInputBoundary.class);
+        // Create a mock interactor
+        MockSearchInputBoundary mockInteractor = new MockSearchInputBoundary();
 
         // Create the controller
         SearchController controller = new SearchController(mockInteractor);
@@ -70,74 +76,68 @@ class SearchControllerTest {
         controller.search(keyword);
 
         // Verify behavior
-        verify(mockInteractor).search(argThat(input ->
-                input.getQuery().equals("Workshops")
-        ));
+        SearchInputData receivedInput = mockInteractor.getReceivedInput();
+        assertNotNull(receivedInput, "Input data should not be null.");
+        assertEquals("Workshops", receivedInput.getQuery(), "Query should match the keyword.");
     }
 
     @Test
     void testSearchControllerEmptyKeyword() {
-        // Mock the SearchInputBoundary
-        SearchInputBoundary mockInteractor = Mockito.mock(SearchInputBoundary.class);
+        // Create a mock interactor
+        MockSearchInputBoundary mockInteractor = new MockSearchInputBoundary();
 
         // Create the controller
         SearchController controller = new SearchController(mockInteractor);
 
         // Define input with an empty keyword
         String keyword = "";
-        Map<String, String> filters = new HashMap<>();
-        filters.put("tags", "coding,java");
 
         // Invoke the method
         controller.search(keyword);
 
         // Verify behavior
-        verify(mockInteractor).search(argThat(input ->
-                input.getQuery().equals("")
-        ));
+        SearchInputData receivedInput = mockInteractor.getReceivedInput();
+        assertNotNull(receivedInput, "Input data should not be null.");
+        assertEquals("", receivedInput.getQuery(), "Query should be empty.");
     }
 
     @Test
     void testSearchControllerNullKeyword() {
-        // Mock the SearchInputBoundary
-        SearchInputBoundary mockInteractor = Mockito.mock(SearchInputBoundary.class);
+        // Create a mock interactor
+        MockSearchInputBoundary mockInteractor = new MockSearchInputBoundary();
 
         // Create the controller
         SearchController controller = new SearchController(mockInteractor);
 
         // Define input with a null keyword
         String keyword = null;
-        Map<String, String> filters = new HashMap<>();
-        filters.put("tags", "coding,java");
 
         // Invoke the method
         controller.search(keyword);
 
         // Verify behavior
-        verify(mockInteractor).search(argThat(input ->
-                input.getQuery() == null
-        ));
+        SearchInputData receivedInput = mockInteractor.getReceivedInput();
+        assertNotNull(receivedInput, "Input data should not be null.");
+        assertNull(receivedInput.getQuery(), "Query should be null.");
     }
 
     @Test
     void testSearchControllerComplexFilters() {
-        // Mock the SearchInputBoundary
-        SearchInputBoundary mockInteractor = Mockito.mock(SearchInputBoundary.class);
+        // Create a mock interactor
+        MockSearchInputBoundary mockInteractor = new MockSearchInputBoundary();
 
         // Create the controller
         SearchController controller = new SearchController(mockInteractor);
 
         // Define input with complex filters
         String keyword = "Technology";
-        Map<String, String> filters = new HashMap<>();
-        filters.put("tags", "AI,   machine learning ,  data-science");
 
         // Invoke the method
         controller.search(keyword);
 
         // Verify behavior
-        verify(mockInteractor).search(argThat(input ->
-                input.getQuery().equals("Technology")
-        ));
+        SearchInputData receivedInput = mockInteractor.getReceivedInput();
+        assertNotNull(receivedInput, "Input data should not be null.");
+        assertEquals("Technology", receivedInput.getQuery(), "Query should match the keyword.");
     }
 }
