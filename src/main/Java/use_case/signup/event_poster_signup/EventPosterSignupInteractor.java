@@ -26,6 +26,9 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
         else if (!eventPosterSignupInputData.getPassword().equals(eventPosterSignupInputData.getRepeatPassword())) {
             userPresenter.prepareFailView("Passwords do not match.");
         }
+        else if (!eventPosterSignupInputData.getSopLink().startsWith("https://")) {
+            userPresenter.prepareFailView("Invalid SOP link");
+        }
         else {
             final Account eventPoster = accountCreator.createAccount(
                     eventPosterSignupInputData.getUsername(),
