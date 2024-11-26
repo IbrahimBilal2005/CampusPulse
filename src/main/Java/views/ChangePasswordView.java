@@ -1,5 +1,16 @@
 package views;
 
+import interface_adapter.change_password.ChangePasswordController;
+import interface_adapter.change_password.ChangePasswordState;
+import interface_adapter.change_password.ChangePasswordViewModel;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordState;
@@ -10,6 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -28,7 +40,7 @@ public class ChangePasswordView extends JPanel implements PropertyChangeListener
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
 
-        // Set up layout and components
+        // Set up frame components
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel titleLabel = new JLabel("Change Password", SwingConstants.CENTER);
