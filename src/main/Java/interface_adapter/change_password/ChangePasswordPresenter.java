@@ -19,8 +19,6 @@ public class ChangePasswordPresenter implements ChangePasswordOutputBoundary {
         state.setConfirmPasswordError(null);
         viewModel.setState(state);  // Clear all errors and update success message
 
-        // Optionally show success message on UI (this would typically be done in a UI component)
-        System.out.println(outputData.getMessage());
     }
 
     @Override
@@ -29,8 +27,6 @@ public class ChangePasswordPresenter implements ChangePasswordOutputBoundary {
         state.setConfirmPasswordError(errorMessage);  // Update error message in ViewModel
         viewModel.setState(state);
 
-        // Optionally show error message on UI
-        System.err.println(errorMessage);
     }
     public ChangePasswordViewModel getViewModel() {
         return viewModel;
