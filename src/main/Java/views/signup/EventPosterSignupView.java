@@ -95,7 +95,8 @@ public class EventPosterSignupView extends BaseSignupView<EventPosterSignupViewM
                                 currentState.getPassword(),
                                 currentState.getRepeatPassword(),
                                 currentState.getOrganizationName(),
-                                currentState.getSopLink()
+                                currentState.getSopLink(),
+                                currentState.getEvents()
                         );
                     }
                 }

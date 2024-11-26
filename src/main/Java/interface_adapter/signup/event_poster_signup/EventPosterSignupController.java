@@ -1,7 +1,10 @@
 package interface_adapter.signup.event_poster_signup;
 
+import entity.Event;
 import use_case.signup.event_poster_signup.EventPosterSignupInputBoundary;
 import use_case.signup.event_poster_signup.EventPosterSignupInputData;
+
+import java.util.Map;
 
 public class EventPosterSignupController {
 
@@ -23,9 +26,10 @@ public class EventPosterSignupController {
                         String password,
                         String confirmPassword,
                         String organizationName,
-                        String sopLink) {
+                        String sopLink,
+                        Map<String, Event> events) {
         final EventPosterSignupInputData eventPosterSignupInputData = new EventPosterSignupInputData(
-                username, password, confirmPassword, organizationName, sopLink);
+                username, password, confirmPassword, organizationName, sopLink, events);
 
         eventPosterSignupUseCaseInteractor.execute(eventPosterSignupInputData);
 
