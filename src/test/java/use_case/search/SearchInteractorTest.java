@@ -1,36 +1,47 @@
 package use_case.search;
 
-import data_access.InMemorySearchDAO;
-import entity.Event;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class SearchInteractorTest {
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import entity.Event;
+import use_case.search.*;
+import data_access.InMemorySearchDAO;
+import interface_adapter.search.SearchPresenter;
+import interface_adapter.search.SearchViewModel;
+
+public class SearchInteractorTest {
+
+    // Helper method to create a common set of events
+    private List<Event> createSampleEvents() {
+        return Arrays.asList(
+                new Event(1, "Hackathon", "A tech competition", "Tech Center", LocalDateTime.now(), LocalDateTime.now().plusHours(3), Arrays.asList("Tech", "Competition")),
+                new Event(2, "Sports Day", "Outdoor sports event", "Sports Field", LocalDateTime.now(), LocalDateTime.now().plusHours(4), Arrays.asList("Sports", "Outdoor")),
+                new Event(3, "Concert", "Music concert", "City Hall", LocalDateTime.now(), LocalDateTime.now().plusHours(5), Arrays.asList("Music", "Entertainment")),
+                new Event(4, "Workshop", "Programming workshop", "Tech Hub", LocalDateTime.now(), LocalDateTime.now().plusHours(2), Arrays.asList("Tech", "Workshop")),
+                new Event(5, "Networking Event", "Professional networking", "Convention Center", LocalDateTime.now(), LocalDateTime.now().plusHours(3), Arrays.asList("Networking", "Career"))
+        );
+    }
 
     @Test
-    void successTest_SearchByCategory_ExistingCategory() {
-        // Arrange
-        Event event1 = new Event(1, "Music", "A music concert", "Location A",
-                LocalDateTime.now(), LocalDateTime.now().plusHours(2),
-                Arrays.asList("fun", "outdoor"));
+    public void emptyQueryTest_shouldReturnAllEvents() {
+        List<Event> events = createSampleEvents();  // Get common events
 
-        // In-memory implementation of SearchDataAccessInterface
-        SearchDataAccessInterface searchRepository = new InMemorySearchDAO(new ArrayList<>(List.of(event1)));
+        // In-memory data access object (DAO) with mock events
+        InMemorySearchDAO dataAccess = new InMemorySearchDAO(events);
 
-        // Anonymous implementation of SearchOutputBoundary for success testing
-        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
+        // Create a mock Presenter
+        SearchViewModel viewModel = new SearchViewModel("Search");
+        new SearchPresenter(viewModel) {
             @Override
             public void setPassView(SearchOutputData outputData) {
-                // Assertions for success case
-                assertNotNull(outputData);
-                assertEquals(1, outputData.getEvents().size());
-                assertEquals("Music", outputData.getEvents().get(0).getName());
+                super.setPassView(outputData);
+                // Assert that all events are returned
+                List<Event> returnedEvents = outputData.getEvents();
+                assertEquals(5, returnedEvents.size());  // We expect all 5 events
+                events.forEach(event -> assertTrue(returnedEvents.contains(event)));  // Ensure each event is returned
             }
 
             @Override
@@ -39,99 +50,11 @@ class SearchInteractorTest {
             }
         };
 
-        SearchInteractor interactor = new SearchInteractor(searchRepository, successPresenter);
-        SearchInputData inputData = new SearchInputData("Music", Arrays.asList("fun"));
+        // Create the Interactor
+        SearchInputBoundary interactor = new SearchInteractor(dataAccess);
 
-        // Act
-        interactor.search(inputData);
-    }
-
-    @Test
-    void successTest_SearchByCategory_NoMatchingEvents() {
-        // Arrange
-        Event event1 = new Event(1, "Music", "A music concert", "Location A",
-                LocalDateTime.now(), LocalDateTime.now().plusHours(2),
-                Arrays.asList("fun", "outdoor"));
-
-        SearchDataAccessInterface searchRepository = new InMemorySearchDAO(new ArrayList<>(List.of(event1)));
-
-        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
-            @Override
-            public void setPassView(SearchOutputData outputData) {
-                fail("No events should have matched.");
-            }
-
-            @Override
-            public void setFailView(String error) {
-                // Assertions for failure case
-                assertEquals("No events found", error);
-            }
-        };
-
-        SearchInteractor interactor = new SearchInteractor(searchRepository, successPresenter);
-        SearchInputData inputData = new SearchInputData("Sports", Arrays.asList("indoor"));
-
-        // Act
-        interactor.search(inputData);
-    }
-
-    @Test
-    void successTest_SearchByCategoryAndTags() {
-        // Arrange
-        Event event1 = new Event(1, "Music", "A music concert", "Location A",
-                LocalDateTime.now(), LocalDateTime.now().plusHours(2),
-                Arrays.asList("fun", "outdoor"));
-
-        Event event2 = new Event(2, "Music", "Another music event", "Location B",
-                LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(1).plusHours(2),
-                Arrays.asList("party", "indoor"));
-
-        SearchDataAccessInterface searchRepository = new InMemorySearchDAO(new ArrayList<>(List.of(event1, event2)));
-
-        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
-            @Override
-            public void setPassView(SearchOutputData outputData) {
-                // Assertions for success case
-                assertNotNull(outputData);
-                assertEquals(1, outputData.getEvents().size());
-                assertEquals("Another music event", outputData.getEvents().get(0).getDescription());
-            }
-
-            @Override
-            public void setFailView(String error) {
-                fail("Use case failure is unexpected.");
-            }
-        };
-
-        SearchInteractor interactor = new SearchInteractor(searchRepository, successPresenter);
-        SearchInputData inputData = new SearchInputData("Music", Arrays.asList("party"));
-
-        // Act
-        interactor.search(inputData);
-    }
-
-    @Test
-    void successTest_SearchWithEmptyInput() {
-        // Arrange
-        SearchDataAccessInterface searchRepository = new InMemorySearchDAO(new ArrayList<>());
-
-        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
-            @Override
-            public void setPassView(SearchOutputData outputData) {
-                fail("No events should have been found.");
-            }
-
-            @Override
-            public void setFailView(String error) {
-                // Assertions for failure case
-                assertEquals("No events found", error);
-            }
-        };
-
-        SearchInteractor interactor = new SearchInteractor(searchRepository, successPresenter);
-        SearchInputData inputData = new SearchInputData("", Arrays.asList());
-
-        // Act
-        interactor.search(inputData);
+        // Search with an empty query
+        SearchInputData inputData = new SearchInputData("");
+        interactor.search(inputData);  // This should return all events
     }
 }

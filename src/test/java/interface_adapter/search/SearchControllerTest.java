@@ -26,12 +26,11 @@ class SearchControllerTest {
         filters.put("tags", "outdoor,fun");
 
         // Invoke the method
-        controller.search(keyword, filters);
+        controller.search(keyword);
 
         // Verify behavior
         verify(mockInteractor).search(argThat(input ->
-                input.getCategory().equals("Sports") &&
-                        input.getTags().equals(List.of("outdoor", "fun"))
+                input.getQuery().equals("Sports")
         ));
     }
 
@@ -48,12 +47,11 @@ class SearchControllerTest {
         Map<String, String> filters = new HashMap<>();
 
         // Invoke the method
-        controller.search(keyword, filters);
+        controller.search(keyword);
 
         // Verify behavior
         verify(mockInteractor).search(argThat(input ->
-                input.getCategory().equals("Music") &&
-                        input.getTags().isEmpty() // Expecting an empty list for tags
+                input.getQuery().equals("Music")
         ));
     }
 
@@ -69,12 +67,11 @@ class SearchControllerTest {
         String keyword = "Workshops";
 
         // Invoke the method
-        controller.search(keyword, null);
+        controller.search(keyword);
 
         // Verify behavior
         verify(mockInteractor).search(argThat(input ->
-                input.getCategory().equals("Workshops") &&
-                        input.getTags().isEmpty() // Expecting an empty list for tags
+                input.getQuery().equals("Workshops")
         ));
     }
 
@@ -92,12 +89,11 @@ class SearchControllerTest {
         filters.put("tags", "coding,java");
 
         // Invoke the method
-        controller.search(keyword, filters);
+        controller.search(keyword);
 
         // Verify behavior
         verify(mockInteractor).search(argThat(input ->
-                input.getCategory().equals("") &&
-                        input.getTags().equals(List.of("coding", "java"))
+                input.getQuery().equals("")
         ));
     }
 
@@ -115,12 +111,11 @@ class SearchControllerTest {
         filters.put("tags", "coding,java");
 
         // Invoke the method
-        controller.search(keyword, filters);
+        controller.search(keyword);
 
         // Verify behavior
         verify(mockInteractor).search(argThat(input ->
-                input.getCategory() == null &&
-                        input.getTags().equals(List.of("coding", "java"))
+                input.getQuery() == null
         ));
     }
 
@@ -138,12 +133,11 @@ class SearchControllerTest {
         filters.put("tags", "AI,   machine learning ,  data-science");
 
         // Invoke the method
-        controller.search(keyword, filters);
+        controller.search(keyword);
 
         // Verify behavior
         verify(mockInteractor).search(argThat(input ->
-                input.getCategory().equals("Technology") &&
-                        input.getTags().equals(List.of("AI", "machine learning", "data-science"))
+                input.getQuery().equals("Technology")
         ));
     }
 }

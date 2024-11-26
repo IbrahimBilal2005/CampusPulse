@@ -34,21 +34,21 @@ class InMemorySearchDAOTest {
         SearchDataAccessInterface dao = new InMemorySearchDAO(events);
 
         // Search for events tagged with "music"
-        List<Event> musicEvents = dao.searchEvents(null, List.of("music"));
+        List<Event> musicEvents = dao.searchEvents(null);
 
         // Assertions
         assertEquals(1, musicEvents.size());
         assertEquals("Concert Night", musicEvents.get(0).getName());
 
         // Search for events tagged with "outdoor"
-        List<Event> outdoorEvents = dao.searchEvents(null, List.of("outdoor"));
+        List<Event> outdoorEvents = dao.searchEvents(null);
 
         // Assertions
         assertEquals(1, outdoorEvents.size());
         assertEquals("Sports Day", outdoorEvents.get(0).getName());
 
         // Search for events tagged with "painting"
-        List<Event> paintingEvents = dao.searchEvents(null, List.of("painting"));
+        List<Event> paintingEvents = dao.searchEvents(null);
 
         // Assertions
         assertEquals(1, paintingEvents.size());
@@ -85,7 +85,7 @@ class InMemorySearchDAOTest {
         SearchDataAccessInterface dao = new InMemorySearchDAO(events);
 
         // Search for events tagged with "sports"
-        List<Event> sportsEvents = dao.searchEvents(null, List.of("sports"));
+        List<Event> sportsEvents = dao.searchEvents(null);
 
         // Assertions
         assertEquals(2, sportsEvents.size(), "Only 2 events should be sports-related");

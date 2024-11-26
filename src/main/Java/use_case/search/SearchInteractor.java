@@ -16,8 +16,13 @@ public class SearchInteractor implements SearchInputBoundary {
 
         // Check if the query is empty
         if (query.isEmpty()) {
-            // Handle the case where no search term is entered
-            presentError("Search term is empty. Please enter a valid search query.");
+            // If the query is empty, show all events
+            List<Event> allEvents = dataAccess.getAllEvents();
+            if (allEvents.isEmpty()) {
+                presentError("No events available.");
+            } else {
+                presentSearchResults(allEvents);
+            }
             return;
         }
 

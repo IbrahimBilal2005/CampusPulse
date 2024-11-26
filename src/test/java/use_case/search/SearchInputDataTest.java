@@ -14,11 +14,10 @@ class SearchInputDataTest {
         List<String> tags = List.of("fiction", "book club");
 
         // Act
-        SearchInputData inputData = new SearchInputData(searchQuery, tags);
+        SearchInputData inputData = new SearchInputData(searchQuery);
 
         // Assert
-        assertEquals("reading", inputData.getCategory());
-        assertEquals(List.of("fiction", "book club"), inputData.getTags());
+        assertEquals("reading", inputData.getQuery());
     }
 
     @Test
@@ -27,11 +26,10 @@ class SearchInputDataTest {
         String searchQuery = "movies";
 
         // Act
-        SearchInputData inputData = new SearchInputData(searchQuery, List.of());
+        SearchInputData inputData = new SearchInputData(searchQuery);
 
         // Assert
-        assertEquals("movies", inputData.getCategory());
-        assertTrue(inputData.getTags().isEmpty());
+        assertEquals("movies", inputData.getQuery());
     }
 
     @Test
@@ -40,10 +38,9 @@ class SearchInputDataTest {
         String searchQuery = "coding";
 
         // Act
-        SearchInputData inputData = new SearchInputData(searchQuery, null);
+        SearchInputData inputData = new SearchInputData(searchQuery);
 
         // Assert
-        assertEquals("coding", inputData.getCategory());
-        assertNull(inputData.getTags());
+        assertEquals("coding", inputData.getQuery());
     }
 }
