@@ -24,12 +24,14 @@ public class UserSignupController {
     public void execute(String username,
                         String password,
                         String confirmPassword,
-                        String gender,
+                        String firstName,
+                        String lastName,
                         Integer age,
+                        String gender,
                         List<String> interests) {
 
         final UserSignupInputData userSignupInputData = new UserSignupInputData(
-                username, password, confirmPassword, gender, age, interests);
+                username, password, confirmPassword, firstName, lastName, age, gender, interests);
 
         userSignupUseCaseInteractor.execute(userSignupInputData);
 

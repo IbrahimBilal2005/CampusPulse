@@ -19,6 +19,8 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
     private UserSignupController userSignupController;
 
+    private final JTextField firstNameInputField = new JTextField(15);
+    private final JTextField lastNameInputField = new JTextField(15);
     private final JTextField genderInputField = new JTextField(15);
     private final JTextField ageInputField = new JTextField(15);
     private final JPanel interestSelectionPanel = new JPanel();
@@ -31,6 +33,8 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
         final JLabel title = new JLabel(UserSignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        final LabelTextPanel firstNameInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.FIRST_NAME_LABEL), firstNameInputField);
+        final LabelTextPanel lastNameInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.LAST_NAME_LABEL), lastNameInputField);
         final LabelTextPanel genderInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.GENDER_LABEL), genderInputField);
         final LabelTextPanel ageInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.AGE_LABEL), ageInputField);
 
@@ -38,12 +42,17 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
         JPanel additionalFieldsPanel = new JPanel();
         additionalFieldsPanel.setLayout(new BoxLayout(additionalFieldsPanel, BoxLayout.Y_AXIS));
+
+        additionalFieldsPanel.add(firstNameInfo);
+        additionalFieldsPanel.add(lastNameInfo);
         additionalFieldsPanel.add(genderInfo);
         additionalFieldsPanel.add(ageInfo);
         additionalFieldsPanel.add(interestScrollPane);
 
         additionalFieldsContainer.add(additionalFieldsPanel);
 
+        addFirstNameListener();
+        addLastNameListener();
         addGenderListener();
         addAgeListener();
     }
@@ -87,6 +96,55 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
         viewModel.setState(currentState);
     }
 
+    private void addFirstNameListener() {
+        firstNameInputField.getDocument().addDocumentListener(new DocumentListener() {
+            private void updateState() {
+                UserSignupState currentState = viewModel.getState();
+                currentState.setFirstName(firstNameInputField.getText());
+                viewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateState();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateState();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateState();
+            }
+        });
+    }
+
+    private void addLastNameListener() {
+        lastNameInputField.getDocument().addDocumentListener(new DocumentListener() {
+            private void updateState() {
+                UserSignupState currentState = viewModel.getState();
+                currentState.setLastName(lastNameInputField.getText());
+                viewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateState();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateState();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateState();
+            }
+        });
+    }
 
     private void addGenderListener() {
         genderInputField.getDocument().addDocumentListener(new DocumentListener() {
@@ -238,8 +296,10 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
                         currentState.getUsername(),
                         currentState.getPassword(),
                         currentState.getRepeatPassword(),
-                        currentState.getGender(),
+                        currentState.getFirstName(),
+                        currentState.getLastName(),
                         currentState.getAge(),
+                        currentState.getGender(),
                         currentState.getInterests());
             }
         });

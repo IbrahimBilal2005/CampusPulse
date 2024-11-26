@@ -10,6 +10,8 @@ public class UserSignupViewModel extends ViewModel<UserSignupState> {
     public static final String AGE_LABEL = "Age";
     public static final String TITLE_LABEL = "General User Signup";
     public static final List<String> INTEREST_SELECTION_OPTIONS = List.of("sports", "music", "visual art");
+    public static final String FIRST_NAME_LABEL = "First Name";
+    public static final String LAST_NAME_LABEL = "Last Name";
 
 
     public UserSignupViewModel() {

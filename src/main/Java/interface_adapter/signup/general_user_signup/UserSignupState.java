@@ -15,12 +15,15 @@ public class UserSignupState {
     private String gender = "";
     private Integer age;
     private String ageError;
-    private List<String> interest;
+    private List<String> interests;
+    private String firstName = "";
+    private String lastName = "";
+    private String firstNameError;
+    private String lastNameError;
 
     public String getUsername() {
         return username;
     }
-
     public String getUsernameError() {
         return usernameError;
     }
@@ -28,7 +31,6 @@ public class UserSignupState {
     public String getPassword() {
         return password;
     }
-
     public String getPasswordError() {
         return passwordError;
     }
@@ -36,7 +38,6 @@ public class UserSignupState {
     public String getRepeatPassword() {
         return repeatPassword;
     }
-
     public String getRepeatPasswordError() {
         return repeatPasswordError;
     }
@@ -44,10 +45,15 @@ public class UserSignupState {
     public String getGender() {return gender;}
 
     public Integer getAge() { return age; }
-
     public String getAgeError() { return ageError; }
 
-    public List<String>  getInterests() { return interest; }
+    public String getFirstName() { return firstName; }
+    public String getFirstNameError() { return firstNameError; }
+
+    public String getLastName() { return lastName; }
+    public String getLastNameError() { return lastNameError; }
+
+    public List<String>  getInterests() { return interests; }
 
     public void setUsername(String username) {
         this.username = username;
@@ -79,7 +85,10 @@ public class UserSignupState {
 
     public void setAgeError(String ageError) { this.ageError = ageError; }
 
-    public void setInterests(List<String> interest) { this.interest = interest; }
+    public void setInterests(List<String> interest) { this.interests = interest; }
+
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
     @Override
     public String toString() {
@@ -87,9 +96,11 @@ public class UserSignupState {
                 + "username='" + username + '\''
                 + ", password='" + password + '\''
                 + ", repeatPassword='" + repeatPassword + '\''
+                + ", firstName='" + firstName + '\''
+                + ", lastName='" + lastName + '\''
                 + ", gender='" + gender + '\''
                 + ", age='" + age + '\''
-                + ", interest='" + interest + '\''
+                + ", interests='" + interests + '\''
                 + '}';
     }
 }

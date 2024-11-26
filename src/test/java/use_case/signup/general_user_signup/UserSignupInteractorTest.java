@@ -15,7 +15,7 @@ class UserSignupInteractorTest {
 
     @Test
     void successTest() {
-        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18, List.of("art"));
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 18, "gender", List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupOutputBoundary successPresenter = new UserSignupOutputBoundary() {
 
@@ -45,7 +45,7 @@ class UserSignupInteractorTest {
     }
     @Test
     void failurePasswordMismatchTest() {
-        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18, List.of("art"));
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "wrong", "firstName", "lastName", 18, "gender", List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
 
@@ -56,7 +56,7 @@ class UserSignupInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("Passwords don't match.", errorMessage);
+                assertEquals("Passwords do not match", errorMessage);
             }
 
             @Override
@@ -75,11 +75,11 @@ class UserSignupInteractorTest {
 
     @Test
     void failureUserExistsTest() {
-        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18, List.of("art"));
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 18, "gender", List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         AccountCreationStrategy accountCreator = new UserCreationStrategy();
-        Account user = accountCreator.createAccount("username", "password", "password", "Organization Name", "sopLink");
+        Account user = accountCreator.createAccount("username", "password", "firstName", "lastName", 18, "gender", List.of("art"));
         userRepository.save(user);
 
         UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
@@ -91,7 +91,7 @@ class UserSignupInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("User already exists.", errorMessage);
+                assertEquals("User already exists", errorMessage);
             }
 
             @Override
