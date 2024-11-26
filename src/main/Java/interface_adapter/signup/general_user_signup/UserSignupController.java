@@ -29,7 +29,7 @@ public class UserSignupController {
                         List<String> interests) {
 
         final UserSignupInputData userSignupInputData = new UserSignupInputData(
-                username, password, confirmPassword, gender, age);
+                username, password, confirmPassword, gender, age, interests);
 
         userSignupUseCaseInteractor.execute(userSignupInputData);
 

@@ -36,7 +36,8 @@ public class UserSignupInteractor implements UserSignupInputBoundary {
                     userSignupInputData.getPassword(),
                     userSignupInputData.getRepeatPassword(),
                     userSignupInputData.getAge(),
-                    userSignupInputData.getGender());
+                    userSignupInputData.getGender(),
+                    userSignupInputData.getInterests());
 
             userDataAccessObject.save(user);
             final UserSignupOutputData signupOutputData= new UserSignupOutputData(user.getUsername(), false);

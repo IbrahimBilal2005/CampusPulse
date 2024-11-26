@@ -61,7 +61,7 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
             interestSelectionPanel.add(checkBox);
         });
 
-        interestScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        interestScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         interestScrollPane.setPreferredSize(new Dimension(200, 100)); // Adjust size as needed
 
         addInterestListeners();
@@ -86,6 +86,7 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
         currentState.setInterests(selectedInterests); // Assuming there's a setSelectedInterests method
         viewModel.setState(currentState);
     }
+
 
     private void addGenderListener() {
         genderInputField.getDocument().addDocumentListener(new DocumentListener() {
@@ -239,8 +240,7 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
                         currentState.getRepeatPassword(),
                         currentState.getGender(),
                         currentState.getAge(),
-                        currentState.getInterests() // Pass selected interests
-                );
+                        currentState.getInterests());
             }
         });
     }

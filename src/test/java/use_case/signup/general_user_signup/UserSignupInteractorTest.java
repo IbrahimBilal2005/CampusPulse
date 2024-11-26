@@ -7,13 +7,15 @@ import entity.UserCreationStrategy;
 import entity.AccountCreationStrategy;
 import use_case.signup.UserSignupDataAccessInterface;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserSignupInteractorTest {
 
     @Test
     void successTest() {
-        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18);
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18, List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupOutputBoundary successPresenter = new UserSignupOutputBoundary() {
 
@@ -43,7 +45,7 @@ class UserSignupInteractorTest {
     }
     @Test
     void failurePasswordMismatchTest() {
-        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18);
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18, List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
 
@@ -73,7 +75,7 @@ class UserSignupInteractorTest {
 
     @Test
     void failureUserExistsTest() {
-        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18);
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "gender", 18, List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         AccountCreationStrategy accountCreator = new UserCreationStrategy();
