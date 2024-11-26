@@ -2,10 +2,14 @@ package use_case.signup.event_poster_signup;
 
 import data_access.InMemoryUserDataAccessObject;
 import entity.AccountCreationStrategy;
+import entity.Event;
 import entity.EventPosterCreationStrategy;
 import entity.Account;
 import org.junit.jupiter.api.Test;
 import use_case.signup.UserSignupDataAccessInterface;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +48,8 @@ class EventPosterSignupInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink");
+        Map<String, Event > events = new HashMap<>();
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink", events);
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         EventPosterSignupOutputBoundary failurePresenter = new EventPosterSignupOutputBoundary() {
 
