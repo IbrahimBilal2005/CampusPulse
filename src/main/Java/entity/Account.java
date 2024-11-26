@@ -15,4 +15,11 @@ public interface Account {
      * @return the password of the user.
      */
     String getPassword();
+
+    /**
+     * Returns a new Account instance with the updated password.
+     * @param newPassword the new password to set.
+     * @return a new Account instance with the updated password.
+     */
+    Account withPassword(String newPassword);
 }

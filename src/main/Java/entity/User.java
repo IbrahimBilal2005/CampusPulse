@@ -64,5 +64,10 @@ public class User implements Account {
     public List<String> getInterests() {
         return this.interests;
     }
+
+    @Override
+    public Account withPassword(String newPassword) {
+        return new User(this.username, newPassword, this.firstName, this.lastName, this.age, this.gender, this.interests);
+    }
 }
 

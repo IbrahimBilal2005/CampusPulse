@@ -24,4 +24,8 @@ public class Admin implements Account {
     public String getPassword() {
         return this.password;
     }
+
+    public Account withPassword(String newPassword) {
+        return new Admin(this.username, newPassword);
+    }
 }

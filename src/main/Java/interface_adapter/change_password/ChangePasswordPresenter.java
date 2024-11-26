@@ -32,4 +32,7 @@ public class ChangePasswordPresenter implements ChangePasswordOutputBoundary {
         // Optionally show error message on UI
         System.err.println(errorMessage);
     }
+    public ChangePasswordViewModel getViewModel() {
+        return viewModel;
+    }
 }

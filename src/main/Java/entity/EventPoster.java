@@ -58,4 +58,9 @@ public class EventPoster implements Account{
     public Map<Integer, Event> getEvents() {
         return this.events;
     }
+
+    @Override
+    public Account withPassword(String newPassword) {
+        return new EventPoster(this.username, newPassword, this.organizationName, this.sopLink, this.tags, this.events);
+    }
 }
