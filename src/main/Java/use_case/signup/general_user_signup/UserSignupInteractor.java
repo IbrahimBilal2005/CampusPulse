@@ -42,6 +42,9 @@ public class UserSignupInteractor implements UserSignupInputBoundary {
         else if (userSignupInputData.getLastName().isEmpty() || !userSignupInputData.getLastName().matches("[a-zA-Z]+")) {
             userPresenter.prepareFailView("Invalid last name");
         }
+        else if (userSignupInputData.getPassword().length() < 8) {
+            userPresenter.prepareFailView("Password must be at least 8 characters");
+        }
         else {
             final Account user = accountCreator.createAccount(
                     userSignupInputData.getUsername(),

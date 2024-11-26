@@ -69,6 +69,14 @@ class UserSignupInteractorTest {
     }
 
     @Test
+    void failureShortPasswordTest() {
+        UserSignupInputData inputData = new UserSignupInputData("username", "short", "short", "firstName", "lastName", 18, "gender", List.of("art"));
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupInputBoundary interactor = getUserSignupInputBoundary("Password must be at least 8 characters", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @Test
     void failureInvalidGenderTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "123", "lastName", 18, "", List.of("art"));
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();

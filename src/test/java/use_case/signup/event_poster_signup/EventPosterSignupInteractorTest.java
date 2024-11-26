@@ -63,6 +63,17 @@ class EventPosterSignupInteractorTest {
     }
 
     @Test
+    void failureShortPasswordTest() {
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "short", "short", "Organization Name", "https://sopLink", new HashMap<>() {{
+            put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
+        }} );
+
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Password must be at least 8 characters", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @Test
     void failureInvalidSOPTest() {
         EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "InvalidSOP", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));

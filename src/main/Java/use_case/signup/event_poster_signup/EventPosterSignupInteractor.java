@@ -32,6 +32,9 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
         else if (eventPosterSignupInputData.getOrganizationName().isEmpty()) {
             userPresenter.prepareFailView("Invalid organization name");
         }
+        else if (eventPosterSignupInputData.getPassword().length() < 8) {
+            userPresenter.prepareFailView("Password must be at least 8 characters");
+        }
         else {
             final Account eventPoster = accountCreator.createAccount(
                     eventPosterSignupInputData.getUsername(),
