@@ -29,6 +29,9 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
         else if (!eventPosterSignupInputData.getSopLink().startsWith("https://")) {
             userPresenter.prepareFailView("Invalid SOP link");
         }
+        else if (eventPosterSignupInputData.getOrganizationName().isEmpty()) {
+            userPresenter.prepareFailView("Invalid organization name");
+        }
         else {
             final Account eventPoster = accountCreator.createAccount(
                     eventPosterSignupInputData.getUsername(),

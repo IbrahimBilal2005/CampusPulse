@@ -74,6 +74,17 @@ class EventPosterSignupInteractorTest {
     }
 
     @Test
+    void failureInvalidOrganizationNameTest() {
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "", "https://", new HashMap<>() {{
+            put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
+        }} );
+
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Invalid organization name", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @Test
     void failureUserExistsTest() {
         EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "https://sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
