@@ -3,6 +3,8 @@ package interface_adapter.signup.general_user_signup;
 import use_case.signup.general_user_signup.UserSignupInputBoundary;
 import use_case.signup.general_user_signup.UserSignupInputData;
 
+import java.util.List;
+
 public class UserSignupController {
 
     private final UserSignupInputBoundary userSignupUseCaseInteractor;
@@ -23,7 +25,8 @@ public class UserSignupController {
                         String password,
                         String confirmPassword,
                         String gender,
-                        Integer age) {
+                        Integer age,
+                        List<String> interests) {
 
         final UserSignupInputData userSignupInputData = new UserSignupInputData(
                 username, password, confirmPassword, gender, age);

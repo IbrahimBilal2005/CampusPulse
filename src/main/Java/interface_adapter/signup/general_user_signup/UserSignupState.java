@@ -1,5 +1,7 @@
 package interface_adapter.signup.general_user_signup;
 
+import java.util.List;
+
 /**
  * The state for the Signup View Model.
  */
@@ -10,9 +12,10 @@ public class UserSignupState {
     private String passwordError;
     private String repeatPassword = "";
     private String repeatPasswordError;
-    private String gender;
+    private String gender = "";
     private Integer age;
     private String ageError;
+    private List<String> interest;
 
     public String getUsername() {
         return username;
@@ -44,6 +47,8 @@ public class UserSignupState {
 
     public String getAgeError() { return ageError; }
 
+    public List<String>  getInterests() { return interest; }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -74,6 +79,8 @@ public class UserSignupState {
 
     public void setAgeError(String ageError) { this.ageError = ageError; }
 
+    public void setInterests(List<String> interest) { this.interest = interest; }
+
     @Override
     public String toString() {
         return "UserSignupState{"
@@ -82,6 +89,7 @@ public class UserSignupState {
                 + ", repeatPassword='" + repeatPassword + '\''
                 + ", gender='" + gender + '\''
                 + ", age='" + age + '\''
+                + ", interest='" + interest + '\''
                 + '}';
     }
 }

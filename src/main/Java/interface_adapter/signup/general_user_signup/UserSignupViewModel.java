@@ -2,11 +2,14 @@ package interface_adapter.signup.general_user_signup;
 
 import interface_adapter.ViewModel;
 
+import java.util.List;
+
 public class UserSignupViewModel extends ViewModel<UserSignupState> {
 
     public static final String GENDER_LABEL = "Gender";
     public static final String AGE_LABEL = "Age";
     public static final String TITLE_LABEL = "General User Signup";
+    public static final List<String> INTEREST_SELECTION_OPTIONS = List.of("sports", "music", "visual art");
 
 
     public UserSignupViewModel() {

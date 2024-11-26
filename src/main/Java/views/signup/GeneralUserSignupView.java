@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> implements ActionListener, PropertyChangeListener {
 
@@ -19,6 +21,9 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
     private final JTextField genderInputField = new JTextField(15);
     private final JTextField ageInputField = new JTextField(15);
+    private final JPanel interestSelectionPanel = new JPanel();
+    private final JScrollPane interestScrollPane = new JScrollPane(interestSelectionPanel);
+    private final List<JCheckBox> interestCheckBoxes = new ArrayList<>();
 
     public GeneralUserSignupView(UserSignupViewModel userSignupViewModel) {
         super(userSignupViewModel);
@@ -29,15 +34,57 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
         final LabelTextPanel genderInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.GENDER_LABEL), genderInputField);
         final LabelTextPanel ageInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.AGE_LABEL), ageInputField);
 
+        setupInterestPicker();
+
         JPanel additionalFieldsPanel = new JPanel();
         additionalFieldsPanel.setLayout(new BoxLayout(additionalFieldsPanel, BoxLayout.Y_AXIS));
         additionalFieldsPanel.add(genderInfo);
         additionalFieldsPanel.add(ageInfo);
+        additionalFieldsPanel.add(interestScrollPane);
 
         additionalFieldsContainer.add(additionalFieldsPanel);
 
         addGenderListener();
         addAgeListener();
+    }
+
+    private void setupInterestPicker() {
+        interestSelectionPanel.setLayout(new BoxLayout(interestSelectionPanel, BoxLayout.Y_AXIS));
+
+        JLabel interestLabel = new JLabel("Select Your Interests:");
+        interestLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        interestSelectionPanel.add(interestLabel);
+
+        UserSignupViewModel.INTEREST_SELECTION_OPTIONS.forEach(interest -> {
+            JCheckBox checkBox = new JCheckBox(interest);
+            interestCheckBoxes.add(checkBox);
+            interestSelectionPanel.add(checkBox);
+        });
+
+        interestScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        interestScrollPane.setPreferredSize(new Dimension(200, 100)); // Adjust size as needed
+
+        addInterestListeners();
+    }
+
+    private void addInterestListeners() {
+        for (JCheckBox checkBox : interestCheckBoxes) {
+            checkBox.addActionListener(e -> updateSelectedInterests());
+        }
+    }
+
+    private void updateSelectedInterests() {
+        List<String> selectedInterests = new ArrayList<>();
+        for (JCheckBox checkBox : interestCheckBoxes) {
+            if (checkBox.isSelected()) {
+                selectedInterests.add(checkBox.getText());
+            }
+        }
+
+        // Update the view model state with the selected interests
+        final UserSignupState currentState = viewModel.getState();
+        currentState.setInterests(selectedInterests); // Assuming there's a setSelectedInterests method
+        viewModel.setState(currentState);
     }
 
     private void addGenderListener() {
@@ -47,14 +94,17 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
                 currentState.setGender(genderInputField.getText());
                 viewModel.setState(currentState);
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
                 updateState();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 updateState();
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 updateState();
@@ -64,18 +114,6 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
     private void addAgeListener() {
         ageInputField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateState();
-            }
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateState();
-            }
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateState();
-            }
             private void updateState() {
                 UserSignupState currentState = viewModel.getState();
                 try {
@@ -85,6 +123,21 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
                     currentState.setAgeError("Please enter a valid age.");
                 }
                 viewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateState();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateState();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateState();
             }
         });
     }
@@ -97,14 +150,17 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
                 currentState.setUsername(usernameInputField.getText());
                 viewModel.setState(currentState);
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
                 documentListenerHelper();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 documentListenerHelper();
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 documentListenerHelper();
@@ -121,10 +177,12 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
                 currentState.setPassword(new String(passwordInputField.getPassword()));
                 viewModel.setState(currentState);
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
                 documentListenerHelper();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 documentListenerHelper();
@@ -145,14 +203,17 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
                 currentState.setRepeatPassword(new String(confirmPasswordInputField.getPassword()));
                 viewModel.setState(currentState);
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
                 documentListenerHelper();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 documentListenerHelper();
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 documentListenerHelper();
@@ -170,19 +231,18 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
     @Override
     protected void addSignupButtonListener() {
         signUp.addActionListener(evt -> {
-                    if (evt.getSource().equals(signUp)) {
-                        final UserSignupState currentState = viewModel.getState();
-
-                        userSignupController.execute(
-                                currentState.getUsername(),
-                                currentState.getPassword(),
-                                currentState.getRepeatPassword(),
-                                currentState.getGender(),
-                                currentState.getAge()
-                        );
-                    }
-                }
-        );
+            if (evt.getSource().equals(signUp)) {
+                final UserSignupState currentState = viewModel.getState();
+                userSignupController.execute(
+                        currentState.getUsername(),
+                        currentState.getPassword(),
+                        currentState.getRepeatPassword(),
+                        currentState.getGender(),
+                        currentState.getAge(),
+                        currentState.getInterests() // Pass selected interests
+                );
+            }
+        });
     }
 
     public void setAccountTypeController(UserSignupController userSignupController) {
