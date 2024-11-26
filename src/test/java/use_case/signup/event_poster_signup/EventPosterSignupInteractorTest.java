@@ -5,6 +5,7 @@ import entity.AccountCreationStrategy;
 import entity.Event;
 import entity.EventPosterCreationStrategy;
 import entity.Account;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import use_case.signup.UserSignupDataAccessInterface;
 
@@ -18,7 +19,7 @@ class EventPosterSignupInteractorTest {
 
     @Test
     void successTest() {
-        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink", new HashMap<String, Event>() {{
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
@@ -52,52 +53,36 @@ class EventPosterSignupInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "wrong", "Organization Name", "sopLink", new HashMap<String, Event>() {{
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "wrong", "Organization Name", "sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
-        EventPosterSignupOutputBoundary failurePresenter = new EventPosterSignupOutputBoundary() {
-
-            @Override
-            public void prepareSuccessView(EventPosterSignupOutputData eventPoster) {
-                fail("User case failure is unexpected.");
-            }
-
-            @Override
-            public void prepareFailView(String errorMessage) {
-                assertEquals("Passwords do not match.", errorMessage);
-            }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
-            }
-        };
-        EventPosterSignupInputBoundary interactor = new EventPosterSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Passwords do not match.", userRepository);
         interactor.execute(inputData);
     }
 
     @Test
     void failureUserExistsTest() {
-        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink", new HashMap<String, Event>() {{
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         AccountCreationStrategy accountCreator = new EventPosterCreationStrategy();
-        Account user = accountCreator.createAccount("username", "password", "Organization Name", "sopLink", new HashMap<String, Event>() {{
+        Account user = accountCreator.createAccount("username", "password", "Organization Name", "sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
         userRepository.save(user);
 
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("User already exists.", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @NotNull
+    private static EventPosterSignupInputBoundary getEventPosterSignupInputBoundary(String expected, UserSignupDataAccessInterface userRepository) {
         EventPosterSignupOutputBoundary failurePresenter = new EventPosterSignupOutputBoundary() {
 
             @Override
@@ -107,7 +92,7 @@ class EventPosterSignupInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("User already exists.", errorMessage);
+                assertEquals(expected, errorMessage);
             }
 
             @Override
@@ -120,7 +105,6 @@ class EventPosterSignupInteractorTest {
                 //expected
             }
         };
-        EventPosterSignupInputBoundary interactor = new EventPosterSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
-        interactor.execute(inputData);
+        return new EventPosterSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
     }
 }
