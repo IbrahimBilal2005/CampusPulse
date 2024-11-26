@@ -21,11 +21,12 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
     private final JTextField firstNameInputField = new JTextField(15);
     private final JTextField lastNameInputField = new JTextField(15);
-    private final JTextField genderInputField = new JTextField(15);
     private final JTextField ageInputField = new JTextField(15);
     private final JPanel interestSelectionPanel = new JPanel();
     private final JScrollPane interestScrollPane = new JScrollPane(interestSelectionPanel);
     private final List<JCheckBox> interestCheckBoxes = new ArrayList<>();
+    private final JComboBox<String> genderComboBox = new JComboBox<>();
+    private final JPanel genderSelectionPanel = new JPanel();
 
     public GeneralUserSignupView(UserSignupViewModel userSignupViewModel) {
         super(userSignupViewModel);
@@ -35,19 +36,19 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
         final LabelTextPanel firstNameInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.FIRST_NAME_LABEL), firstNameInputField);
         final LabelTextPanel lastNameInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.LAST_NAME_LABEL), lastNameInputField);
-        final LabelTextPanel genderInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.GENDER_LABEL), genderInputField);
         final LabelTextPanel ageInfo = new LabelTextPanel(new JLabel(UserSignupViewModel.AGE_LABEL), ageInputField);
 
         setupInterestPicker();
+        setupGenderComboBox();
 
         JPanel additionalFieldsPanel = new JPanel();
         additionalFieldsPanel.setLayout(new BoxLayout(additionalFieldsPanel, BoxLayout.Y_AXIS));
 
         additionalFieldsPanel.add(firstNameInfo);
         additionalFieldsPanel.add(lastNameInfo);
-        additionalFieldsPanel.add(genderInfo);
         additionalFieldsPanel.add(ageInfo);
-        additionalFieldsPanel.add(interestScrollPane);
+        additionalFieldsPanel.add(genderSelectionPanel);
+        additionalFieldsPanel.add(interestSelectionPanel);
 
         additionalFieldsContainer.add(additionalFieldsPanel);
 
@@ -57,13 +58,25 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
         addAgeListener();
     }
 
+    private void setupGenderComboBox() {
+        genderSelectionPanel.add(new JLabel(UserSignupViewModel.GENDER_LABEL));
+        genderSelectionPanel.add(genderComboBox);
+
+        for (String genderOption : UserSignupViewModel.GENDER_SELECTION_OPTIONS) {
+            genderComboBox.addItem(genderOption);
+        }
+        genderComboBox.setPreferredSize(new Dimension(200, 25));
+        genderComboBox.addActionListener(e -> {
+            UserSignupState currentState = viewModel.getState();
+            currentState.setGender((String) genderComboBox.getSelectedItem());
+            viewModel.setState(currentState);
+        });
+    }
+
     private void setupInterestPicker() {
         interestSelectionPanel.setLayout(new BoxLayout(interestSelectionPanel, BoxLayout.Y_AXIS));
 
-        JLabel interestLabel = new JLabel("Select Your Interests:");
-        interestLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        interestSelectionPanel.add(interestLabel);
-
+        interestSelectionPanel.add(new JLabel(UserSignupViewModel.INTEREST_SELECTION_LABEL));
         UserSignupViewModel.INTEREST_SELECTION_OPTIONS.forEach(interest -> {
             JCheckBox checkBox = new JCheckBox(interest);
             interestCheckBoxes.add(checkBox);
@@ -71,8 +84,7 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
         });
 
         interestScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        interestScrollPane.setPreferredSize(new Dimension(200, 100)); // Adjust size as needed
-
+        interestScrollPane.setPreferredSize(new Dimension(200, 100));
         addInterestListeners();
     }
 
@@ -90,9 +102,8 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
             }
         }
 
-        // Update the view model state with the selected interests
         final UserSignupState currentState = viewModel.getState();
-        currentState.setInterests(selectedInterests); // Assuming there's a setSelectedInterests method
+        currentState.setInterests(selectedInterests);
         viewModel.setState(currentState);
     }
 
@@ -147,27 +158,11 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
     }
 
     private void addGenderListener() {
-        genderInputField.getDocument().addDocumentListener(new DocumentListener() {
-            private void updateState() {
-                UserSignupState currentState = viewModel.getState();
-                currentState.setGender(genderInputField.getText());
-                viewModel.setState(currentState);
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateState();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateState();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateState();
-            }
+        genderComboBox.addActionListener(e -> {
+            String selectedGender = (String) genderComboBox.getSelectedItem();
+            UserSignupState currentState = viewModel.getState();
+            currentState.setGender(selectedGender);
+            viewModel.setState(currentState);
         });
     }
 
