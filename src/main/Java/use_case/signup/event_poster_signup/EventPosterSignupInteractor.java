@@ -26,6 +26,15 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
         else if (!eventPosterSignupInputData.getPassword().equals(eventPosterSignupInputData.getRepeatPassword())) {
             userPresenter.prepareFailView("Passwords do not match.");
         }
+        else if (!eventPosterSignupInputData.getSopLink().startsWith("https://")) {
+            userPresenter.prepareFailView("Invalid SOP link");
+        }
+        else if (eventPosterSignupInputData.getOrganizationName().isEmpty()) {
+            userPresenter.prepareFailView("Invalid organization name");
+        }
+        else if (eventPosterSignupInputData.getPassword().length() < 8) {
+            userPresenter.prepareFailView("Password must be at least 8 characters");
+        }
         else {
             final Account eventPoster = accountCreator.createAccount(
                     eventPosterSignupInputData.getUsername(),

@@ -19,7 +19,7 @@ class EventPosterSignupInteractorTest {
 
     @Test
     void successTest() {
-        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink", new HashMap<>() {{
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "https://sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
@@ -53,7 +53,7 @@ class EventPosterSignupInteractorTest {
 
     @Test
     void failurePasswordMismatchTest() {
-        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "wrong", "Organization Name", "sopLink", new HashMap<>() {{
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "wrong", "Organization Name", "https://sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
@@ -63,8 +63,41 @@ class EventPosterSignupInteractorTest {
     }
 
     @Test
+    void failureShortPasswordTest() {
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "short", "short", "Organization Name", "https://sopLink", new HashMap<>() {{
+            put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
+        }} );
+
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Password must be at least 8 characters", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void failureInvalidSOPTest() {
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "InvalidSOP", new HashMap<>() {{
+            put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
+        }} );
+
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Invalid SOP link", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void failureInvalidOrganizationNameTest() {
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "", "https://", new HashMap<>() {{
+            put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
+        }} );
+
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Invalid organization name", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @Test
     void failureUserExistsTest() {
-        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "sopLink", new HashMap<>() {{
+        EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "https://sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 

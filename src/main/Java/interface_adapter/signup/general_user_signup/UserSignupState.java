@@ -17,8 +17,8 @@ public class UserSignupState {
     private String ageError;
     private List<String> interests;
     private String firstName = "";
-    private String lastName = "";
     private String firstNameError;
+    private String lastName = "";
     private String lastNameError;
 
     public String getUsername() {
@@ -58,7 +58,6 @@ public class UserSignupState {
     public void setUsername(String username) {
         this.username = username;
     }
-
     public void setUsernameError(String usernameError) {
         this.usernameError = usernameError;
     }
@@ -66,7 +65,6 @@ public class UserSignupState {
     public void setPassword(String password) {
         this.password = password;
     }
-
     public void setPasswordError(String passwordError) {
         this.passwordError = passwordError;
     }
@@ -74,7 +72,6 @@ public class UserSignupState {
     public void setRepeatPassword(String repeatPassword) {
         this.repeatPassword = repeatPassword;
     }
-
     public void setRepeatPasswordError(String repeatPasswordError) {
         this.repeatPasswordError = repeatPasswordError;
     }
@@ -82,13 +79,15 @@ public class UserSignupState {
     public void setGender(String gender) { this.gender = gender; }
 
     public void setAge(Integer age) { this.age = age; }
-
     public void setAgeError(String ageError) { this.ageError = ageError; }
 
     public void setInterests(List<String> interest) { this.interests = interest; }
 
     public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setFirstNameError(String firstNameError) { this.firstNameError = firstNameError; }
+
     public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setLastNameError(String lastNameError) { this.lastNameError = lastNameError; }
 
     @Override
     public String toString() {

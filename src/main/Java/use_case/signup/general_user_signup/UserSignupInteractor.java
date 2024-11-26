@@ -30,6 +30,21 @@ public class UserSignupInteractor implements UserSignupInputBoundary {
         else if (userSignupInputData.getAge() < 18) {
             userPresenter.prepareFailView("Age must be at least 18");
         }
+        else if (userSignupInputData.getGender().isEmpty()) {
+            userPresenter.prepareFailView("No gender selected");
+        }
+        else if (userSignupInputData.getInterests() == null) {
+            userPresenter.prepareFailView("No interests selected");
+        }
+        else if (userSignupInputData.getFirstName().isEmpty() || !userSignupInputData.getFirstName().matches("[a-zA-Z]+")) {
+            userPresenter.prepareFailView("Invalid first name");
+        }
+        else if (userSignupInputData.getLastName().isEmpty() || !userSignupInputData.getLastName().matches("[a-zA-Z]+")) {
+            userPresenter.prepareFailView("Invalid last name");
+        }
+        else if (userSignupInputData.getPassword().length() < 8) {
+            userPresenter.prepareFailView("Password must be at least 8 characters");
+        }
         else {
             final Account user = accountCreator.createAccount(
                     userSignupInputData.getUsername(),
