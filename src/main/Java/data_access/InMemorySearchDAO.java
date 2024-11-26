@@ -17,14 +17,20 @@ public class InMemorySearchDAO implements SearchDataAccessInterface {
     }
 
     @Override
-    public List<Event> searchEvents(String category, List<String> tags) {
-        String lowerCaseCategory = category.toLowerCase();
+    public List<Event> searchEvents(String query) {
+        String lowerCaseQuery = query.toLowerCase();
 
         return events.stream()
-                .filter(event -> Levenshtein.isSimilar(event.getName(), lowerCaseCategory, 3) // Match title using Levenshtein
-                        || CosineSimilarity.isSimilar(event.getName(), lowerCaseCategory, 0.7) // Match title using Cosine Similarity
-                        || event.getTags().stream().anyMatch(tag -> Levenshtein.isSimilar(tag, lowerCaseCategory, 3)) // Match tags using Levenshtein
-                        || event.getTags().stream().anyMatch(tag -> CosineSimilarity.isSimilar(tag, lowerCaseCategory, 0.7))) // Match tags using Cosine Similarity
+                .filter(event ->
+                        // Match event name using Levenshtein Distance or Cosine Similarity
+                        Levenshtein.isSimilar(event.getName(), lowerCaseQuery, 3) ||
+                                CosineSimilarity.isSimilar(event.getName(), lowerCaseQuery, 0.7) ||
+                                // Match event tags using Levenshtein or Cosine Similarity
+                                event.getTags().stream().anyMatch(tag ->
+                                        Levenshtein.isSimilar(tag, lowerCaseQuery, 3) ||
+                                                CosineSimilarity.isSimilar(tag, lowerCaseQuery, 0.7)
+                                )
+                )
                 .collect(Collectors.toList());
     }
 

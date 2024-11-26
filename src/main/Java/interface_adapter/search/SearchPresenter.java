@@ -31,15 +31,4 @@ public class SearchPresenter implements SearchOutputBoundary {
         viewModel.setSearchResults(Collections.emptyList());
         viewModel.setError(errorMessage);
     }
-
-    // Additional methods to fetch output data and error message
-    @Override
-    public SearchOutputData getOutputData() {
-        return outputData;
-    }
-
-    @Override
-    public String getErrorMessage() {
-        return errorMessage;
-    }
 }

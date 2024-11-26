@@ -1,21 +1,15 @@
 package use_case.search;
 
-import java.util.List;
-
 public class SearchInputData {
-    private final String category;
-    private final List<String> tags;
+    private String query;  // The search term entered by the user (event name or keyword)
 
-    public SearchInputData(String category, List<String> tags) {
-        this.category = category;
-        this.tags = tags;
+    // Constructor
+    public SearchInputData(String query) {
+        this.query = query;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public List<String> getTags() {
-        return tags;
+    // Getter for query (search term)
+    public String getQuery() {
+        return query;
     }
 }

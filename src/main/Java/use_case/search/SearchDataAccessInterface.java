@@ -12,11 +12,10 @@ public interface SearchDataAccessInterface {
     /**
      * Searches for events that match the specified criteria.
      *
-     * @param category the category of events to search for.
-     * @param tags a list of tags to filter events by.
+     * @param query the phrase searched by the user.
      * @return a list of events matching the search criteria.
      */
-    List<Event> searchEvents(String category, List<String> tags);
+    List<Event> searchEvents(String query);
 
     /**
      * Retrieves all events in the system (optional, depending on your use case).
