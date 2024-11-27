@@ -4,11 +4,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import data_access.MongoDB.MongoConnection;
 import data_access.MongoDB.readDBInterface;
-import entity.Account;
-import entity.AccountCreationStrategy;
-import entity.UserCreationStrategy;
+import entity.*;
 import org.bson.Document;
-import use_case.signup.UserSignupDataAccessInterface;
+import use_case.signup.general_user_signup.UserSignupDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,13 +45,33 @@ public class UserDataAccessObject implements UserSignupDataAccessInterface {
         }
     }
 
+    /**
+     * Check if an account exists by the username.
+     * @param username the username to look for
+     * @return true if the account exists, otherwise false
+     */
     @Override
     public boolean existsByName(String username) {
-        return false;
+        return accounts.containsKey(username);
     }
 
+    /**
+     * Save a User object to the database.
+     * @param account the user to save
+     */
     @Override
-    public void save(Account user) {
+    public void save(Account account) {
+        User user = (User) account;
+        Document doc = new Document();
+        doc.append("username", user.getUsername());
+        doc.append("password", user.getPassword());
+        doc.append("firstName", user.getFirstName());
+        doc.append("lastName", user.getLastName());
+        doc.append("age", user.getAge());
+        doc.append("gender", user.getGender());
+        doc.append("interests", user.getInterests());
 
+        UsersCollection.insertOne(doc);
+        accounts.put(user.getUsername(), user);
     }
 }

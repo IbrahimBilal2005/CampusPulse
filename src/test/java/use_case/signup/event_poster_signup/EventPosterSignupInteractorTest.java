@@ -1,13 +1,13 @@
 package use_case.signup.event_poster_signup;
 
-import data_access.InMemoryUserDataAccessObject;
+import data_access.InMemoryUserDataAccessInterface;
 import entity.AccountCreationStrategy;
 import entity.Event;
 import entity.EventPosterCreationStrategy;
 import entity.Account;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import use_case.signup.UserSignupDataAccessInterface;
+import use_case.signup.general_user_signup.UserSignupDataAccessInterface;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
         EventPosterSignupOutputBoundary successPresenter = new EventPosterSignupOutputBoundary() {
 
             @Override
@@ -57,7 +57,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Passwords do not match.", userRepository);
         interactor.execute(inputData);
     }
@@ -68,7 +68,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Password must be at least 8 characters", userRepository);
         interactor.execute(inputData);
     }
@@ -79,7 +79,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Invalid SOP link", userRepository);
         interactor.execute(inputData);
     }
@@ -90,7 +90,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Invalid organization name", userRepository);
         interactor.execute(inputData);
     }
@@ -101,7 +101,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
 
         AccountCreationStrategy accountCreator = new EventPosterCreationStrategy();
         Account user = accountCreator.createAccount("username", "password", "Organization Name", "sopLink", new HashMap<>() {{
