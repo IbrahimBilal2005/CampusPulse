@@ -1,5 +1,8 @@
 package data_access;
 
+import data_access.geo.GeoapifyGeocodingService;
+import data_access.geo.GeoapifyRequest;
+import data_access.geo.Location;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;

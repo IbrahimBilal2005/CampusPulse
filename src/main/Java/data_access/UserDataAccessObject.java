@@ -1,4 +1,4 @@
-package data_access.MongoDB;
+package data_access;
 
 public class UserDataAccessObject {
 }
