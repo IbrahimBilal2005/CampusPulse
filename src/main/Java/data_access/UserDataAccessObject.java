@@ -4,8 +4,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import data_access.readDB.MongoConnection;
 import data_access.readDB.readDBInterface;
-import entity.*;
+import entity.User;
 import org.bson.Document;
+import entity.Account;
+import entity.AccountCreationStrategy;
 import use_case.signup.general_user_signup.UserSignupDataAccessInterface;
 
 import java.util.HashMap;
@@ -17,7 +19,7 @@ public class UserDataAccessObject implements UserSignupDataAccessInterface {
     private readDBInterface mongoConnection = new MongoConnection();
     private MongoCollection<Document> UsersCollection;
     private Map<String, Account> accounts = new HashMap<>();
-    private AccountCreationStrategy accountCreationStrategy = new UserCreationStrategy();
+    private AccountCreationStrategy accountCreationStrategy;
 
     public UserDataAccessObject(AccountCreationStrategy accountCreationStrategy,
                                 Map<String, Account> accounts,
@@ -43,6 +45,16 @@ public class UserDataAccessObject implements UserSignupDataAccessInterface {
                 accounts.put(username, user);
             }
         }
+    }
+
+    /**
+     * Retrieves the map of User objects.
+     *
+     * @return the map of User objects.
+     */
+
+    public Map<String, Account> getAccounts() {
+        return accounts;
     }
 
     /**
