@@ -32,10 +32,8 @@ public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
             return;
         }
 
-        Account updatedAccount = account.withPassword(inputData.getNewPassword());
-
         // Update the password
-        userDataAccess.changePassword(updatedAccount);
+        userDataAccess.changePassword(account, inputData.getNewPassword());
 
         // Notify success
         presenter.presentSuccess(new ChangePasswordOutputData("Password successfully changed."));

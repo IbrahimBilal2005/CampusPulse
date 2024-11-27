@@ -11,7 +11,7 @@ public class User implements Account {
     //  If this isn't an insane amount of extra work it would be a cool addition
 
     private final String username;
-    private final String password;
+    private  String password;
     private final String firstName;
     private final String lastName;
     private final Integer age;
@@ -66,8 +66,13 @@ public class User implements Account {
     }
 
     @Override
-    public Account withPassword(String newPassword) {
-        return new User(this.username, newPassword, this.firstName, this.lastName, this.age, this.gender, this.interests);
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public void setUsername(String username) {
+
     }
 }
 

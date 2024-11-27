@@ -16,11 +16,13 @@ public class InMemoryDAOCP implements ChangePasswordUserDataAccessInterface {
     }
 
     @Override
-    public void changePassword(Account updatedAccount) {
+    public void changePassword(Account updatedAccount, String newPassword) {
         if (!accounts.containsKey(updatedAccount.getUsername())) {
             throw new IllegalArgumentException("Account not found."); // Handle non-existing accounts
         }
-        accounts.put(updatedAccount.getUsername(), updatedAccount);
+
+        Account oldAccount = accounts.get(updatedAccount.getUsername());
+        oldAccount.setPassword(newPassword);
     }
 
     /**

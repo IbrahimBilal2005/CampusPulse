@@ -5,7 +5,7 @@ package entity;
  */
 public class Admin implements Account {
     private final String username;
-    private final String password;
+    private  String password;
 
     // TODO do we need to add any other logic to make our approval process easier?
     //  Ex map of approved event posters, map of pending event posters awaiting approval etc.
@@ -25,7 +25,13 @@ public class Admin implements Account {
         return this.password;
     }
 
-    public Account withPassword(String newPassword) {
-        return new Admin(this.username, newPassword);
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public void setUsername(String username) {
+
     }
 }
