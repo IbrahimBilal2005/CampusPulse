@@ -1,17 +1,35 @@
 package views;
 
+import data_access.EventDAO;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchPresenter;
+import interface_adapter.search.SearchViewModel;
+import use_case.search.SearchDataAccessInterface;
+import entity.Event;
+import use_case.search.SearchInteractor;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.List;
 
 public class Home_screen extends JFrame {
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private JButton myEventsButton;
 
-    public Home_screen() {
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private JButton myEventsButton;
+    private JTextField searchField;
+    private JPanel eventsPanel;
+    private SearchController searchController;
+    private SearchViewModel searchViewModel;
+
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController) {
+        this.searchViewModel = searchViewModel;
+        this.searchController = searchController;
+
         // Frame settings
         setTitle("CampusPulse - Home");
         setSize(screenSize.width, screenSize.height);
@@ -31,7 +49,7 @@ public class Home_screen extends JFrame {
 
         // Center panel for search bar and filter button
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        JTextField searchField = new JTextField(20);
+        searchField = new JTextField(20);
         JButton filterButton = new JButton("Filters");
         filterButton.setPreferredSize(new Dimension(80, 30));
 
@@ -60,14 +78,8 @@ public class Home_screen extends JFrame {
         }
 
         // Events list panel
-        JPanel eventsPanel = new JPanel();
+        eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
-
-        // Dummy events
-        for (int i = 1; i <= 5; i++) {
-            eventsPanel.add(createEventPanel("Event " + i, "Description of Event " + i, "Location " + i, "Date " + i, "path-to-file" + i + ".jpg"));
-            eventsPanel.add(Box.createRigidArea(new Dimension(0, 40)));
-        }
 
         // Scroll pane for events list
         JScrollPane scrollPane = new JScrollPane(eventsPanel);
@@ -76,6 +88,77 @@ public class Home_screen extends JFrame {
 
         // Add main panel to frame
         add(mainPanel);
+
+        // Add search functionality
+        searchField.addActionListener(e -> {
+            String query = searchField.getText();
+            searchController.search(query); // Trigger the search when the user types in the search field
+            updateEventsList(searchViewModel.getState().getResults());
+        });
+
+        // Listen for changes to the search results
+        searchViewModel.addPropertyChangeListener(evt -> {
+            if ("results".equals(evt.getPropertyName())) {
+                // Update the events list based on new results
+                updateEventsList(searchViewModel.getState().getResults());
+            }
+        });
+
+        // Trigger an initial empty search to display all events
+        searchController.search("");
+        for (Event event : searchViewModel.getState().getResults()) {
+            eventsPanel.add(createEventPanel(event));
+            eventsPanel.add(Box.createRigidArea(new Dimension(0, 40)));
+        }
+    }
+
+    private void updateEventsList(List<Event> events) {
+        eventsPanel.removeAll(); // Clear existing components
+        if (events.isEmpty()) {
+            eventsPanel.add(new JLabel("No events found"));
+        } else {
+            for (Event event : events) {
+                eventsPanel.add(createEventPanel(event)); // Add new event panels
+                eventsPanel.add(Box.createRigidArea(new Dimension(0, 40))); // Add spacing
+            }
+        }
+        eventsPanel.revalidate(); // Refresh layout
+        eventsPanel.repaint(); // Redraw the panel
+    }
+
+    private JPanel createEventPanel(Event event) {
+        JPanel eventPanel = new JPanel();
+        eventPanel.setLayout(new BorderLayout());
+        eventPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Event details
+        JPanel eventDetailsPanel = new JPanel();
+        eventDetailsPanel.setLayout(new BoxLayout(eventDetailsPanel, BoxLayout.Y_AXIS));
+
+        JLabel eventNameLabel = new JLabel(event.getName());
+        eventNameLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        eventDetailsPanel.add(eventNameLabel);
+
+        JLabel eventDescriptionLabel = new JLabel("Description: " + event.getDescription());
+        eventDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        eventDetailsPanel.add(eventDescriptionLabel);
+
+        JLabel eventLocationLabel = new JLabel("Location: " + event.getLocation());
+        eventLocationLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        eventDetailsPanel.add(eventLocationLabel);
+
+        JLabel eventDateLabel = new JLabel("Date: " + event.getStart().toString());
+        eventDateLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        eventDetailsPanel.add(eventDateLabel);
+
+        eventPanel.add(eventDetailsPanel, BorderLayout.CENTER);
+
+        return eventPanel;
+    }
+
+    private boolean checkIfEventPoster() {
+        // Implement logic to determine if the user is an event poster
+        return true; // Replace with actual condition
     }
 
     private static ImageIcon resizeImage(String filePath, int width, int height) {
@@ -89,47 +172,14 @@ public class Home_screen extends JFrame {
         }
     }
 
-    private JPanel createEventPanel(String eventName, String description, String location, String date, String imagePath) {
-        JPanel eventPanel = new JPanel();
-        eventPanel.setLayout(new BorderLayout());
-        eventPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        // Event image
-        JLabel eventImageLabel = new JLabel(resizeImage("src/main/Java/data_access/uoftpic.jpeg", 250, 250));
-
-        // Event details
-        JPanel eventDetailsPanel = new JPanel();
-        eventDetailsPanel.setLayout(new BoxLayout(eventDetailsPanel, BoxLayout.Y_AXIS));
-
-        JLabel eventNameLabel = new JLabel(eventName);
-        eventNameLabel.setFont(new Font("Arial", Font.BOLD, 24 * 2));
-        eventDetailsPanel.add(eventNameLabel);
-
-        JLabel eventDescriptionLabel = new JLabel("Description: " + description);
-        eventDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 20 * 2));
-        eventDetailsPanel.add(eventDescriptionLabel);
-
-        JLabel eventLocationLabel = new JLabel("Location: " + location);
-        eventLocationLabel.setFont(new Font("Arial", Font.PLAIN, 20 * 2));
-        eventDetailsPanel.add(eventLocationLabel);
-
-        JLabel eventDateLabel = new JLabel("Date: " + date);
-        eventDateLabel.setFont(new Font("Arial", Font.PLAIN, 20 * 2));
-        eventDetailsPanel.add(eventDateLabel);
-
-        // Add components to event panel
-        eventPanel.add(eventImageLabel, BorderLayout.WEST);
-        eventPanel.add(eventDetailsPanel, BorderLayout.CENTER);
-
-        return eventPanel;
-    }
-
-    private boolean checkIfEventPoster() {
-        // Implement logic to determine if the user is an event poster
-        return true; // Replace with actual condition
-    }
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Home_screen().setVisible(true));
+        SearchDataAccessInterface dataAccess = new EventDAO();
+        SearchViewModel viewModel = new SearchViewModel();
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        SearchPresenter presenter = new SearchPresenter(viewModel, viewManagerModel);
+        SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
+        SearchController controller = new SearchController(interactor);
+
+        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller).setVisible(true));
     }
 }
