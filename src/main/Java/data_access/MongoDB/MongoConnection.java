@@ -9,6 +9,7 @@ import org.bson.Document;
 
 public class MongoConnection implements readDBInterface{
 
+    // instead of hard coding use files and getDB service to abstract
     private MongoClient mongoClient = MongoClients.create("mongodb+srv://ibrahimbilal:Ibrahim123@cluster0.ngph3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
     private MongoDatabase database = mongoClient.getDatabase("CampusPulse");
 
