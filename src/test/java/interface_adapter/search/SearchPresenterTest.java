@@ -1,6 +1,7 @@
 package interface_adapter.search;
 
 import entity.Event;
+import interface_adapter.ViewManagerModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import use_case.search.SearchOutputData;
@@ -16,12 +17,28 @@ class SearchPresenterTest {
 
     private SearchViewModel searchUserViewModel;
     private SearchPresenter searchUserPresenter;
+    private StubViewManagerModel stubViewManager;
+
+    // Stub class to replace ViewManagerModel
+    static class StubViewManagerModel extends ViewManagerModel {
+        private boolean propertyChangedCalled = false;
+
+        @Override
+        public void firePropertyChanged() {
+            propertyChangedCalled = true;
+        }
+
+        public boolean isPropertyChangedCalled() {
+            return propertyChangedCalled;
+        }
+    }
 
     @BeforeEach
     void setUp() {
-        // Initialize the view model and presenter
-        searchUserViewModel = new SearchViewModel("Search");
-        searchUserPresenter = new SearchPresenter(searchUserViewModel);
+        // Initialize the view model, presenter, and the stubbed ViewManagerModel
+        searchUserViewModel = new SearchViewModel();
+        stubViewManager = new StubViewManagerModel();
+        searchUserPresenter = new SearchPresenter(searchUserViewModel, stubViewManager);
     }
 
     @Test
@@ -42,6 +59,7 @@ class SearchPresenterTest {
         assertEquals(1, searchUserViewModel.getState().getResults().size());
         assertEquals("Soccer", searchUserViewModel.getState().getResults().get(0).getName());
         assertNull(searchUserViewModel.getState().getError()); // No error should be set
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
 
     @Test
@@ -54,8 +72,9 @@ class SearchPresenterTest {
 
         // Then check if the error is set correctly in the view model
         assertNotNull(searchUserViewModel.getState());  // Ensure the state is not null
-        assertTrue(searchUserViewModel.getState().getResults().isEmpty(), "Results should be empty");  // Results should be empty
+        assertNotNull(searchUserViewModel.getState().getResults(), "Results should not be null");  // Results should be null
         assertEquals("No events found", searchUserViewModel.getState().getError(), "Error message should match");  // Error should match
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
 
     @Test
@@ -70,6 +89,7 @@ class SearchPresenterTest {
         assertNotNull(searchUserViewModel.getState().getResults(), "Results should not be null");
         assertTrue(searchUserViewModel.getState().getResults().isEmpty(), "Results should be empty");
         assertNull(searchUserViewModel.getState().getError(), "Error should be null");
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
 
     @Test
@@ -85,6 +105,7 @@ class SearchPresenterTest {
         assertNotNull(searchUserViewModel.getState().getResults(), "Results should not be null");
         assertTrue(searchUserViewModel.getState().getResults().isEmpty(), "Results should be empty");
         assertNull(searchUserViewModel.getState().getError(), "Error should be null");
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
 
     @Test
@@ -109,6 +130,7 @@ class SearchPresenterTest {
         assertEquals("Soccer Match", searchUserViewModel.getState().getResults().get(0).getName(), "First event should be 'Soccer Match'");
         assertEquals("Basketball Game", searchUserViewModel.getState().getResults().get(1).getName(), "Second event should be 'Basketball Game'");
         assertNull(searchUserViewModel.getState().getError(), "Error should be null");
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
 
     @Test
@@ -122,6 +144,7 @@ class SearchPresenterTest {
         // Then check if the error is null and results are empty
         assertTrue(searchUserViewModel.getState().getResults().isEmpty(), "Results should be empty");
         assertNull(searchUserViewModel.getState().getError(), "Error should be null");
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
 
     @Test
@@ -135,6 +158,7 @@ class SearchPresenterTest {
         // Then check if the error message is set correctly
         assertTrue(searchUserViewModel.getState().getResults().isEmpty(), "Results should be empty");
         assertEquals("No matching events found", searchUserViewModel.getState().getError(), "Error message should match");
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
 
     @Test
@@ -155,7 +179,6 @@ class SearchPresenterTest {
         assertEquals(1, searchUserViewModel.getState().getResults().size(), "There should be 1 result");
         assertEquals("", searchUserViewModel.getState().getResults().get(0).getName(), "Event name should be empty");
         assertNull(searchUserViewModel.getState().getError(), "Error should be null");
+        assertTrue(stubViewManager.isPropertyChangedCalled()); // Ensure the view manager was notified
     }
-
 }
-

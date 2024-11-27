@@ -25,7 +25,11 @@ public class SearchState {
     }
 
     public void setResults(List<Event> results) {
-        this.results = results;
+        if (results == null) {
+            this.results = Collections.emptyList();  // Ensure non-null list
+        } else {
+            this.results = results;
+        }
     }
 
     public String getError() {

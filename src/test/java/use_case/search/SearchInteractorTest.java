@@ -1,157 +1,218 @@
 package use_case.search;
 
+import data_access.EventDAO;
+import entity.Event;
+import use_case.search.SearchInputData;
+import use_case.search.SearchOutputBoundary;
+import use_case.search.SearchInteractor;
+import use_case.search.SearchOutputData;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import entity.Event;
-import use_case.search.*;
-import data_access.EventDAO;
-import interface_adapter.search.SearchPresenter;
-import interface_adapter.search.SearchViewModel;
-
-public class SearchInteractorTest {
-
-    // Helper method to create a common set of events
-    private List<Event> createSampleEvents() {
-        return Arrays.asList(
-                new Event(1, "Hackathon", "A tech competition", "Tech Center", LocalDateTime.now(), LocalDateTime.now().plusHours(3), Arrays.asList("Tech", "Competition")),
-                new Event(2, "Sports Day", "Outdoor sports event", "Sports Field", LocalDateTime.now(), LocalDateTime.now().plusHours(4), Arrays.asList("Sports", "Outdoor")),
-                new Event(3, "Concert", "Music concert", "City Hall", LocalDateTime.now(), LocalDateTime.now().plusHours(5), Arrays.asList("Music", "Entertainment")),
-                new Event(4, "Workshop", "Programming workshop", "Tech Hub", LocalDateTime.now(), LocalDateTime.now().plusHours(2), Arrays.asList("Tech", "Workshop")),
-                new Event(5, "Networking Event", "Professional networking", "Convention Center", LocalDateTime.now(), LocalDateTime.now().plusHours(3), Arrays.asList("Networking", "Career")),
-                new Event(6, "Indoor Soccer", "Outdoor sports event", "Sports Field", LocalDateTime.now(), LocalDateTime.now().plusHours(4), Arrays.asList("Sports", "Outdoor", "Fun"))
-        );
-    }
+class SearchInteractorTest {
 
     @Test
-    public void successTest() {
-        List<Event> events = createSampleEvents();  // Get common events
+    void searchTestWithMatchingQuery() {
+        // Initialize EventDAO with events that may contain "AI" in the name or tags
+        EventDAO eventDAO = new EventDAO();
 
-        // In-memory data access object (DAO) with mock events
-        EventDAO dataAccess = new EventDAO(events);
+        // Create the SearchInputData object with the query "AI"
+        SearchInputData inputData = new SearchInputData("AI");
 
-        // Create a mock Presenter
-        SearchViewModel viewModel = new SearchViewModel("Search");
-        SearchPresenter presenter = new SearchPresenter(viewModel) {
+        // Define a successPresenter to verify correct behavior
+        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
             @Override
             public void setPassView(SearchOutputData outputData) {
-                super.setPassView(outputData);
-                // Assert the output data is correct
-                List<Event> returnedEvents = outputData.getEvents();
-                assertEquals(1, returnedEvents.size());  // "Concert" should match one event
-                assertTrue(returnedEvents.contains(events.get(2)));  // "Concert"
+                // Assert that the result contains at least one event with the keyword "AI"
+                List<Event> events = outputData.getEvents();
+                assertFalse(events.isEmpty(), "No events found for the search term 'AI'.");
+
+                // Check that at least one event contains "AI" in its name or tags
+                boolean foundMatch = events.stream().anyMatch(event -> {
+                    String eventName = event.getName().toLowerCase();
+                    boolean containsAIInName = eventName.contains("ai");
+
+                    boolean containsAIInTags = event.getTags().stream()
+                            .anyMatch(tag -> tag.toLowerCase().contains("ai"));
+
+                    // Return true if either name or tags contain "AI"
+                    return containsAIInName || containsAIInTags;
+                });
+
+                // Assert that at least one event matches the query
+                assertTrue(foundMatch, "No events found matching the search term 'AI' in name or tags.");
             }
 
             @Override
             public void setFailView(String error) {
-                fail("Use case failure is unexpected.");
+                fail("Unexpected failure: " + error);
             }
         };
 
-        // Create the Interactor, passing the presenter
-        SearchInputBoundary interactor = new SearchInteractor(dataAccess, presenter);
+        // Instantiate the SearchInteractor and execute the search
+        SearchInteractor interactor = new SearchInteractor(eventDAO, successPresenter);
+        interactor.search(inputData);
 
-        // Search for "Concert"
-        SearchInputData inputData = new SearchInputData("Concert");
-        interactor.search(inputData);  // This will pass the data to the presenter
+        // The successPresenter will be triggered, and assertions will be checked in setPassView
     }
 
     @Test
-    public void emptyQueryTest_shouldReturnAllEvents() {
-        List<Event> events = createSampleEvents();  // Get common events
+    void searchTestWithNoMatchingQuery() {
+        // Initialize EventDAO with sample events
+        EventDAO eventDAO = new EventDAO();
 
-        // In-memory data access object (DAO) with mock events
-        EventDAO dataAccess = new EventDAO(events);
+        // Create the SearchInputData object with a query that doesn't match any events
+        SearchInputData inputData = new SearchInputData("NonexistentEvent");
 
-        // Create a mock Presenter
-        SearchViewModel viewModel = new SearchViewModel("Search");
-        SearchPresenter presenter = new SearchPresenter(viewModel) {
+        // Define a successPresenter for checking the behavior on no matching events
+        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
             @Override
             public void setPassView(SearchOutputData outputData) {
-                super.setPassView(outputData);
-                // Assert that all events are returned
-                List<Event> returnedEvents = outputData.getEvents();
-                assertEquals(6, returnedEvents.size());  // We expect all 6 events
-                events.forEach(event -> assertTrue(returnedEvents.contains(event)));  // Ensure each event is returned
+                fail("Unexpected success: There should be no matching events.");
             }
 
             @Override
             public void setFailView(String error) {
-                fail("Use case failure is unexpected.");
+                // Assert that the error message corresponds to the expected failure
+                assertEquals("No events found matching your search query.", error, "The error message should match the expected failure message.");
             }
         };
 
-        // Create the Interactor, passing the presenter
-        SearchInputBoundary interactor = new SearchInteractor(dataAccess, presenter);
+        // Instantiate the SearchInteractor and execute the search
+        SearchInteractor interactor = new SearchInteractor(eventDAO, successPresenter);
+        interactor.search(inputData);
+    }
 
-        // Search with an empty query
+    @Test
+    void searchTestWithPartialMatchQuery() {
+        // Initialize EventDAO with sample events
+        EventDAO eventDAO = new EventDAO();
+
+        // Create the SearchInputData object with a query that partially matches events ("Tech")
+        SearchInputData inputData = new SearchInputData("Music");
+
+        // Define a successPresenter to check correct behavior
+        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
+            @Override
+            public void setPassView(SearchOutputData outputData) {
+                // Assert that events are returned containing the keyword "Tech"
+                List<Event> events = outputData.getEvents();
+                assertFalse(events.isEmpty(), "No events found for the search term 'Music'.");
+
+                // Check that at least one event contains "Tech" in its name or tags
+                boolean foundMatch = events.stream().anyMatch(event -> {
+                    String eventName = event.getName().toLowerCase();
+                    boolean containsTechInName = eventName.contains("music");
+
+                    boolean containsTechInTags = event.getTags().stream()
+                            .anyMatch(tag -> tag.toLowerCase().contains("music"));
+
+                    // Return true if either name or tags contain "Tech"
+                    return containsTechInName || containsTechInTags;
+                });
+
+                // Assert that at least one event matches the query
+                assertTrue(foundMatch, "No events found matching the search term 'Music' in name or tags.");
+            }
+
+            @Override
+            public void setFailView(String error) {
+                fail("Unexpected failure: " + error);
+            }
+        };
+
+        // Instantiate the SearchInteractor and execute the search
+        SearchInteractor interactor = new SearchInteractor(eventDAO, successPresenter);
+        interactor.search(inputData);
+
+        // The successPresenter will be triggered, and assertions will be checked in setPassView
+    }
+
+    @Test
+    void searchTestWithEmptyQuery() {
+        // Initialize EventDAO with sample events
+        EventDAO eventDAO = new EventDAO();
+
+        // Create the SearchInputData object with an empty query
         SearchInputData inputData = new SearchInputData("");
-        interactor.search(inputData);  // This should return all events
-    }
 
-    @Test
-    public void queryMatchesMultipleEvents() {
-        List<Event> events = createSampleEvents();  // Get common events
-
-        // In-memory data access object (DAO) with mock events
-        EventDAO dataAccess = new EventDAO(events);
-
-        // Create a mock Presenter
-        SearchViewModel viewModel = new SearchViewModel("search");
-        SearchPresenter presenter = new SearchPresenter(viewModel) {
+        // Define a successPresenter to check behavior when the query is empty
+        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
             @Override
             public void setPassView(SearchOutputData outputData) {
-                super.setPassView(outputData);
-                // Assert that multiple events are returned
-                List<Event> returnedEvents = outputData.getEvents();
-                assertTrue(returnedEvents.size() > 1);  // More than one event should be returned
-                assertTrue(returnedEvents.contains(events.get(1)));  // "Sports Day"
-                assertTrue(returnedEvents.contains(events.get(5)));  // "Indoor Soccer"
+                // Assert that all events are returned for an empty search query
+                List<Event> events = outputData.getEvents();
+                assertFalse(events.isEmpty(), "No events found for an empty search query.");
+                assertEquals(6, events.size(), "The number of events should be 6.");
             }
 
             @Override
             public void setFailView(String error) {
-                fail("Use case failure is unexpected.");
+                fail("Unexpected failure: " + error);
             }
         };
 
-        // Create the Interactor, passing the presenter
-        SearchInputBoundary interactor = new SearchInteractor(dataAccess, presenter);
+        // Instantiate the SearchInteractor and execute the search
+        SearchInteractor interactor = new SearchInteractor(eventDAO, successPresenter);
+        interactor.search(inputData);
 
-        // Search for "Outdoor" (matches Sports Day and Indoor Soccer)
-        SearchInputData inputData = new SearchInputData("Outdoor");
-        interactor.search(inputData);  // Should return "Sports Day" and "Indoor Soccer"
+        // The successPresenter will be triggered, and assertions will be checked in prepareSuccessView
     }
 
     @Test
-    public void queryMatchesNoEvents() {
-        List<Event> events = createSampleEvents();  // Get common events
+    void testGetAllEvents() {
+        // Initialize EventDAO with sample events
+        EventDAO eventDAO = new EventDAO();
 
-        // In-memory data access object (DAO) with mock events
-        EventDAO dataAccess = new EventDAO(events);
+        // Retrieve all events from the EventDAO
+        List<Event> events = eventDAO.getAllEvents();
 
-        // Create a mock Presenter
-        SearchViewModel viewModel = new SearchViewModel("Search");
-        SearchPresenter presenter = new SearchPresenter(viewModel) {
+        // Assert that the correct number of events are returned
+        assertEquals(6, events.size(), "There should be 6 events in the DAO.");
+
+        // Assert that the event names match the expected sample event names
+        assertEquals("Tech Talk: AI in Healthcare", events.get(0).getName());
+        assertEquals("Football Tournament Finals", events.get(1).getName());
+        assertEquals("Startup Pitch Night", events.get(2).getName());
+        assertEquals("Yoga for Beginners", events.get(3).getName());
+        assertEquals("AI for Beginners Workshop", events.get(4).getName());
+        assertEquals("Music Jam Session", events.get(5).getName());
+    }
+
+    @Test
+    void searchTestWithTagMatch() {
+        // Initialize EventDAO with sample events
+        EventDAO eventDAO = new EventDAO();
+
+        // Create the SearchInputData object with a query that matches a tag ("Yoga")
+        SearchInputData inputData = new SearchInputData("Yoga");
+
+        // Define a successPresenter to verify correct behavior for tag matching
+        SearchOutputBoundary successPresenter = new SearchOutputBoundary() {
             @Override
             public void setPassView(SearchOutputData outputData) {
-                fail("Use case failure is unexpected.");
+                // Assert that the result contains events with the "Yoga" tag
+                List<Event> events = outputData.getEvents();
+                assertFalse(events.isEmpty(), "No events found for the search term 'Yoga'.");
+                events.forEach(event -> {
+                    assertTrue(event.getTags().contains("Yoga"),
+                            "Event does not contain the tag 'Yoga'.");
+                });
             }
 
             @Override
             public void setFailView(String error) {
-                assertEquals("No events found matching your search query.", error);  // Expected error message
+                fail("Unexpected failure: " + error);
             }
         };
 
-        // Create the Interactor, passing the presenter
-        SearchInputBoundary interactor = new SearchInteractor(dataAccess, presenter);
+        // Instantiate the SearchInteractor and execute the search
+        SearchInteractor interactor = new SearchInteractor(eventDAO, successPresenter);
+        interactor.search(inputData);
 
-        // Search for a non-existent event
-        SearchInputData inputData = new SearchInputData("NonExistentEvent");
-        interactor.search(inputData);  // Should invoke setFailView with the error message
+        // The successPresenter will be triggered, and assertions will be checked in prepareSuccessView
     }
 }

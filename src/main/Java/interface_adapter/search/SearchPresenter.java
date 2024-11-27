@@ -4,6 +4,8 @@ import interface_adapter.ViewManagerModel;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
 
+import java.util.Collections;
+
 public class SearchPresenter implements SearchOutputBoundary {
     private final SearchViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
@@ -17,7 +19,11 @@ public class SearchPresenter implements SearchOutputBoundary {
     public void setPassView(SearchOutputData outputData) {
         // Update state with search results
         SearchState state = viewModel.getState();
-        state.setResults(outputData.getEvents());
+        if (outputData != null && outputData.getEvents() != null) {
+            viewModel.getState().setResults(outputData.getEvents());
+        } else {
+            viewModel.getState().setResults(Collections.emptyList());
+        }
         viewModel.setState(state);
         state.setError(null); // Clear any previous errors
         viewManagerModel.firePropertyChanged(); // Notify observers about state change
