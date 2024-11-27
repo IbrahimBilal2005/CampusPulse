@@ -1,6 +1,6 @@
 package use_case.signup.event_poster_signup;
 
-import entity.EventPoster;
+import entity.Account;
 
 public interface EventPosterSignupDataAccessInterface {
     /**
