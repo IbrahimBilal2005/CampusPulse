@@ -4,16 +4,15 @@ import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInputData;
 
 public class SearchController {
-    private final SearchInputBoundary interactor;
 
-    public SearchController(SearchInputBoundary interactor) {
-        this.interactor = interactor;
+    private final SearchInputBoundary inputBoundary;
+
+    public SearchController(SearchInputBoundary inputBoundary) {
+        this.inputBoundary = inputBoundary;
     }
 
-    public void search(String keyword) {
-        // Create SearchInputData with just the keyword (query)
-        SearchInputData inputData = new SearchInputData(keyword);
-        // Pass the input data to the interactor
-        interactor.search(inputData);
+    public void search(String query) {
+        SearchInputData inputData = new SearchInputData(query);
+        inputBoundary.search(inputData);
     }
 }

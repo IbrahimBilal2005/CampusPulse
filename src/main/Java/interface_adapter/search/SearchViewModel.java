@@ -1,31 +1,33 @@
 package interface_adapter.search;
 
-import entity.Event;
-import interface_adapter.ViewModel;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
-import java.util.Collections;
-import java.util.List;
+public class SearchViewModel {
 
-public class SearchViewModel extends ViewModel<SearchState> {
-    public SearchViewModel(String viewName) {
-        super(viewName);
-        // Initialize with a default empty state to avoid null issues
-        setState(new SearchState(Collections.emptyList(), null));
+    private final PropertyChangeSupport support;
+    private SearchState state;
+
+    public SearchViewModel() {
+        this.support = new PropertyChangeSupport(this);
+        this.state = new SearchState();
     }
 
-    public void setSearchResults(List<Event> results) {
-        // Use the setter to update the results in the state
-        SearchState newState = getState();  // Get the current state
-        newState.setResults(results);  // Set the new results
-        setState(newState);  // Update the state
-        firePropertyChanged();  // Notify listeners about the state change
+    public SearchState getState() {
+        return state;
     }
 
-    public void setError(String errorMessage) {
-        // Use the setter to update the error in the state
-        SearchState newState = getState();  // Get the current state
-        newState.setError(errorMessage);  // Set the new error message
-        setState(newState);  // Update the state
-        firePropertyChanged();  // Notify listeners about the error
+    public void setState(SearchState newstate) {
+        SearchState oldState = this.state;
+        this.state = newstate;
+        support.firePropertyChange("state", oldState, newstate);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
     }
 }

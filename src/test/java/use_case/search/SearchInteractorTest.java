@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import entity.Event;
 import use_case.search.*;
-import data_access.InMemorySearchDAO;
+import data_access.EventDAO;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
 
@@ -31,7 +31,7 @@ public class SearchInteractorTest {
         List<Event> events = createSampleEvents();  // Get common events
 
         // In-memory data access object (DAO) with mock events
-        InMemorySearchDAO dataAccess = new InMemorySearchDAO(events);
+        EventDAO dataAccess = new EventDAO(events);
 
         // Create a mock Presenter
         SearchViewModel viewModel = new SearchViewModel("Search");
@@ -64,7 +64,7 @@ public class SearchInteractorTest {
         List<Event> events = createSampleEvents();  // Get common events
 
         // In-memory data access object (DAO) with mock events
-        InMemorySearchDAO dataAccess = new InMemorySearchDAO(events);
+        EventDAO dataAccess = new EventDAO(events);
 
         // Create a mock Presenter
         SearchViewModel viewModel = new SearchViewModel("Search");
@@ -97,7 +97,7 @@ public class SearchInteractorTest {
         List<Event> events = createSampleEvents();  // Get common events
 
         // In-memory data access object (DAO) with mock events
-        InMemorySearchDAO dataAccess = new InMemorySearchDAO(events);
+        EventDAO dataAccess = new EventDAO(events);
 
         // Create a mock Presenter
         SearchViewModel viewModel = new SearchViewModel("search");
@@ -131,7 +131,7 @@ public class SearchInteractorTest {
         List<Event> events = createSampleEvents();  // Get common events
 
         // In-memory data access object (DAO) with mock events
-        InMemorySearchDAO dataAccess = new InMemorySearchDAO(events);
+        EventDAO dataAccess = new EventDAO(events);
 
         // Create a mock Presenter
         SearchViewModel viewModel = new SearchViewModel("Search");

@@ -1,16 +1,15 @@
 package use_case.search;
 
 import entity.Event;
-import use_case.search.SearchOutputBoundary;
 import java.util.List;
 
 public class SearchInteractor implements SearchInputBoundary {
     private final SearchDataAccessInterface dataAccess;
-    private final SearchOutputBoundary searchPresenter;
+    private final SearchOutputBoundary searchOutPut;
 
     public SearchInteractor(SearchDataAccessInterface dataAccess, SearchOutputBoundary searchPresenter) {
         this.dataAccess = dataAccess;
-        this.searchPresenter = searchPresenter;
+        this.searchOutPut = searchPresenter;
     }
 
     @Override
@@ -22,9 +21,10 @@ public class SearchInteractor implements SearchInputBoundary {
             // If the query is empty, show all events
             List<Event> allEvents = dataAccess.getAllEvents();
             if (allEvents.isEmpty()) {
-                searchPresenter.setFailView("No events available.");
+                searchOutPut.setFailView("No events available.");
             } else {
-                searchPresenter.setPassView(new SearchOutputData(allEvents));
+                // Pass the events to the presenter without calling setFailView
+                searchOutPut.setPassView(new SearchOutputData(allEvents)); // Use SearchOutputData to wrap events
             }
             return;
         }
@@ -34,9 +34,9 @@ public class SearchInteractor implements SearchInputBoundary {
 
         // If no events are found, return an error message
         if (events.isEmpty()) {
-            searchPresenter.setFailView("No events found matching your search query.");
+            searchOutPut.setFailView("No events found matching your search query.");
         } else {
-            searchPresenter.setPassView(new SearchOutputData(events));
+            searchOutPut.setPassView(new SearchOutputData(events)); // Use SearchOutputData to wrap events
         }
     }
 }

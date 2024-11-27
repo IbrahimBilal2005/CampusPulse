@@ -1,36 +1,35 @@
 package interface_adapter.search;
 
+import interface_adapter.ViewManagerModel;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
-import java.util.Collections;
 
 public class SearchPresenter implements SearchOutputBoundary {
     private final SearchViewModel viewModel;
-    private SearchOutputData outputData;
-    private String errorMessage;
+    private final ViewManagerModel viewManagerModel;
 
-    public SearchPresenter(SearchViewModel viewModel) {
+    public SearchPresenter(SearchViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
-        this.outputData = null;
-        this.errorMessage = null;
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
     public void setPassView(SearchOutputData outputData) {
-        this.outputData = outputData;
-        this.errorMessage = null;  // Reset the error message when passing data
-        // Update the viewModel with the events
-        viewModel.setSearchResults(outputData.getEvents() != null ? outputData.getEvents() : Collections.emptyList());
-        viewModel.setError(null);  // Clear the error message in the viewModel
+        // Update state with search results
+        SearchState state = viewModel.getState();
+        state.setResults(outputData.getEvents());
+        viewModel.setState(state);
+        state.setError(null); // Clear any previous errors
+        viewManagerModel.firePropertyChanged(); // Notify observers about state change
     }
 
     @Override
     public void setFailView(String errorMessage) {
-        this.outputData = null;  // Reset the output data when failing
-        this.errorMessage = errorMessage;
-        // Set the empty list for search results
-        viewModel.setSearchResults(Collections.emptyList());
-        // Set the error message in the viewModel
-        viewModel.setError(errorMessage);
+        // Update state with an error message
+        SearchState state = viewModel.getState();
+        state.setError(errorMessage);
+        viewModel.setState(state);
+        state.setResults(null); // Clear any previous results
+        viewManagerModel.firePropertyChanged(); // Notify observers about state change
     }
 }

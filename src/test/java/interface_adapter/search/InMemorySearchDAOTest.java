@@ -2,7 +2,7 @@ package interface_adapter.search;
 
 import entity.Event;
 import org.junit.jupiter.api.Test;
-import data_access.InMemorySearchDAO;
+import data_access.EventDAO;
 import use_case.search.SearchDataAccessInterface;
 
 import java.time.LocalDateTime;
@@ -31,7 +31,7 @@ class InMemorySearchDAOTest {
         );
 
         // DAO Implementation
-        SearchDataAccessInterface dao = new InMemorySearchDAO(events);
+        SearchDataAccessInterface dao = new EventDAO();
 
         // Search for events tagged with "music"
         List<Event> musicEvents = dao.searchEvents(null);
@@ -82,7 +82,7 @@ class InMemorySearchDAOTest {
         );
 
         // DAO Implementation
-        SearchDataAccessInterface dao = new InMemorySearchDAO(events);
+        SearchDataAccessInterface dao = new EventDAO();
 
         // Search for events tagged with "sports"
         List<Event> sportsEvents = dao.searchEvents(null);
