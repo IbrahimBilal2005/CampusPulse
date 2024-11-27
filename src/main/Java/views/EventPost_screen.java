@@ -39,27 +39,19 @@ public class EventPost_screen {
         eventDescriptionPanel.add(scrollPane);
         panel.add(eventDescriptionPanel);
 
-        // Date panel with placeholder
-        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        datePanel.add(new JLabel("Date (DD/MM/YYYY):"));
-        JTextField dateField = new JTextField("DD/MM/YYYY", 15);
-        addPlaceholderEffect(dateField, "DD/MM/YYYY");
-        datePanel.add(dateField);
-        panel.add(datePanel);
-
-        // Start time panel with placeholder
+        // Start DateTime panel with placeholder
         JPanel startTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        startTimePanel.add(new JLabel("Start time:"));
-        JTextField startTimeField = new JTextField("HH:MM", 15);
-        addPlaceholderEffect(startTimeField, "HH:MM");
+        startTimePanel.add(new JLabel("Start Date & Time (24 hr) (YYYY-MM-DD HH:MM):"));
+        JTextField startTimeField = new JTextField("YYYY-MM-DD HH:MM", 15);
+        addPlaceholderEffect(startTimeField, "YYYY-MM-DD HH:MM");
         startTimePanel.add(startTimeField);
         panel.add(startTimePanel);
 
-        // End time panel with placeholder
+        // End DateTime panel with placeholder
         JPanel endTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        endTimePanel.add(new JLabel("End time:"));
-        JTextField endTimeField = new JTextField("HH:MM", 15);
-        addPlaceholderEffect(endTimeField, "HH:MM");
+        endTimePanel.add(new JLabel("End Date & Time  (24 hr) (YYYY-MM-DD HH:MM):"));
+        JTextField endTimeField = new JTextField("YYYY-MM-DD HH:MM", 15);
+        addPlaceholderEffect(endTimeField, "YYYY-MM-DD HH:MM");
         endTimePanel.add(endTimeField);
         panel.add(endTimePanel);
 
@@ -70,11 +62,18 @@ public class EventPost_screen {
         panel.add(locationPanel);
 
         // Tags panel with a JComboBox
-        JPanel tagsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        tagsPanel.add(new JLabel("Tags (Up to 3):"));
+        JPanel tag1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        tag1Panel.add(new JLabel("Tag 1:"));
         JComboBox<String> tagsComboBox = new JComboBox<>(new String[]{"Sports", "Drawing", "Environmental"});
-        tagsPanel.add(tagsComboBox);
-        panel.add(tagsPanel);
+        tag1Panel.add(tagsComboBox);
+        panel.add(tag1Panel);
+
+        // Tags panel with a JComboBox
+        JPanel tag2Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        tag2Panel.add(new JLabel("Tag 1:"));
+        JComboBox<String> tags2ComboBox = new JComboBox<>(new String[]{"Sports", "Drawing", "Environmental"});
+        tag2Panel.add(tags2ComboBox);
+        panel.add(tag2Panel);
 
         panel.add(Box.createVerticalStrut(20)); // Spacer
 

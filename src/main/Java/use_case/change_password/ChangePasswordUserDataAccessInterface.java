@@ -12,6 +12,6 @@ public interface ChangePasswordUserDataAccessInterface {
      */
     Account getAccountByUsername(String username);
 
-    void changePassword(Account user);
+    void changePassword(Account user, String newPassword);
 }
 

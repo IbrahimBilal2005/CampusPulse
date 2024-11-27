@@ -1,23 +1,29 @@
 package use_case.new_event_post;
 
-import java.util.List;
 
 public class NewEventPostInputData {
+    private final String username;
     private final String eventName;
     private final String description;
     private final String location;
     private final String start;
     private final String end;
-    private final List<String> tags;
+    private final String tag1;
+    private final String tag2;
+
     public NewEventPostInputData(String username, String eventName, String description,
-                                 String location, String start, String end, List<String> tags) {
+                                 String location, String start, String end, String tag1, String tag2) {
+        this.username = username;
         this.eventName = eventName;
         this.description = description;
         this.location = location;
         this.start = start;
         this.end = end;
-        this.tags = tags;
+        this.tag1 = tag1;
+        this.tag2 = tag2;
     }
+
+    public String getUsername() {return username;}
 
     public String getEventName() {
         return eventName;
@@ -39,8 +45,8 @@ public class NewEventPostInputData {
         return end;
     }
 
-    public List<String> getTags() {
-        return tags;
-    }
+    public String getTag1() {return tag1;}
+
+    public String getTag2() {return tag2;}
 
 }
