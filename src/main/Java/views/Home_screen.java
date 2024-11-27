@@ -102,24 +102,40 @@ public class Home_screen extends JFrame {
 
     private JPopupMenu createFilterPopup() {
         JPopupMenu popup = new JPopupMenu();
-        JPanel checkboxPanel = createFilterCheckboxPanel();
-        JScrollPane scrollfilter = new JScrollPane(checkboxPanel);
-        scrollfilter.setPreferredSize(new Dimension(200, 100));
+        JPanel filterPanel = createFilterPanel();
+        JScrollPane scrollfilter = new JScrollPane(filterPanel);
+        scrollfilter.setPreferredSize(new Dimension(250, 200));
         popup.setLayout(new BorderLayout());
         popup.add(scrollfilter, BorderLayout.CENTER);
         return popup;
     }
 
-    private JPanel createFilterCheckboxPanel() {
-        String[] choices = {"Duration", "Location", "Sports", "Drawing", "Environmental"};
-        JPanel checkboxPanel = new JPanel();
-        checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
+    private JPanel createFilterPanel() {
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
 
-        for (String item : choices) {
-            checkboxPanel.add(new JCheckBox(item));
+        // Add Duration slider
+        filterPanel.add(new JLabel("Duration (Hours):"));
+        JSlider durationSlider = new JSlider(1, 4);
+        durationSlider.setMajorTickSpacing(1);
+        durationSlider.setPaintTicks(true);
+        durationSlider.setPaintLabels(true);
+        filterPanel.add(durationSlider);
+
+        // Add Location text field
+        filterPanel.add(new JLabel("Location:"));
+        JTextField locationField = new JTextField();
+        locationField.setMaximumSize(new Dimension(200, 25));
+        filterPanel.add(locationField);
+
+        // Add checkboxes for categories
+        filterPanel.add(new JLabel("Categories:"));
+        String[] categories = {"Sports", "Drawing", "Environmental"};
+        for (String category : categories) {
+            filterPanel.add(new JCheckBox(category));
         }
 
-        return checkboxPanel;
+        return filterPanel;
     }
 
     private JButton createFilterButton() {
