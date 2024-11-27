@@ -1,4 +1,4 @@
-package data_access.MongoDB;
+package data_access.readDB;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -6,17 +6,19 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
+import static data_access.readDB.GetDB.*;
+
 
 public class MongoConnection implements readDBInterface{
 
     // instead of hard coding use files and getDB service to abstract
-    private MongoClient mongoClient = MongoClients.create("mongodb+srv://ibrahimbilal:Ibrahim123@cluster0.ngph3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
-    private MongoDatabase database = mongoClient.getDatabase("CampusPulse");
+    private MongoClient mongoClient = MongoClients.create(getURI());
+    private MongoDatabase database = mongoClient.getDatabase(getDBName());
 
-    private MongoCollection<Document> eventsCollection = database.getCollection("events");
-    private MongoCollection<Document> eventPostersCollection = database.getCollection("eventPosters");
-    private MongoCollection<Document> usersCollection = database.getCollection("users");
-    private MongoCollection<Document> adminsCollection = database.getCollection("admins");
+    private MongoCollection<Document> eventsCollection = database.getCollection(GetDB.getEventsCollection());
+    private MongoCollection<Document> eventPostersCollection = database.getCollection(GetDB.getEventPostersCollection());
+    private MongoCollection<Document> usersCollection = database.getCollection(GetDB.getUsersCollection());
+    private MongoCollection<Document> adminsCollection = database.getCollection(getAdminsCollection());
 
     @Override
     public MongoCollection<Document> getEventsCollection() {

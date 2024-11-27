@@ -1,4 +1,4 @@
-package data_access.MongoDB;
+package data_access.readDB;
 
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;

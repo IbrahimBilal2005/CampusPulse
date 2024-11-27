@@ -2,8 +2,8 @@ package data_access;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import data_access.MongoDB.MongoConnection;
-import data_access.MongoDB.readDBInterface;
+import data_access.readDB.MongoConnection;
+import data_access.readDB.readDBInterface;
 import entity.*;
 import org.bson.Document;
 import use_case.signup.general_user_signup.UserSignupDataAccessInterface;

@@ -1,4 +1,4 @@
-package data_access.MongoDB;
+package data_access.readDB;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,7 +18,7 @@ public class GetDB {
      * @return The database URI as a string.
      */
     public static String getURI(){
-        return readTokenFromFile("src/data_access/readDB/DB_files/DB_uri");
+        return readTokenFromFile("src/main/Java/data_access/readDB/DB_files/DB_uri");
     }
 
 
@@ -28,7 +28,7 @@ public class GetDB {
      * @return The database name as a string.
      */
     public static String getDBName(){
-        return readTokenFromFile("src/data_access/readDB/DB_files/DB_name");
+        return readTokenFromFile("src/main/Java/data_access/readDB/DB_files/DB_name");
     }
 
 
@@ -38,7 +38,7 @@ public class GetDB {
      * @return The Events collection name as a string.
      */
     public static String getEventsCollection(){
-        return readTokenFromFile("src/data_access/readDB/DB_files/EventsCollectionName");
+        return readTokenFromFile("src/main/Java/data_access/readDB/DB_files/EventsCollectionName");
     }
 
     /**
@@ -47,7 +47,7 @@ public class GetDB {
      * @return The EventsPosters collection name as a string.
      */
     public static String getEventPostersCollection(){
-        return readTokenFromFile("src/data_access/readDB/DB_files/EventPostersCollectionName");
+        return readTokenFromFile("src/main/Java/data_access/readDB/DB_files/EventPostersCollectionName");
     }
 
     /**
@@ -56,7 +56,7 @@ public class GetDB {
      * @return The Users collection name as a string.
      */
     public static String getUsersCollection(){
-        return readTokenFromFile("src/data_access/readDB/DB_files/UsersCollectionName");
+        return readTokenFromFile("src/main/Java/data_access/readDB/DB_files/UsersCollectionName");
     }
 
     /**
@@ -65,7 +65,7 @@ public class GetDB {
      * @return The Admins collection name as a string.
      */
     public static String getAdminsCollection(){
-        return readTokenFromFile("src/data_access/readDB/DB_files/AdminsCollectionName");
+        return readTokenFromFile("src/main/Java/data_access/readDB/DB_files/AdminsCollectionName");
     }
 
 //    /**
