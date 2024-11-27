@@ -150,6 +150,17 @@ public class EventDAO implements SearchDataAccessInterface {
         events.removeIf(event -> event.getId().equals(eventId));
     }*/
 
+    // Method to filter events based on criteria
+    public List<Event> filterEvents(LocalDateTime startTime, LocalDateTime endTime, List<String> tags, String location) {
+        return events.stream()
+                .filter(event -> (startTime == null || event.getStart().isAfter(startTime)) &&
+                        (endTime == null || event.getEnd().isBefore(endTime)) &&
+                        (tags == null || tags.isEmpty() || event.getTags().stream().anyMatch(tags::contains)) &&
+                        (location == null || event.getLocation().toLowerCase().contains(location.toLowerCase()))
+                )
+                .collect(Collectors.toList());
+    }
+
     // Search events based on the query using a basic string matching algorithm
     @Override
     public List<Event> searchEvents(String query) {

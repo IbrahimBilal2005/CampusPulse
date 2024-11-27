@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Home_screen extends JFrame {
@@ -31,33 +32,103 @@ public class Home_screen extends JFrame {
         this.searchController = searchController;
 
         // Frame settings
+        setupFrame();
+
+        // Main container
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel headerPanel = createHeaderPanel();
+
+        // Events list panel
+        eventsPanel = createEventsPanel();
+        JScrollPane scrollPane = new JScrollPane(eventsPanel);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(mainPanel);
+
+        // Initialize search functionality
+        initializeSearchFunctionality();
+
+        // Trigger an initial empty search to display all events
+        triggerInitialSearch();
+    }
+
+    private void setupFrame() {
         setTitle("CampusPulse - Home");
         setSize(screenSize.width, screenSize.height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+    }
 
-        // Main container
-        JPanel mainPanel = new JPanel(new BorderLayout());
-
-        // Header
+    private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(createTitleLabel(), BorderLayout.WEST);
+        headerPanel.add(createCenterPanel(), BorderLayout.CENTER);
+        headerPanel.add(createRightPanel(), BorderLayout.EAST);
+        return headerPanel;
+    }
 
-        // Title on the left
+    private JLabel createTitleLabel() {
         JLabel titleLabel = new JLabel("Campus Pulse");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        headerPanel.add(titleLabel, BorderLayout.WEST);
+        return titleLabel;
+    }
 
-        // Center panel for search bar and filter button
+    private JPanel createCenterPanel() {
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         searchField = new JTextField(20);
+        centerPanel.add(searchField);
+        centerPanel.add(createFilterComboBox());
+        centerPanel.add(createFilterButton());
+        return centerPanel;
+    }
+
+    private JComboBox<String> createFilterComboBox() {
+        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Select Items"});
+        comboBox.setPrototypeDisplayValue("Select multiple items");
+        comboBox.setEditable(false);
+
+        comboBox.addActionListener(e -> {
+            if (comboBox.isPopupVisible()) {
+                JPopupMenu popup = createFilterPopup();
+                Component comp = (Component) e.getSource();
+                popup.show(comp, 0, comp.getHeight());
+            }
+        });
+
+        return comboBox;
+    }
+
+    private JPopupMenu createFilterPopup() {
+        JPopupMenu popup = new JPopupMenu();
+        JPanel checkboxPanel = createFilterCheckboxPanel();
+        JScrollPane scrollfilter = new JScrollPane(checkboxPanel);
+        scrollfilter.setPreferredSize(new Dimension(200, 100));
+        popup.setLayout(new BorderLayout());
+        popup.add(scrollfilter, BorderLayout.CENTER);
+        return popup;
+    }
+
+    private JPanel createFilterCheckboxPanel() {
+        String[] choices = {"Duration", "Location", "Sports", "Drawing", "Environmental"};
+        JPanel checkboxPanel = new JPanel();
+        checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.Y_AXIS));
+
+        for (String item : choices) {
+            checkboxPanel.add(new JCheckBox(item));
+        }
+
+        return checkboxPanel;
+    }
+
+    private JButton createFilterButton() {
         JButton filterButton = new JButton("Filters");
         filterButton.setPreferredSize(new Dimension(80, 30));
+        return filterButton;
+    }
 
-        centerPanel.add(searchField);
-        centerPanel.add(filterButton);
-        headerPanel.add(centerPanel, BorderLayout.CENTER);
-
-        // Right panel for My Events button and profile icon
+    private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         myEventsButton = new JButton("My Events");
         myEventsButton.setVisible(false);
@@ -69,91 +140,72 @@ public class Home_screen extends JFrame {
         rightPanel.add(myEventsButton);
         rightPanel.add(profileIcon);
 
-        headerPanel.add(rightPanel, BorderLayout.EAST);
-
-        // Check if the user is an event poster
-        boolean isEventPoster = checkIfEventPoster();
-        if (isEventPoster) {
+        if (checkIfEventPoster()) {
             myEventsButton.setVisible(true);
         }
 
-        // Events list panel
-        eventsPanel = new JPanel();
+        return rightPanel;
+    }
+
+    private JPanel createEventsPanel() {
+        JPanel eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
+        return eventsPanel;
+    }
 
-        // Scroll pane for events list
-        JScrollPane scrollPane = new JScrollPane(eventsPanel);
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-        // Add main panel to frame
-        add(mainPanel);
-
-        // Add search functionality
+    private void initializeSearchFunctionality() {
         searchField.addActionListener(e -> {
             String query = searchField.getText();
-            searchController.search(query); // Trigger the search when the user types in the search field
+            searchController.search(query);
             updateEventsList(searchViewModel.getState().getResults());
         });
 
-        // Listen for changes to the search results
         searchViewModel.addPropertyChangeListener(evt -> {
             if ("results".equals(evt.getPropertyName())) {
-                // Update the events list based on new results
                 updateEventsList(searchViewModel.getState().getResults());
             }
         });
+    }
 
-        // Trigger an initial empty search to display all events
+    private void triggerInitialSearch() {
         searchController.search("");
-        for (Event event : searchViewModel.getState().getResults()) {
-            eventsPanel.add(createEventPanel(event));
-            eventsPanel.add(Box.createRigidArea(new Dimension(0, 40)));
-        }
+        updateEventsList(searchViewModel.getState().getResults());
     }
 
     private void updateEventsList(List<Event> events) {
-        eventsPanel.removeAll(); // Clear existing components
+        eventsPanel.removeAll();
         if (events.isEmpty()) {
             eventsPanel.add(new JLabel("No events found"));
         } else {
             for (Event event : events) {
-                eventsPanel.add(createEventPanel(event)); // Add new event panels
-                eventsPanel.add(Box.createRigidArea(new Dimension(0, 40))); // Add spacing
+                eventsPanel.add(createEventPanel(event));
+                eventsPanel.add(Box.createRigidArea(new Dimension(0, 40)));
             }
         }
-        eventsPanel.revalidate(); // Refresh layout
-        eventsPanel.repaint(); // Redraw the panel
+        eventsPanel.revalidate();
+        eventsPanel.repaint();
     }
 
     private JPanel createEventPanel(Event event) {
-        JPanel eventPanel = new JPanel();
-        eventPanel.setLayout(new BorderLayout());
+        JPanel eventPanel = new JPanel(new BorderLayout());
         eventPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Event details
         JPanel eventDetailsPanel = new JPanel();
         eventDetailsPanel.setLayout(new BoxLayout(eventDetailsPanel, BoxLayout.Y_AXIS));
 
-        JLabel eventNameLabel = new JLabel(event.getName());
-        eventNameLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        eventDetailsPanel.add(eventNameLabel);
-
-        JLabel eventDescriptionLabel = new JLabel("Description: " + event.getDescription());
-        eventDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        eventDetailsPanel.add(eventDescriptionLabel);
-
-        JLabel eventLocationLabel = new JLabel("Location: " + event.getLocation());
-        eventLocationLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        eventDetailsPanel.add(eventLocationLabel);
-
-        JLabel eventDateLabel = new JLabel("Date: " + event.getStart().toString());
-        eventDateLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        eventDetailsPanel.add(eventDateLabel);
+        eventDetailsPanel.add(createLabel(event.getName(), new Font("Arial", Font.BOLD, 24)));
+        eventDetailsPanel.add(createLabel("Description: " + event.getDescription(), new Font("Arial", Font.PLAIN, 20)));
+        eventDetailsPanel.add(createLabel("Location: " + event.getLocation(), new Font("Arial", Font.PLAIN, 20)));
+        eventDetailsPanel.add(createLabel("Date: " + event.getStart().toString(), new Font("Arial", Font.PLAIN, 20)));
 
         eventPanel.add(eventDetailsPanel, BorderLayout.CENTER);
-
         return eventPanel;
+    }
+
+    private JLabel createLabel(String text, Font font) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        return label;
     }
 
     private boolean checkIfEventPoster() {
