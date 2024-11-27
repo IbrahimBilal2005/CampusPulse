@@ -4,14 +4,14 @@ import interface_adapter.ViewModel;
 
 public class LoginViewModel extends ViewModel<LoginState> {
 
-    public static final String LOGIN_SCREEN = "Login Screen";
-    public static final String USERNAME = "Username: ";
-    public static final String PASSWORD = "Password: ";
-    public static final String LOG_IN = "Login";
-    public static final String TITLE = "CampusPulse";
+    public final String LOGIN_SCREEN = "Login Screen";
+    public final String USERNAME = "Username: ";
+    public final String PASSWORD = "Password: ";
+    public final String LOG_IN = "Login";
+    public final String TITLE = "CampusPulse";
 
     public LoginViewModel() {
-        super("log in");
+        super("Login_screen");
         setState(new LoginState());
     }
 }
