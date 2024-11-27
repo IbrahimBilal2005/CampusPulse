@@ -35,7 +35,6 @@ public class EventDAO implements SearchDataAccessInterface {
     public EventDAO() {
             // Example events with randomized data
             events.add(new Event(
-                    1,
                     "Tech Talk: AI in Healthcare",
                     "A discussion on how AI is revolutionizing healthcare.",
                     "Room 101, Main Building",
@@ -45,7 +44,6 @@ public class EventDAO implements SearchDataAccessInterface {
             ));
 
             events.add(new Event(
-                    2,
                     "Football Tournament Finals",
                     "The final match of the university football tournament.",
                     "Sports Complex, Field 3",
@@ -55,7 +53,6 @@ public class EventDAO implements SearchDataAccessInterface {
             ));
 
             events.add(new Event(
-                    3,
                     "Startup Pitch Night",
                     "Join us for a night of exciting startup pitches.",
                     "Room 205, Innovation Hub",
@@ -65,7 +62,6 @@ public class EventDAO implements SearchDataAccessInterface {
             ));
 
             events.add(new Event(
-                    4,
                     "Yoga for Beginners",
                     "A relaxing session of yoga for all levels.",
                     "Wellness Center, Yoga Studio",
@@ -75,7 +71,6 @@ public class EventDAO implements SearchDataAccessInterface {
             ));
 
             events.add(new Event(
-                    5,
                     "AI for Beginners Workshop",
                     "A hands-on workshop introducing AI concepts.",
                     "Room 301, Computer Science Building",
@@ -85,7 +80,6 @@ public class EventDAO implements SearchDataAccessInterface {
             ));
 
             events.add(new Event(
-                    6,
                     "Music Jam Session",
                     "An open music jam session for all musicians.",
                     "Music Room, Arts Building",
