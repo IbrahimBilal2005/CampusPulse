@@ -1,8 +1,8 @@
-package use_case.signup;
+package use_case.signup.event_poster_signup;
 
-import entity.Account;
+import entity.EventPoster;
 
-public interface UserSignupDataAccessInterface {
+public interface EventPosterSignupDataAccessInterface {
     /**
      * Checks if the given username exists.
      * @param username the username to look for
@@ -12,7 +12,7 @@ public interface UserSignupDataAccessInterface {
 
     /**
      * Saves the user.
-     * @param user the user to save
+     * @param eventPoster the event poster to save
      */
-    void save(Account user);
+    void save(Account eventPoster);
 }

@@ -11,13 +11,13 @@ import entity.EventPoster;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_event.DeleteEventDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
-import use_case.signup.UserSignupDataAccessInterface;
+import use_case.signup.general_user_signup.UserSignupDataAccessInterface;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
  * NOT persist data between runs of the program.
  */
-public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterface,
+public class InMemoryUserDataAccessInterface implements UserSignupDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         DeleteEventDataAccessInterface {
