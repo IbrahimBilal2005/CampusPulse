@@ -171,13 +171,18 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
         String location = (String) filterCriteria.get("location");
         List<String> tags = (List<String>) filterCriteria.getOrDefault("tags", Collections.emptyList());
 
+        //revieve query
+        String query = (String) filterCriteria.get("query");
+
+        List<Event> filterevents = searchEvents(query);
+
         // If no filters are selected, return all events
         if (duration == 0 && location == null && tags.isEmpty()) {
-            return events; // Assuming `events` contains all stored events
+            return filterevents; // Assuming `events` contains all stored events
         }
 
         // Apply filters
-        return events.stream()
+        return filterevents.stream()
                 .filter(event -> {
                     // Filter by duration if specified
                     boolean matchesDuration = true;

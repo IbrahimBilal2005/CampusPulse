@@ -15,7 +15,7 @@ public class FilterController {
     }
 
     public void executeFilter(Map<String, Object> filters) {
-        FilterInputData inputData = new FilterInputData((Integer) filters.get("duration"), (String) filters.get("location"), (List<String>) filters.get("tags"));
+        FilterInputData inputData = new FilterInputData((Integer) filters.get("duration"), (String) filters.get("location"), (List<String>) filters.get("tags"), (String) filters.get("query"));
         filterInteractor.filter(inputData);
     }
 }

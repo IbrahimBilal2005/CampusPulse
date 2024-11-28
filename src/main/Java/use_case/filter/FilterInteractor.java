@@ -22,7 +22,8 @@ public class FilterInteractor implements FilterInputBoundary {
         Map<String, Object> filterCriteria = Map.of(
                 "duration", inputData.getDuration(),
                 "location", inputData.getLocation(),
-                "tags", inputData.getTags()
+                "tags", inputData.getTags(),
+                "query", inputData.getQuery()
         );
 
         // Use the transformed criteria in the data access layer
