@@ -8,7 +8,7 @@ import java.util.List;
 public class User implements Account {
 
     private final String username;
-    private final String password;
+    private  String password;
     private final String firstName;
     private final String lastName;
     private final Integer age;
@@ -60,6 +60,16 @@ public class User implements Account {
 
     public List<String> getInterests() {
         return this.interests;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public void setUsername(String username) {
+
     }
 }
 

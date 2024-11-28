@@ -26,5 +26,28 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
     @Override
     public void save(Account user) {
         users.put(user.getUsername(), user);}
+
+    @Override
+    public Account getAccountByUsername(String username) {
+        return users.get(username);
+    }
+
+    @Override
+    public void changePassword(Account updatedAccount, String newPassword) {
+        if (!users.containsKey(updatedAccount.getUsername())) {
+            throw new IllegalArgumentException("Account not found."); // Handle non-existing accounts
+        }
+
+        Account oldAccount = users.get(updatedAccount.getUsername());
+        oldAccount.setPassword(newPassword);
+    }
+
+    /**
+     * Adds a test account to the in-memory store.
+     * @param account The account to add.
+     */
+    public void addAccount(Account account) {
+        users.put(account.getUsername(), account);
+    }
 }
 
