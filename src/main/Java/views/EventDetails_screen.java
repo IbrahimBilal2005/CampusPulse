@@ -1,5 +1,6 @@
 package views;
 
+import interface_adapter.event_details.EventDetailsController;
 import interface_adapter.event_details.EventDetailsViewModel;
 import entity.Event;
 
@@ -12,6 +13,8 @@ import java.util.List; //TO BE REMOVED ONCE FILE COMPLETED
 import java.util.ArrayList; //TO BE REMOVED ONCE FILE COMPLETED
 
 public class EventDetails_screen {
+
+    private EventDetailsController controller;
 
     //public EventDetails_screen(EventDetailsViewModel view, Event event) {
 
@@ -120,6 +123,15 @@ public class EventDetails_screen {
         frame.add(main_panel, BorderLayout.CENTER);
         frame.setVisible(true);
 
+        backButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (e.getSource().equals(backButton)) {
+                            // controller.execute();
+                        }
+                    }
+                }
+        );
     }
 
     private static String dateConvert(LocalDateTime date) {
