@@ -9,6 +9,7 @@ public class EventDetailsOutputData {
     }
 
     public boolean isClick() {
+        System.out.println("click");
         return click;
     }
 }

@@ -16,16 +16,16 @@ public class EventDetails_screen {
 
     private EventDetailsController controller;
 
-    //public EventDetails_screen(EventDetailsViewModel view, Event event) {
+    public EventDetails_screen(EventDetailsViewModel view, Event event) {
 
-    public static void main(String[] args) {
-        //TESTING CODE
-        EventDetailsViewModel view = new EventDetailsViewModel();
-        LocalDateTime dateTime = LocalDateTime.of(2025, 1, 1,12, 15);
-        List<String> stringList = new ArrayList<>();
-        stringList.add("Monday");
-        Event event = new Event("test name", "This is description", "22 Shorten Place", dateTime, dateTime, stringList);
-
+    //public static void main(String[] args) {
+//        //TESTING CODE
+//        EventDetailsViewModel view = new EventDetailsViewModel();
+//        LocalDateTime dateTime = LocalDateTime.of(2025, 1, 1,12, 15);
+//        List<String> stringList = new ArrayList<>();
+//        stringList.add("Monday");
+//        Event event = new Event("test name", "This is description", "22 Shorten Place", dateTime, dateTime, stringList);
+//
 
         // Create a new frame
         JFrame frame = new JFrame("Event Details Screen"); // Create Frame and have it close when the x is clicked
@@ -127,7 +127,7 @@ public class EventDetails_screen {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (e.getSource().equals(backButton)) {
-                            // controller.execute();
+                            controller.execute();
                         }
                     }
                 }
