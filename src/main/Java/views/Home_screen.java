@@ -2,9 +2,14 @@ package views;
 
 import data_access.EventDAO;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterPresenter;
+import interface_adapter.filter.FilterViewModel;
+import interface_adapter.filter.FilterViewState;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import use_case.filter.FilterInteractor;
 import use_case.search.SearchDataAccessInterface;
 import entity.Event;
 import use_case.search.SearchInteractor;
@@ -15,7 +20,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Home_screen extends JFrame {
 
@@ -25,39 +33,160 @@ public class Home_screen extends JFrame {
     private JPanel eventsPanel;
     private SearchController searchController;
     private SearchViewModel searchViewModel;
+    private FilterController filterController;
+    private FilterViewModel filterViewModel;
 
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController) {
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel) {
         this.searchViewModel = searchViewModel;
         this.searchController = searchController;
+        this.filterController = filterController;
+        this.filterViewModel = filterViewModel;
 
         // Frame settings
+        setupFrame();
+
+        // Main container
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel headerPanel = createHeaderPanel();
+
+        // Events list panel
+        eventsPanel = createEventsPanel();
+        JScrollPane scrollPane = new JScrollPane(eventsPanel);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(mainPanel);
+
+        // Initialize search functionality
+        initializeSearchFunctionality();
+
+        // Trigger an initial empty search to display all events
+        triggerInitialSearch();
+    }
+
+    private void setupFrame() {
         setTitle("CampusPulse - Home");
         setSize(screenSize.width, screenSize.height);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+    }
 
-        // Main container
-        JPanel mainPanel = new JPanel(new BorderLayout());
-
-        // Header
+    private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.add(createTitleLabel(), BorderLayout.WEST);
+        headerPanel.add(createCenterPanel(), BorderLayout.CENTER);
+        headerPanel.add(createRightPanel(), BorderLayout.EAST);
+        return headerPanel;
+    }
 
-        // Title on the left
+    private JLabel createTitleLabel() {
         JLabel titleLabel = new JLabel("Campus Pulse");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        headerPanel.add(titleLabel, BorderLayout.WEST);
+        return titleLabel;
+    }
 
-        // Center panel for search bar and filter button
+    private JPanel createCenterPanel() {
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         searchField = new JTextField(20);
-        JButton filterButton = new JButton("Filters");
-        filterButton.setPreferredSize(new Dimension(80, 30));
-
         centerPanel.add(searchField);
-        centerPanel.add(filterButton);
-        headerPanel.add(centerPanel, BorderLayout.CENTER);
+        centerPanel.add(createFilterComboBox());
+        return centerPanel;
+    }
 
-        // Right panel for My Events button and profile icon
+    private JComboBox<String> createFilterComboBox() {
+        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Filters"});
+        comboBox.setPrototypeDisplayValue("Filters");
+        comboBox.setEditable(false);
+
+        // Map to hold filter criteria
+        Map<String, Object> filterCriteria = new HashMap<>();
+
+        comboBox.addActionListener(e -> {
+            if (comboBox.isPopupVisible()) {
+                JPopupMenu popup = createFilterPopup(filterCriteria);
+                Component comp = (Component) e.getSource();
+                popup.show(comp, 0, comp.getHeight());
+            }
+        });
+
+        return comboBox;
+    }
+
+    private JPopupMenu createFilterPopup(Map<String, Object> filterCriteria) {
+        JPopupMenu popup = new JPopupMenu();
+        JPanel filterPanel = createFilterPanel(filterCriteria);
+        JScrollPane scrollfilter = new JScrollPane(filterPanel);
+        scrollfilter.setPreferredSize(new Dimension(250, 200));
+        popup.setLayout(new BorderLayout());
+        popup.add(scrollfilter, BorderLayout.CENTER);
+        return popup;
+    }
+
+    private JPanel createFilterPanel(Map<String, Object> filterCriteria) {
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
+
+        // Duration slider
+        filterPanel.add(new JLabel("Duration (Hours):"));
+        JSlider durationSlider = new JSlider(1, 4);
+        durationSlider.setMajorTickSpacing(1);
+        durationSlider.setPaintTicks(true);
+        durationSlider.setPaintLabels(true);
+        durationSlider.addChangeListener(e -> filterCriteria.put("duration", durationSlider.getValue()));
+        filterPanel.add(durationSlider);
+
+        // Location text field
+        filterPanel.add(new JLabel("Location:"));
+        JTextField locationField = new JTextField();
+        locationField.setMaximumSize(new Dimension(200, 25));
+        locationField.addActionListener(e -> filterCriteria.put("location", locationField.getText()));
+        filterPanel.add(locationField);
+
+        // Tags checkboxes
+        filterPanel.add(new JLabel("Categories:"));
+        String[] categories = {"Sports", "Drawing", "Environmental"};
+        List<String> selectedTags = new ArrayList<>();
+        for (String category : categories) {
+            JCheckBox checkBox = new JCheckBox(category);
+            checkBox.addActionListener(e -> {
+                if (checkBox.isSelected()) {
+                    selectedTags.add(category);
+                } else {
+                    selectedTags.remove(category);
+                }
+                filterCriteria.put("tags", new ArrayList<>(selectedTags));
+            });
+            filterPanel.add(checkBox);
+        }
+
+        // Apply Button
+        JButton applyButton = new JButton("Apply Filters");
+        applyButton.addActionListener(e -> {
+            System.out.println("Filters Applied: " + filterCriteria); // Debugging
+            filterCriteria.put("query", searchField.getText());
+            filterController.executeFilter(filterCriteria);
+            updateEventsList(filterViewModel.getState().getFilteredEvents());// Call a method in the controller
+        });
+        JButton resetButton = new JButton("Reset Filters");
+        resetButton.addActionListener(e -> {
+            System.out.println("Filters Applied: " + filterCriteria);
+            filterCriteria.put("duration", null);
+            filterCriteria.put("location", null);
+            filterCriteria.put("tags", null);
+            filterCriteria.put("query", searchField.getText());
+            System.out.println("Filters Applied: " + filterCriteria); // Debugging
+            filterController.executeFilter(filterCriteria); // Call a method in the controller
+            updateEventsList(filterViewModel.getState().getFilteredEvents());
+        });
+        filterPanel.add(applyButton);
+        filterPanel.add(resetButton);
+
+        return filterPanel;
+    }
+
+
+    private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         myEventsButton = new JButton("My Events");
         myEventsButton.setVisible(false);
@@ -69,91 +198,72 @@ public class Home_screen extends JFrame {
         rightPanel.add(myEventsButton);
         rightPanel.add(profileIcon);
 
-        headerPanel.add(rightPanel, BorderLayout.EAST);
-
-        // Check if the user is an event poster
-        boolean isEventPoster = checkIfEventPoster();
-        if (isEventPoster) {
+        if (checkIfEventPoster()) {
             myEventsButton.setVisible(true);
         }
 
-        // Events list panel
-        eventsPanel = new JPanel();
+        return rightPanel;
+    }
+
+    private JPanel createEventsPanel() {
+        JPanel eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
+        return eventsPanel;
+    }
 
-        // Scroll pane for events list
-        JScrollPane scrollPane = new JScrollPane(eventsPanel);
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-        // Add main panel to frame
-        add(mainPanel);
-
-        // Add search functionality
+    private void initializeSearchFunctionality() {
         searchField.addActionListener(e -> {
             String query = searchField.getText();
-            searchController.search(query); // Trigger the search when the user types in the search field
+            searchController.search(query);
             updateEventsList(searchViewModel.getState().getResults());
         });
 
-        // Listen for changes to the search results
         searchViewModel.addPropertyChangeListener(evt -> {
             if ("results".equals(evt.getPropertyName())) {
-                // Update the events list based on new results
                 updateEventsList(searchViewModel.getState().getResults());
             }
         });
+    }
 
-        // Trigger an initial empty search to display all events
+    private void triggerInitialSearch() {
         searchController.search("");
-        for (Event event : searchViewModel.getState().getResults()) {
-            eventsPanel.add(createEventPanel(event));
-            eventsPanel.add(Box.createRigidArea(new Dimension(0, 40)));
-        }
+        updateEventsList(searchViewModel.getState().getResults());
     }
 
     private void updateEventsList(List<Event> events) {
-        eventsPanel.removeAll(); // Clear existing components
+        eventsPanel.removeAll();
         if (events.isEmpty()) {
             eventsPanel.add(new JLabel("No events found"));
         } else {
             for (Event event : events) {
-                eventsPanel.add(createEventPanel(event)); // Add new event panels
-                eventsPanel.add(Box.createRigidArea(new Dimension(0, 40))); // Add spacing
+                eventsPanel.add(createEventPanel(event));
+                eventsPanel.add(Box.createRigidArea(new Dimension(0, 40)));
             }
         }
-        eventsPanel.revalidate(); // Refresh layout
-        eventsPanel.repaint(); // Redraw the panel
+        eventsPanel.revalidate();
+        eventsPanel.repaint();
     }
 
     private JPanel createEventPanel(Event event) {
-        JPanel eventPanel = new JPanel();
-        eventPanel.setLayout(new BorderLayout());
+        JPanel eventPanel = new JPanel(new BorderLayout());
         eventPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Event details
         JPanel eventDetailsPanel = new JPanel();
         eventDetailsPanel.setLayout(new BoxLayout(eventDetailsPanel, BoxLayout.Y_AXIS));
 
-        JLabel eventNameLabel = new JLabel(event.getName());
-        eventNameLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        eventDetailsPanel.add(eventNameLabel);
-
-        JLabel eventDescriptionLabel = new JLabel("Description: " + event.getDescription());
-        eventDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        eventDetailsPanel.add(eventDescriptionLabel);
-
-        JLabel eventLocationLabel = new JLabel("Location: " + event.getLocation());
-        eventLocationLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        eventDetailsPanel.add(eventLocationLabel);
-
-        JLabel eventDateLabel = new JLabel("Date: " + event.getStart().toString());
-        eventDateLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        eventDetailsPanel.add(eventDateLabel);
+        eventDetailsPanel.add(createLabel(event.getName(), new Font("Arial", Font.BOLD, 24)));
+        eventDetailsPanel.add(createLabel("Description: " + event.getDescription(), new Font("Arial", Font.PLAIN, 20)));
+        eventDetailsPanel.add(createLabel("Location: " + event.getLocation(), new Font("Arial", Font.PLAIN, 20)));
+        eventDetailsPanel.add(createLabel("Date: " + event.getStart().toString(), new Font("Arial", Font.PLAIN, 20)));
 
         eventPanel.add(eventDetailsPanel, BorderLayout.CENTER);
-
         return eventPanel;
+    }
+
+    private JLabel createLabel(String text, Font font) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        return label;
     }
 
     private boolean checkIfEventPoster() {
@@ -173,13 +283,17 @@ public class Home_screen extends JFrame {
     }
 
     public static void main(String[] args) {
-        SearchDataAccessInterface dataAccess = new EventDAO();
+        EventDAO dataAccess = new EventDAO();
         SearchViewModel viewModel = new SearchViewModel();
         ViewManagerModel viewManagerModel = new ViewManagerModel();
         SearchPresenter presenter = new SearchPresenter(viewModel, viewManagerModel);
         SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
         SearchController controller = new SearchController(interactor);
+        FilterViewModel filterViewModel = new FilterViewModel();
+        FilterPresenter filterPresenter = new FilterPresenter(filterViewModel, viewManagerModel);
+        FilterInteractor filterInteractor = new FilterInteractor(dataAccess, filterPresenter);
+        FilterController filterController = new FilterController(filterInteractor);
 
-        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller).setVisible(true));
+        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel).setVisible(true));
     }
 }
