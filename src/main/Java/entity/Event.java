@@ -7,7 +7,6 @@ import java.util.List;
  * An event in our program.
  */
 public class Event {
-    private final Integer id;
     private final String name;
     private final String description;
     private final String location;
@@ -15,15 +14,13 @@ public class Event {
     private final LocalDateTime end;
     private final List<String> tags;
 
-    public Event(Integer id,
+    public Event(
                  String name,
                  String description,
                  String location,
                  LocalDateTime start,
                  LocalDateTime end,
                  List<String> tags) {
-
-        this.id = id;
         this.name = name;
         this.description = description;
         this.location = location;
@@ -36,9 +33,6 @@ public class Event {
     //  Do we need a unique id for each event in the event posters events?
     //  Is the name/title enough?
 
-    public Integer getId(){
-        return id;
-    }
 
     public String getName() {
         return name;
