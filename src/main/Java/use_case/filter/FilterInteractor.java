@@ -20,7 +20,7 @@ public class FilterInteractor implements FilterInputBoundary {
     public void filter(FilterInputData inputData) {
         // Extract filtering criteria as a simple map or individual parameters
         Map<String, Object> filterCriteria = Map.of(
-                "startTime", inputData.getStartTime(),
+                "duration", inputData.getDuration(),
                 "location", inputData.getLocation(),
                 "tags", inputData.getTags()
         );

@@ -5,15 +5,17 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;*/
 import entity.Event;
 //import org.bson.Document;
+import use_case.filter.FilterDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 //import static com.mongodb.client.model.Filters.eq;
 
-public class EventDAO implements SearchDataAccessInterface {
+public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInterface {
     //private final MongoCollection<Document> eventCollection;
     private final List<Event> events = new ArrayList<>();
 
@@ -87,6 +89,15 @@ public class EventDAO implements SearchDataAccessInterface {
                     LocalDateTime.of(2024, 12, 12, 19, 0),
                     Arrays.asList("Music", "Jam Session", "Art")
             ));
+
+        events.add(new Event(
+                "Mat137",
+                "Math Lecture.",
+                "Toronto",
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1),
+                Arrays.asList("Math", "Jam Session", "tech")
+        ));
     }
 
     // Converts a MongoDB Document into an Event object
@@ -151,15 +162,45 @@ public class EventDAO implements SearchDataAccessInterface {
     }*/
 
     // Method to filter events based on criteria
-    public List<Event> filterEvents(LocalDateTime startTime, LocalDateTime endTime, List<String> tags, String location) {
+    @Override
+    public List<Event> filterEvents(Map<String, Object> filterCriteria) {
+        // Safely retrieve the duration and handle null values
+        Integer duration = (Integer) filterCriteria.getOrDefault("duration", 0);
+
+        // Retrieve other filters
+        String location = (String) filterCriteria.get("location");
+        List<String> tags = (List<String>) filterCriteria.getOrDefault("tags", Collections.emptyList());
+
+        // If no filters are selected, return all events
+        if (duration == 0 && location == null && tags.isEmpty()) {
+            return events; // Assuming `events` contains all stored events
+        }
+
+        // Apply filters
         return events.stream()
-                .filter(event -> (startTime == null || event.getStart().isAfter(startTime)) &&
-                        (endTime == null || event.getEnd().isBefore(endTime)) &&
-                        (tags == null || tags.isEmpty() || event.getTags().stream().anyMatch(tags::contains)) &&
-                        (location == null || event.getLocation().toLowerCase().contains(location.toLowerCase()))
-                )
+                .filter(event -> {
+                    // Filter by duration if specified
+                    boolean matchesDuration = true;
+                    if (duration != 0) {
+                        // Calculate the event's duration (in hours)
+                        long eventDuration = Duration.between(event.getStart(), event.getEnd()).toHours();
+                        matchesDuration = eventDuration == duration;
+                    }
+
+                    // Filter by location if specified
+                    boolean matchesLocation = location == null || event.getLocation().toLowerCase().contains(location.toLowerCase());
+
+                    // Filter by tags if specified
+                    boolean matchesTags = tags.isEmpty() || event.getTags().stream().anyMatch(tags::contains);
+
+                    // Return true if all filters match
+                    return matchesDuration && matchesLocation && matchesTags;
+                })
                 .collect(Collectors.toList());
     }
+
+
+
 
     // Search events based on the query using a basic string matching algorithm
     @Override

@@ -13,10 +13,10 @@ public interface FilterDataAccessInterface {
     /**
      * Searches for events that match the specified criteria.
      *
-     * @param query the phrase searched by the user.
+     * @param filterCriteria the phrase searched by the user.
      * @return a list of events matching the search criteria.
      */
-    List<Event> filterEvents(Map query);
+    List<Event> filterEvents(Map<String, Object> filterCriteria);
 
     /**
      * Retrieves all events in the system (optional, depending on your use case).

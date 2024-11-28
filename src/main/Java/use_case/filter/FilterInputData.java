@@ -1,34 +1,30 @@
 package use_case.filter;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class FilterInputData {
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
+    private final Integer duration;
     private final List<String> tags;
     private final String location;
 
-    public FilterInputData(LocalDateTime startTime, LocalDateTime endTime, List<String> tags, String location) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public FilterInputData(Integer duration, String location, List<String> tags) {
+        this.duration = duration;
         this.tags = tags;
         this.location = location;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public Integer getDuration() {
+        return Objects.requireNonNullElse(this.duration, 0);
     }
 
     public List<String> getTags() {
-        return tags;
+        return Objects.requireNonNullElse(this.tags, Collections.emptyList());
     }
 
     public String getLocation() {
-        return location;
+        return Objects.requireNonNullElse(this.location, "");
     }
 }

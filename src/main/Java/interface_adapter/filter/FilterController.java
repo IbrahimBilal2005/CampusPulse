@@ -13,8 +13,8 @@ public class FilterController {
         this.filterInteractor = filterInteractor;
     }
 
-    public void executeFilter(LocalDateTime startTime, LocalDateTime endTime, List<String> tags, String location) {
-        FilterInputData inputData = new FilterInputData(startTime, endTime, tags, location);
+    public void executeFilter(Integer duration, List<String> tags, String location) {
+        FilterInputData inputData = new FilterInputData(duration, location, tags);
         filterInteractor.filter(inputData);
     }
 }
