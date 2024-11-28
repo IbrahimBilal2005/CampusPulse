@@ -12,7 +12,7 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
     private final NewEventPostOutputBoundary presenter;
     private final NewEventPostUserDataAccessInterface dataAccess;
 
-    private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("d-M-yyyy H:mm");
+    private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("DD-MM-YYYY HH:MM");
 
     public NewEventPostInteractor(NewEventPostOutputBoundary presenter,
                                   NewEventPostUserDataAccessInterface dataAccess) {

@@ -39,19 +39,17 @@ public class EventPost_screen {
         eventDescriptionPanel.add(scrollPane);
         panel.add(eventDescriptionPanel);
 
-        // Start DateTime panel with placeholder
+        // Start DateTime panel
         JPanel startTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        startTimePanel.add(new JLabel("Start Date & Time (24 hr) (YYYY-MM-DD HH:MM):"));
-        JTextField startTimeField = new JTextField("YYYY-MM-DD HH:MM", 15);
-        addPlaceholderEffect(startTimeField, "YYYY-MM-DD HH:MM");
+        startTimePanel.add(new JLabel("Start Date & Time (24 hr) (DD-MM-YYYY HH:MM):"));
+        JTextField startTimeField = new JTextField(15);
         startTimePanel.add(startTimeField);
         panel.add(startTimePanel);
 
-        // End DateTime panel with placeholder
+        // End DateTime panel
         JPanel endTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        endTimePanel.add(new JLabel("End Date & Time  (24 hr) (YYYY-MM-DD HH:MM):"));
-        JTextField endTimeField = new JTextField("YYYY-MM-DD HH:MM", 15);
-        addPlaceholderEffect(endTimeField, "YYYY-MM-DD HH:MM");
+        endTimePanel.add(new JLabel("End Date & Time  (24 hr) (DD-MM-YYYY HH:MM):"));
+        JTextField endTimeField = new JTextField(15);
         endTimePanel.add(endTimeField);
         panel.add(endTimePanel);
 
@@ -68,9 +66,8 @@ public class EventPost_screen {
         tag1Panel.add(tagsComboBox);
         panel.add(tag1Panel);
 
-        // Tags panel with a JComboBox
         JPanel tag2Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        tag2Panel.add(new JLabel("Tag 1:"));
+        tag2Panel.add(new JLabel("Tag 2:"));
         JComboBox<String> tags2ComboBox = new JComboBox<>(new String[]{"Sports", "Drawing", "Environmental"});
         tag2Panel.add(tags2ComboBox);
         panel.add(tag2Panel);
@@ -91,29 +88,6 @@ public class EventPost_screen {
         // Add main panel to the frame
         frame.add(panel);
         frame.setVisible(true);
-    }
-
-    // Helper method to add placeholder effect to a JTextField
-    private void addPlaceholderEffect(JTextField field, String placeholder) {
-        field.setForeground(Color.GRAY);
-
-        field.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (field.getText().equals(placeholder)) {
-                    field.setText("");
-                    field.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setForeground(Color.GRAY);
-                    field.setText(placeholder);
-                }
-            }
-        });
     }
 
     // Main method to start the application
