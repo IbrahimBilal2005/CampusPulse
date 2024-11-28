@@ -1,29 +1,13 @@
 package views;
 
-import interface_adapter.event_details.EventDetailsViewModel;
-import entity.Event;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
-import java.util.List; //TO BE REMOVED ONCE FILE COMPLETED
-import java.util.ArrayList; //TO BE REMOVED ONCE FILE COMPLETED
 
 public class EventDetails_screen {
 
-    //public EventDetails_screen(EventDetailsViewModel view, Event event) {
-
     public static void main(String[] args) {
-        //TESTING CODE
-        EventDetailsViewModel view = new EventDetailsViewModel();
-        LocalDateTime dateTime = LocalDateTime.of(2025, 1, 1,12, 15);
-        List<String> stringList = new ArrayList<>();
-        stringList.add("Monday");
-        Event event = new Event("test name", "This is description", "22 Shorten Place", dateTime, dateTime, stringList);
-
-
         // Create a new frame
         JFrame frame = new JFrame("Event Details Screen"); // Create Frame and have it close when the x is clicked
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,7 +20,7 @@ public class EventDetails_screen {
         JPanel bannerPanel = new JPanel(new BorderLayout());
         bannerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel bannerLabel = new JLabel(view.TITLE);
+        JLabel bannerLabel = new JLabel("CampusPulse");
         bannerLabel.setFont(new Font("Arial", Font.BOLD, 24));
 
         JTextField searchField = new JTextField("Search Events...");
@@ -60,7 +44,7 @@ public class EventDetails_screen {
         main_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Event name label
-        JLabel eventNameLabel = new JLabel(event.getName());
+        JLabel eventNameLabel = new JLabel("Event Name");
         eventNameLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
         JPanel detailsPanel = new JPanel();
@@ -68,7 +52,7 @@ public class EventDetails_screen {
         detailsPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align elements to the left
         detailsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JTextArea descriptionArea = new JTextArea(event.getDescription());
+        JTextArea descriptionArea = new JTextArea("Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae luctus eros, ut tincidunt metus. Pellentesque non ligula quam. Praesent sed magna ornare, vestibulum urna sit amet, sodales massa. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent at sodales lectus, ac rhoncus diam. Aenean interdum lorem quis mauris pretium congue. Nunc malesuada, quam quis convallis viverra, elit diam finibus nulla, eu varius enim sapien nec arcu. Mauris enim dui, ultrices vel magna a, consectetur elementum dolor. Etiam nec arcu at urna viverra aliquam sed at tellus. Nulla fringilla urna vulputate, dictum tortor et, eleifend nunc. Aliquam vel vestibulum orci, sit amet mattis eros. Mauris eu orci ornare, tincidunt est at, porttitor tellus. Nam quis mi sem. Proin suscipit nisi vel suscipit gravida. Vestibulum placerat posuere sem, nec semper quam ullamcorper in. Mauris tristique leo vitae felis ultricies, dapibus tempor leo volutpat.");
         descriptionArea.setLineWrap(true); // Enable line wrapping
         descriptionArea.setWrapStyleWord(true); // Wrap words properly
         descriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -80,29 +64,23 @@ public class EventDetails_screen {
         scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT); // Align description to the left
         detailsPanel.add(scrollPane);
 
-        JPanel backButtonPanel = new JPanel();
-        backButtonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        detailsPanel.add(new JLabel(view.DATE + dateConvert(event.getStart()) + " - " + dateConvert(event.getEnd())));
+        detailsPanel.add(new JLabel("Date:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         detailsPanel.add(Box.createVerticalStrut(10));
 
-        detailsPanel.add(new JLabel(view.LOCATION + event.getLocation()));
+        detailsPanel.add(new JLabel("Location:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         detailsPanel.add(Box.createVerticalStrut(10));
 
-        detailsPanel.add(new JLabel(view.TIME + timeConvert(event.getStart()) + " - " + timeConvert(event.getEnd())));
+        detailsPanel.add(new JLabel("Time:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         detailsPanel.add(Box.createVerticalStrut(10));
 
-        detailsPanel.add(new JLabel(view.TAGS + event.getTags().toString()));
+        detailsPanel.add(new JLabel("Link:"));
         detailsPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
         detailsPanel.add(Box.createVerticalStrut(10));
 
-        JButton backButton = new JButton(view.BACK);
-        backButton.setPreferredSize(new Dimension(80, 30));
-        detailsPanel.add(backButton);
-
+        detailsPanel.add(new JLabel("Add map stuff etc."));
         JPanel imagePanel = new JPanel();
         imagePanel.setPreferredSize(new Dimension(300, 300));
         imagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -110,10 +88,11 @@ public class EventDetails_screen {
         imagePanel.add(imageLabel);
 
         // Add components to the main panel
+        main_panel.add(eventNameLabel, BorderLayout.NORTH);
         main_panel.add(detailsPanel, BorderLayout.CENTER);
         main_panel.add(imagePanel, BorderLayout.EAST);
-        //main_panel.add(backButtonPanel, BorderLayout.NORTH);
         main_panel.add(eventNameLabel, BorderLayout.NORTH); // Add the event name at the top
+//        main_panel.add(scrollPane, BorderLayout.CENTER);
 
         // Add panels to the frame
         frame.add(bannerPanel, BorderLayout.NORTH);
@@ -121,16 +100,4 @@ public class EventDetails_screen {
         frame.setVisible(true);
 
     }
-
-    private static String dateConvert(LocalDateTime date) {
-        return date.getMonth().toString().charAt(0) + date.getMonth().toString().toLowerCase().substring(1) + " " + date.getDayOfMonth() + " " + date.getYear();
-    }
-
-    private static String timeConvert(LocalDateTime time) {
-        if (time.getMinute() < 10) {
-            return time.getHour() + ":0" + time.getMinute();
-        }
-        return time.getHour() + ":" + time.getMinute();
-    }
-
 }
