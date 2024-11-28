@@ -5,6 +5,7 @@ import use_case.filter.FilterInputData;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class FilterController {
     private final FilterInputBoundary filterInteractor;
@@ -13,8 +14,8 @@ public class FilterController {
         this.filterInteractor = filterInteractor;
     }
 
-    public void executeFilter(Integer duration, List<String> tags, String location) {
-        FilterInputData inputData = new FilterInputData(duration, location, tags);
+    public void executeFilter(Map<String, Object> filters) {
+        FilterInputData inputData = new FilterInputData((Integer) filters.get("duration"), (String) filters.get("location"), (List<String>) filters.get("tags"));
         filterInteractor.filter(inputData);
     }
 }

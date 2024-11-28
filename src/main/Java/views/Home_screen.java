@@ -2,9 +2,14 @@ package views;
 
 import data_access.EventDAO;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.filter.FilterController;
+import interface_adapter.filter.FilterPresenter;
+import interface_adapter.filter.FilterViewModel;
+import interface_adapter.filter.FilterViewState;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import use_case.filter.FilterInteractor;
 import use_case.search.SearchDataAccessInterface;
 import entity.Event;
 import use_case.search.SearchInteractor;
@@ -16,7 +21,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Home_screen extends JFrame {
 
@@ -26,10 +33,14 @@ public class Home_screen extends JFrame {
     private JPanel eventsPanel;
     private SearchController searchController;
     private SearchViewModel searchViewModel;
+    private FilterController filterController;
+    private FilterViewModel filterViewModel;
 
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController) {
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel) {
         this.searchViewModel = searchViewModel;
         this.searchController = searchController;
+        this.filterController = filterController;
+        this.filterViewModel = filterViewModel;
 
         // Frame settings
         setupFrame();
@@ -80,18 +91,20 @@ public class Home_screen extends JFrame {
         searchField = new JTextField(20);
         centerPanel.add(searchField);
         centerPanel.add(createFilterComboBox());
-        centerPanel.add(createFilterButton());
         return centerPanel;
     }
 
     private JComboBox<String> createFilterComboBox() {
-        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Select Items"});
-        comboBox.setPrototypeDisplayValue("Select multiple items");
+        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Filters"});
+        comboBox.setPrototypeDisplayValue("Filters");
         comboBox.setEditable(false);
+
+        // Map to hold filter criteria
+        Map<String, Object> filterCriteria = new HashMap<>();
 
         comboBox.addActionListener(e -> {
             if (comboBox.isPopupVisible()) {
-                JPopupMenu popup = createFilterPopup();
+                JPopupMenu popup = createFilterPopup(filterCriteria);
                 Component comp = (Component) e.getSource();
                 popup.show(comp, 0, comp.getHeight());
             }
@@ -100,9 +113,9 @@ public class Home_screen extends JFrame {
         return comboBox;
     }
 
-    private JPopupMenu createFilterPopup() {
+    private JPopupMenu createFilterPopup(Map<String, Object> filterCriteria) {
         JPopupMenu popup = new JPopupMenu();
-        JPanel filterPanel = createFilterPanel();
+        JPanel filterPanel = createFilterPanel(filterCriteria);
         JScrollPane scrollfilter = new JScrollPane(filterPanel);
         scrollfilter.setPreferredSize(new Dimension(250, 200));
         popup.setLayout(new BorderLayout());
@@ -110,39 +123,65 @@ public class Home_screen extends JFrame {
         return popup;
     }
 
-    private JPanel createFilterPanel() {
+    private JPanel createFilterPanel(Map<String, Object> filterCriteria) {
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
 
-        // Add Duration slider
+        // Duration slider
         filterPanel.add(new JLabel("Duration (Hours):"));
         JSlider durationSlider = new JSlider(1, 4);
         durationSlider.setMajorTickSpacing(1);
         durationSlider.setPaintTicks(true);
         durationSlider.setPaintLabels(true);
+        durationSlider.addChangeListener(e -> filterCriteria.put("duration", durationSlider.getValue()));
         filterPanel.add(durationSlider);
 
-        // Add Location text field
+        // Location text field
         filterPanel.add(new JLabel("Location:"));
         JTextField locationField = new JTextField();
         locationField.setMaximumSize(new Dimension(200, 25));
+        locationField.addActionListener(e -> filterCriteria.put("location", locationField.getText()));
         filterPanel.add(locationField);
 
-        // Add checkboxes for categories
+        // Tags checkboxes
         filterPanel.add(new JLabel("Categories:"));
         String[] categories = {"Sports", "Drawing", "Environmental"};
+        List<String> selectedTags = new ArrayList<>();
         for (String category : categories) {
-            filterPanel.add(new JCheckBox(category));
+            JCheckBox checkBox = new JCheckBox(category);
+            checkBox.addActionListener(e -> {
+                if (checkBox.isSelected()) {
+                    selectedTags.add(category);
+                } else {
+                    selectedTags.remove(category);
+                }
+                filterCriteria.put("tags", new ArrayList<>(selectedTags));
+            });
+            filterPanel.add(checkBox);
         }
+
+        // Apply Button
+        JButton applyButton = new JButton("Apply Filters");
+        applyButton.addActionListener(e -> {
+            System.out.println("Filters Applied: " + filterCriteria); // Debugging
+            filterController.executeFilter(filterCriteria);
+            updateEventsList(filterViewModel.getState().getFilteredEvents());// Call a method in the controller
+        });
+        JButton resetButton = new JButton("Reset Filters");
+        resetButton.addActionListener(e -> {
+            System.out.println("Filters Applied: " + filterCriteria);
+            filterCriteria.put("duration", null);
+            filterCriteria.put("location", null);
+            filterCriteria.put("tags", null);
+            filterController.executeFilter(filterCriteria); // Call a method in the controller
+            updateEventsList(filterViewModel.getState().getFilteredEvents());
+        });
+        filterPanel.add(applyButton);
+        filterPanel.add(resetButton);
 
         return filterPanel;
     }
 
-    private JButton createFilterButton() {
-        JButton filterButton = new JButton("Filters");
-        filterButton.setPreferredSize(new Dimension(80, 30));
-        return filterButton;
-    }
 
     private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
@@ -241,13 +280,17 @@ public class Home_screen extends JFrame {
     }
 
     public static void main(String[] args) {
-        SearchDataAccessInterface dataAccess = new EventDAO();
+        EventDAO dataAccess = new EventDAO();
         SearchViewModel viewModel = new SearchViewModel();
         ViewManagerModel viewManagerModel = new ViewManagerModel();
         SearchPresenter presenter = new SearchPresenter(viewModel, viewManagerModel);
         SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
         SearchController controller = new SearchController(interactor);
+        FilterViewModel filterViewModel = new FilterViewModel();
+        FilterPresenter filterPresenter = new FilterPresenter(filterViewModel, viewManagerModel);
+        FilterInteractor filterInteractor = new FilterInteractor(dataAccess, filterPresenter);
+        FilterController filterController = new FilterController(filterInteractor);
 
-        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller).setVisible(true));
+        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel).setVisible(true));
     }
 }
