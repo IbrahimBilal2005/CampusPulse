@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class EventPoster implements Account{
     private final String username;
-    private final String password;
+    private  String password;
     private final String organizationName;
     private final String sopLink;
     private final Map<String, Event> events;
@@ -47,5 +47,15 @@ public class EventPoster implements Account{
 
     public Map<String, Event> getEvents() {
         return this.events;
+    }
+
+    @Override
+    public void setUsername(String username) {
+
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -15,4 +15,9 @@ public interface Account {
      * @return the password of the user.
      */
     String getPassword();
+
+
+    void setUsername(String username);
+
+    void setPassword(String password);
 }
