@@ -11,16 +11,11 @@ public class AdminApprovalInteractor {
 
     public void approveUser(AdminApprovalInputData inputData) {
         try {
-            // Validate if the admin has the correct role
-            if (!userDataAccess.isAdmin(inputData.getAdminUid())) {
-                outputBoundary.presentFailure("Permission denied: Only admins can approve users.");
-                return;
-            }
-
             // Approve the target user
             boolean success = userDataAccess.approveUserAsEventPoster(inputData.getTargetUid());
             if (success) {
-                outputBoundary.presentSuccess(new AdminApprovalOutputData("User approved successfully."));
+                AdminApprovalOutputData outputData = new AdminApprovalOutputData("User approved successfully", true);
+                outputBoundary.presentSuccess(outputData);
             } else {
                 outputBoundary.presentFailure("Failed to approve user.");
             }
