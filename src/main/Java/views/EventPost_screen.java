@@ -2,8 +2,7 @@ package views;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+
 
 public class EventPost_screen {
     public EventPost_screen() {
