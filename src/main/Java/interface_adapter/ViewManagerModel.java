@@ -10,4 +10,5 @@ public class ViewManagerModel extends ViewModel<String> {
         super("view manager");
         this.setState("");
     }
+
 }
