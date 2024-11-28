@@ -16,15 +16,15 @@ class InMemorySearchDAOTest {
     void testSearchEventsByTags() {
         // Sample data
         List<Event> events = List.of(
-                new Event(1, "Concert Night", "A fun live music event", "Concert Hall",
+                new Event("Concert Night", "A fun live music event", "Concert Hall",
                         LocalDateTime.of(2024, 11, 30, 19, 0),
                         LocalDateTime.of(2024, 11, 30, 22, 0),
                         List.of("music", "live")),
-                new Event(2, "Sports Day", "Outdoor sports competition", "Sports Arena",
+                new Event("Sports Day", "Outdoor sports competition", "Sports Arena",
                         LocalDateTime.of(2024, 12, 1, 9, 0),
                         LocalDateTime.of(2024, 12, 1, 17, 0),
                         List.of("outdoor", "sports")),
-                new Event(3, "Art Workshop", "Learn to paint and sculpt", "Art Studio",
+                new Event("Art Workshop", "Learn to paint and sculpt", "Art Studio",
                         LocalDateTime.of(2024, 12, 5, 10, 0),
                         LocalDateTime.of(2024, 12, 5, 12, 0),
                         List.of("art", "painting"))
@@ -59,23 +59,23 @@ class InMemorySearchDAOTest {
     void testSearchSportsEvents() {
         // Sample data: 5 events, 2 of them are sports-related
         List<Event> events = List.of(
-                new Event(1, "Soccer Match", "Exciting soccer game", "Stadium",
+                new Event("Soccer Match", "Exciting soccer game", "Stadium",
                         LocalDateTime.of(2024, 12, 1, 18, 0),
                         LocalDateTime.of(2024, 12, 1, 21, 0),
                         List.of("sports", "outdoor", "soccer")),
-                new Event(2, "Basketball Game", "Local basketball league", "Arena",
+                new Event("Basketball Game", "Local basketball league", "Arena",
                         LocalDateTime.of(2024, 12, 5, 19, 0),
                         LocalDateTime.of(2024, 12, 5, 22, 0),
                         List.of("sports", "indoor", "basketball")),
-                new Event(3, "Cooking Workshop", "Learn to cook gourmet meals", "Community Center",
+                new Event("Cooking Workshop", "Learn to cook gourmet meals", "Community Center",
                         LocalDateTime.of(2024, 12, 3, 10, 0),
                         LocalDateTime.of(2024, 12, 3, 13, 0),
                         List.of("cooking", "food", "workshop")),
-                new Event(4, "Art Exhibition", "Showcase of local art", "Gallery",
+                new Event("Art Exhibition", "Showcase of local art", "Gallery",
                         LocalDateTime.of(2024, 12, 7, 15, 0),
                         LocalDateTime.of(2024, 12, 7, 18, 0),
                         List.of("art", "exhibition")),
-                new Event(5, "Tech Conference", "Latest in tech and innovation", "Convention Center",
+                new Event("Tech Conference", "Latest in tech and innovation", "Convention Center",
                         LocalDateTime.of(2024, 12, 9, 9, 0),
                         LocalDateTime.of(2024, 12, 9, 17, 0),
                         List.of("technology", "innovation", "conference"))

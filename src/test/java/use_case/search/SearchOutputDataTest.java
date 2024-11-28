@@ -13,8 +13,8 @@ public class SearchOutputDataTest {
     public void testConstructorAndGetter() {
         // Test constructor and getter for events
         List<Event> events = Arrays.asList(
-                new Event(1, "Hackathon", "A tech competition", "Tech Center", LocalDateTime.now(), LocalDateTime.now().plusHours(3), Arrays.asList("Tech", "Competition")),
-                new Event(2, "Sports Day", "Outdoor sports event", "Sports Field", LocalDateTime.now(), LocalDateTime.now().plusHours(4), Arrays.asList("Sports", "Outdoor"))
+                new Event("Hackathon", "A tech competition", "Tech Center", LocalDateTime.now(), LocalDateTime.now().plusHours(3), Arrays.asList("Tech", "Competition")),
+                new Event("Sports Day", "Outdoor sports event", "Sports Field", LocalDateTime.now(), LocalDateTime.now().plusHours(4), Arrays.asList("Sports", "Outdoor"))
         );
         SearchOutputData outputData = new SearchOutputData(events);
 
@@ -35,7 +35,7 @@ public class SearchOutputDataTest {
     @Test
     public void testSingleEvent() {
         // Test case with a single event
-        Event event = new Event(1, "Concert", "Music concert", "City Hall", LocalDateTime.now(), LocalDateTime.now().plusHours(5), Arrays.asList("Music", "Entertainment"));
+        Event event = new Event("Concert", "Music concert", "City Hall", LocalDateTime.now(), LocalDateTime.now().plusHours(5), Arrays.asList("Music", "Entertainment"));
         List<Event> singleEventList = Arrays.asList(event);
         SearchOutputData outputData = new SearchOutputData(singleEventList);
 

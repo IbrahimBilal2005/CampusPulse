@@ -45,7 +45,7 @@ class SearchPresenterTest {
     void testShowSuccessScreen() {
         // Given valid event data
         List<Event> events = List.of(
-                new Event(1, "Soccer", "Soccer match", "Toronto",
+                new Event("Soccer", "Soccer match", "Toronto",
                         LocalDateTime.now(), LocalDateTime.now().plusHours(2),
                         Arrays.asList("fun", "outdoor"))
         );
@@ -112,10 +112,10 @@ class SearchPresenterTest {
     void testSetPassViewWithMultipleEvents() {
         // Given multiple events
         List<Event> events = List.of(
-                new Event(1, "Soccer Match", "An exciting soccer match", "Stadium",
+                new Event("Soccer Match", "An exciting soccer match", "Stadium",
                         LocalDateTime.now(), LocalDateTime.now().plusHours(2),
                         Arrays.asList("sports", "outdoor")),
-                new Event(2, "Basketball Game", "Local basketball tournament", "Arena",
+                new Event("Basketball Game", "Local basketball tournament", "Arena",
                         LocalDateTime.now(), LocalDateTime.now().plusHours(3),
                         Arrays.asList("sports", "indoor"))
         );
@@ -165,7 +165,7 @@ class SearchPresenterTest {
     void testSetPassViewWithInvalidEventData() {
         // Given an event with missing or invalid data (empty name)
         List<Event> invalidEvents = List.of(
-                new Event(1, "", "An invalid event with no name", "Unknown Location",
+                new Event("", "An invalid event with no name", "Unknown Location",
                         LocalDateTime.now(), LocalDateTime.now().plusHours(1),
                         Arrays.asList("invalid", "test"))
         );

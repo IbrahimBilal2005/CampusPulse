@@ -1,4 +1,4 @@
-import data_access.InMemoryDAOCP;
+import data_access.InMemoryUserDataAccessObject;
 import entity.Account;
 import entity.User;
 import interface_adapter.change_password.ChangePasswordPresenter;
@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class ChangePasswordInteractorTest {
     private ChangePasswordInteractor interactor;
     private ChangePasswordPresenter presenter;
-    private InMemoryDAOCP userDataAccess;
+    private InMemoryUserDataAccessObject userDataAccess;
 
     @BeforeEach
     void setUp() {
         // Initialize the in-memory data access, view model, and presenter
-        userDataAccess = new InMemoryDAOCP();
+        userDataAccess = new InMemoryUserDataAccessObject();
         ChangePasswordViewModel viewModel = new ChangePasswordViewModel();
         presenter = new ChangePasswordPresenter(viewModel);  // Real presenter
         interactor = new ChangePasswordInteractor(userDataAccess, presenter);
