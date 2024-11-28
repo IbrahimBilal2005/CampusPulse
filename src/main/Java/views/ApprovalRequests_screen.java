@@ -1,15 +1,17 @@
 package views;
 
 import entity.User;
-import entity.Role;
+import interface_adapter.admin_approval.AdminApprovalController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ApprovalRequests_screen extends JFrame {
     private List<User> pendingRequests;
+    private AdminApprovalController approvalController;
 
     public ApprovalRequests_screen(List<User> pendingRequests) {
         this.pendingRequests = pendingRequests;
@@ -35,22 +37,26 @@ public class ApprovalRequests_screen extends JFrame {
             JButton approveButton = new JButton("Approve");
             JButton rejectButton = new JButton("Reject");
 
-            approveButton.addActionListener(e -> {
-                user.setRole(Role.EVENT_HOSTER);
-                JOptionPane.showMessageDialog(this, user.getUsername() + " is now an Event Hoster!");
-                refreshUI();
-            });
-
-            rejectButton.addActionListener(e -> {
-                pendingRequests.remove(user);
-                JOptionPane.showMessageDialog(this, "Rejected " + user.getUsername() + "'s request.");
-                refreshUI();
-            });
+//            rejectButton.addActionListener(e -> {
+//                pendingRequests.remove(user);
+//                JOptionPane.showMessageDialog(this, "Rejected " + user.getUsername() + "'s request.");
+//                refreshUI();
+//            });
 
             userPanel.add(userLabel);
             userPanel.add(approveButton);
             userPanel.add(rejectButton);
             requestsPanel.add(userPanel);
+            approveButton.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource().equals(approveButton)) {
+
+                                approvalController.approveUser(user.getUsername());
+                            }
+                        }
+                    }
+            );
         }
 
         JScrollPane scrollPane = new JScrollPane(requestsPanel);
@@ -65,9 +71,9 @@ public class ApprovalRequests_screen extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Dummy data
-        List<User> pending = new ArrayList<>();
-        pending.add(new User("Jerry", "jerry@utoronto.ca", "jerryu", Role.PENDING));
-        new ApprovalRequests_screen(pending);
+//        // Dummy data
+//        List<User> pending = new ArrayList<>();
+//        pending.add(new User("Jerry", "jerry@utoronto.ca", "jerryu", Role.PENDING));
+//        new ApprovalRequests_screen(pending);
     }
 }
