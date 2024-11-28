@@ -62,7 +62,7 @@ class FilterInteractorTest {
         };
 
         // Input data for filtering
-        FilterInputData inputData = new FilterInputData(1, "Toronto", List.of("tech"));
+        FilterInputData inputData = new FilterInputData(1, "Toronto", List.of("tech"), "");
 
         // Create and execute the interactor
         FilterInteractor interactor = new FilterInteractor(dataAccess, successPresenter);
@@ -89,7 +89,7 @@ class FilterInteractorTest {
         };
 
         // Input data for filtering that won't match any events
-        FilterInputData inputData = new FilterInputData(null, "Vancouver", List.of("sports"));
+        FilterInputData inputData = new FilterInputData(null, "Vancouver", List.of("sports"), "");
 
         // Create and execute the interactor
         FilterInteractor interactor = new FilterInteractor(dataAccess, failurePresenter);
@@ -116,7 +116,7 @@ class FilterInteractorTest {
         };
 
         // Filter by location "Wellness Center, Yoga Studio"
-        FilterInputData inputData = new FilterInputData(null, "Wellness Center, Yoga Studio", null);
+        FilterInputData inputData = new FilterInputData(null, "Wellness Center, Yoga Studio", null, "");
 
         FilterInteractor interactor = new FilterInteractor(dataAccess, presenter);
         interactor.filter(inputData);
@@ -144,7 +144,7 @@ class FilterInteractorTest {
         };
 
         // Filter by tags ["AI", "Technology"]
-        FilterInputData inputData = new FilterInputData(null, null, Arrays.asList("AI", "Technology"));
+        FilterInputData inputData = new FilterInputData(null, null, Arrays.asList("AI", "Technology"), "");
 
         FilterInteractor interactor = new FilterInteractor(dataAccess, presenter);
         interactor.filter(inputData);
@@ -172,7 +172,7 @@ class FilterInteractorTest {
 
         // Filter by a specific start time (e.g., the current time)
         LocalDateTime now = LocalDateTime.now();
-        FilterInputData inputData = new FilterInputData(1, "", null);
+        FilterInputData inputData = new FilterInputData(1, "", null, "");
 
         FilterInteractor interactor = new FilterInteractor(dataAccess, presenter);
         interactor.filter(inputData);
@@ -199,7 +199,7 @@ class FilterInteractorTest {
         };
 
         // Filter by duration (e.g., 2 hours)
-        FilterInputData inputData = new FilterInputData(2, null, null);
+        FilterInputData inputData = new FilterInputData(2, null, null, "");
 
         FilterInteractor interactor = new FilterInteractor(dataAccess, presenter);
         interactor.filter(inputData);
@@ -224,7 +224,7 @@ class FilterInteractorTest {
         };
 
         // Filter by tags that don't match any events
-        FilterInputData inputData = new FilterInputData(null, null, Arrays.asList("Nonexistent", "Tag"));
+        FilterInputData inputData = new FilterInputData(null, null, Arrays.asList("Nonexistent", "Tag"), "");
 
         FilterInteractor interactor = new FilterInteractor(dataAccess, failurePresenter);
         interactor.filter(inputData);

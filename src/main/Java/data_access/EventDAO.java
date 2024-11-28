@@ -173,8 +173,13 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
 
         //revieve query
         String query = (String) filterCriteria.get("query");
-
-        List<Event> filterevents = searchEvents(query);
+        List<Event> filterevents = new ArrayList<>();
+        if (query == ""){
+            filterevents = events;
+        }
+        else {
+            filterevents = searchEvents(query);
+        }
 
         // If no filters are selected, return all events
         if (duration == 0 && location == null && tags.isEmpty()) {
