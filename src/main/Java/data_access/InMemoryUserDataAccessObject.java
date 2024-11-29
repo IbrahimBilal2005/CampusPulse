@@ -24,8 +24,23 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
     }
 
     @Override
+    public boolean nameExists(String username) {
+        return false;
+    }
+
+    @Override
     public void save(Account user) {
         users.put(user.getUsername(), user);}
+
+    @Override
+    public Account get(String username) {
+        return null;
+    }
+
+    @Override
+    public String getCurrentUsername() {
+        return "";
+    }
 
     @Override
     public Account getAccountByUsername(String username) {

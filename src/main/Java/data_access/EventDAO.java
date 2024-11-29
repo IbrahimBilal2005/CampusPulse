@@ -173,13 +173,7 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
 
         //revieve query
         String query = (String) filterCriteria.get("query");
-        List<Event> filterevents = new ArrayList<>();
-        if (query == ""){
-            filterevents = events;
-        }
-        else {
-            filterevents = searchEvents(query);
-        }
+        List<Event> filterevents = query.isEmpty() ? new ArrayList<>(events) : searchEvents(query);
 
         // If no filters are selected, return all events
         if (duration == 0 && location == null && tags.isEmpty()) {
@@ -192,9 +186,12 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
                     // Filter by duration if specified
                     boolean matchesDuration = true;
                     if (duration != 0) {
-                        // Calculate the event's duration (in hours)
-                        long eventDuration = Duration.between(event.getStart(), event.getEnd()).toHours();
-                        matchesDuration = eventDuration == duration;
+                        if (event.getStart() == null || event.getEnd() == null) {
+                            matchesDuration = false;
+                        } else {
+                            long eventDuration = Duration.between(event.getStart(), event.getEnd()).toHours();
+                            matchesDuration = duration == eventDuration;
+                        }
                     }
 
                     // Filter by location if specified

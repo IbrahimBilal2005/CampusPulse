@@ -3,6 +3,7 @@ package interface_adapter.filter;
 import entity.Event;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilterViewState {
@@ -12,6 +13,12 @@ public class FilterViewState {
     private String location;
     private List<Event> filteredEvents; // New property for filtered events
     private String error; // New property for error messages
+    private Integer duration;
+
+    public FilterViewState() {
+        this.filteredEvents = new ArrayList<>();
+        this.error = null;
+    }
 
     // Getters and setters for state properties
     public LocalDateTime getStartTime() {
@@ -60,5 +67,13 @@ public class FilterViewState {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public Integer getDuration() {
+        return duration;
     }
 }
