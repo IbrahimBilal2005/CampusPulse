@@ -5,18 +5,22 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
-import interface_adapter.filter.FilterViewState;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.sort.SortController;
+import interface_adapter.sort.SortPresenter;
+import interface_adapter.sort.SortState;
+import interface_adapter.sort.SortViewModel;
 import use_case.filter.FilterInteractor;
-import use_case.search.SearchDataAccessInterface;
 import entity.Event;
 import use_case.search.SearchInteractor;
+import use_case.sort.SortInteractor;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +40,20 @@ public class Home_screen extends JFrame {
     private FilterController filterController;
     private FilterViewModel filterViewModel;
 
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel) {
+    private SortController sortController;
+    private SortViewModel sortViewModel;
+
+    private final JComboBox<String> sortComboBox = new JComboBox<>();
+
+
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel, SortController sortController, SortViewModel sortViewModel) {
         this.searchViewModel = searchViewModel;
         this.searchController = searchController;
         this.filterController = filterController;
         this.filterViewModel = filterViewModel;
+
+        this.sortController = sortController;
+        this.sortViewModel = sortViewModel;
 
         // Frame settings
         setupFrame();
@@ -64,6 +77,7 @@ public class Home_screen extends JFrame {
         // Trigger an initial empty search to display all events
         triggerInitialSearch();
     }
+
 
     private void setupFrame() {
         setTitle("CampusPulse - Home");
@@ -91,7 +105,27 @@ public class Home_screen extends JFrame {
         searchField = new JTextField(20);
         centerPanel.add(searchField);
         centerPanel.add(createFilterComboBox());
+        centerPanel.add(createSortComboBox());
         return centerPanel;
+    }
+
+    private JComboBox<String> createSortComboBox() {
+        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Sort Results"});
+        comboBox.setPrototypeDisplayValue("Sort Results");
+        comboBox.setEditable(false);
+
+        for (String sortOption : List.of("shortest", "longest", "earliest", "latest")) {
+            comboBox.addItem(sortOption);
+        }
+        comboBox.addActionListener(e -> {
+            SortState currentState = sortViewModel.getState();
+            currentState.setSortQuery((String) comboBox.getSelectedItem());
+            sortViewModel.setState(currentState);
+
+            sortController.sort(currentState.getSortQuery(), filterViewModel.getState().getFilteredEvents());
+            updateEventsList(currentState.getSortedResult());
+        });
+        return comboBox;
     }
 
     private JComboBox<String> createFilterComboBox() {
@@ -294,6 +328,11 @@ public class Home_screen extends JFrame {
         FilterInteractor filterInteractor = new FilterInteractor(dataAccess, filterPresenter);
         FilterController filterController = new FilterController(filterInteractor);
 
-        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel).setVisible(true));
+        SortViewModel sortViewModel = new SortViewModel();
+        SortPresenter sortPresenter = new SortPresenter(sortViewModel, viewManagerModel);
+        SortInteractor sortInteractor = new SortInteractor(sortPresenter);
+        SortController sortController = new SortController(sortInteractor);
+
+        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel, sortController, sortViewModel).setVisible(true));
     }
 }
