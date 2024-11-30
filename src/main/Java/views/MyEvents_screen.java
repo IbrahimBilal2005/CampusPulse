@@ -4,13 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import entity.Event;
-import interface_adapter.MyEventsViewModel;
 
-public class MyEventsScreen extends JFrame {
+public class MyEvents_screen extends JFrame {
     private MyEventsViewModel viewModel;
     private JPanel eventsPanel;
 
-    public MyEventsScreen(MyEventsViewModel viewModel) {
+    public MyEvents_screen(MyEventsViewModel viewModel) {
         this.viewModel = viewModel;
         setupFrame();
         initializeComponents();
@@ -61,6 +60,6 @@ public class MyEventsScreen extends JFrame {
     public static void main(String[] args) {
         // Example ViewModel instantiation
         MyEventsViewModel viewModel = new MyEventsViewModel();
-        SwingUtilities.invokeLater(() -> new MyEventsScreen(viewModel).setVisible(true));
+        SwingUtilities.invokeLater(() -> new MyEvents_screen(viewModel).setVisible(true));
     }
 }
