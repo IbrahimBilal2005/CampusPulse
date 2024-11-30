@@ -163,7 +163,7 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
 
     // Method to filter events based on criteria
     @Override
-    public List<Event> filterEvents(Map<String, Object> filterCriteria) {
+    public List<Event> filterEvents(Map<String, Object> filterCriteria, List<Event> beforeFilteringEvents) {
         // Safely retrieve the duration and handle null values
         Integer duration = (Integer) filterCriteria.getOrDefault("duration", 0);
 
@@ -171,17 +171,13 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
         String location = (String) filterCriteria.get("location");
         List<String> tags = (List<String>) filterCriteria.getOrDefault("tags", Collections.emptyList());
 
-        //revieve query
-        String query = (String) filterCriteria.get("query");
-        List<Event> filterevents = query.isEmpty() ? new ArrayList<>(events) : searchEvents(query);
-
         // If no filters are selected, return all events
         if (duration == 0 && location == null && tags.isEmpty()) {
-            return filterevents; // Assuming `events` contains all stored events
+            return beforeFilteringEvents; // Assuming `events` contains all stored events
         }
 
         // Apply filters
-        return filterevents.stream()
+        return beforeFilteringEvents.stream()
                 .filter(event -> {
                     // Filter by duration if specified
                     boolean matchesDuration = true;

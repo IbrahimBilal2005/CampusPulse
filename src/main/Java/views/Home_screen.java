@@ -165,8 +165,7 @@ public class Home_screen extends JFrame {
         JButton applyButton = new JButton("Apply Filters");
         applyButton.addActionListener(e -> {
             System.out.println("Filters Applied: " + filterCriteria); // Debugging
-            filterCriteria.put("query", searchField.getText());
-            filterController.executeFilter(filterCriteria);
+            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
             updateEventsList(filterViewModel.getState().getFilteredEvents());// Call a method in the controller
         });
         JButton resetButton = new JButton("Reset Filters");
@@ -175,9 +174,8 @@ public class Home_screen extends JFrame {
             filterCriteria.put("duration", null);
             filterCriteria.put("location", null);
             filterCriteria.put("tags", null);
-            filterCriteria.put("query", searchField.getText());
             System.out.println("Filters Applied: " + filterCriteria); // Debugging
-            filterController.executeFilter(filterCriteria); // Call a method in the controller
+            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults()); // Call a method in the controller
             updateEventsList(filterViewModel.getState().getFilteredEvents());
         });
         filterPanel.add(applyButton);
@@ -232,8 +230,7 @@ public class Home_screen extends JFrame {
         filterCriteria.put("duration", null);
         filterCriteria.put("location", null);
         filterCriteria.put("tags", null);
-        filterCriteria.put("query", searchField.getText());
-        filterController.executeFilter(filterCriteria);
+        filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
         updateEventsList(searchViewModel.getState().getResults());
     }
 

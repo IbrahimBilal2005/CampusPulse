@@ -16,7 +16,7 @@ public interface FilterDataAccessInterface {
      * @param filterCriteria the phrase searched by the user.
      * @return a list of events matching the search criteria.
      */
-    List<Event> filterEvents(Map<String, Object> filterCriteria);
+    List<Event> filterEvents(Map<String, Object> filterCriteria, List<Event> events);
 
     /**
      * Retrieves all events in the system (optional, depending on your use case).
