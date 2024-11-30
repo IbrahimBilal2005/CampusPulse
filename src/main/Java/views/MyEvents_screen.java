@@ -2,15 +2,24 @@ package views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import entity.Event;
+import interface_adapter.delete_event.DeleteEventController;
+import interface_adapter.delete_event.MyEventsViewModel;
 
-public class MyEvents_screen extends JFrame {
-    private MyEventsViewModel viewModel;
+public class MyEvents_screen extends JFrame implements PropertyChangeListener {
+    private MyEventsViewModel myEventsViewModel;
+    private DeleteEventController deleteEventController;
+    // add controller for adding an event
+
+
     private JPanel eventsPanel;
 
-    public MyEvents_screen(MyEventsViewModel viewModel) {
-        this.viewModel = viewModel;
+    public MyEvents_screen(MyEventsViewModel myEventsViewModel) {
+        this.myEventsViewModel = myEventsViewModel;
+        this.myEventsViewModel.addPropertyChangeListener(this);
         setupFrame();
         initializeComponents();
         loadEvents();
@@ -32,7 +41,7 @@ public class MyEvents_screen extends JFrame {
 
     private void loadEvents() {
         eventsPanel.removeAll();
-        List<Event> events = viewModel.getEvents();
+        List<Event> events = myEventsViewModel.getEvents();
         for (Event event : events) {
             eventsPanel.add(createEventPanel(event));
         }
@@ -46,7 +55,6 @@ public class MyEvents_screen extends JFrame {
         JButton editButton = new JButton("Edit");
         JButton deleteButton = new JButton("Delete");
 
-        editButton.addActionListener(e -> viewModel.editEvent(event));
         deleteButton.addActionListener(e -> viewModel.deleteEvent(event));
 
         JPanel buttonPanel = new JPanel();
@@ -61,5 +69,10 @@ public class MyEvents_screen extends JFrame {
         // Example ViewModel instantiation
         MyEventsViewModel viewModel = new MyEventsViewModel();
         SwingUtilities.invokeLater(() -> new MyEvents_screen(viewModel).setVisible(true));
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
     }
 }
