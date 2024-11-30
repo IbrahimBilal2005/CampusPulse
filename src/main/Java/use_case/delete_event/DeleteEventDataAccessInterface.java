@@ -13,6 +13,4 @@ public interface DeleteEventDataAccessInterface {
     EventPoster getUser(String username);
 
     void deleteEvent(EventPoster eventPoster, String eventToDelete);
-
-    List<Event> getAllEvents();
 }

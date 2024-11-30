@@ -27,15 +27,6 @@ public class DeleteEventInteractor implements DeleteEventInputBoundary{
 
     @Override
     public void deleteEvent(DeleteEventInputData deleteEventInputData) {
-        if (deleteEventInputData.getEventToDelete() == null) {
-            List<Event> allEvents = userDataAccessObject.getAllEvents();
-            if (allEvents.isEmpty()) {
-                userPresenter.prepareFailView("No events available.");
-            } else {
-                userPresenter.prepareSuccessView(new DeleteEventOutputData(allEvents, false));
-            }
-            return;
-        }
         // Get the eventPoster who's username mathces the input username
         final EventPoster eventPoster = userDataAccessObject.getUser(deleteEventInputData.getUsername());
 
