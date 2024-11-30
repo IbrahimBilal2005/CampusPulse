@@ -16,12 +16,12 @@ public class SortPresenter implements SortOutputBoundary {
     }
 
     @Override
-    public void setPassView(SortOutputData outputData) {
+    public void prepareSuccessView(SortOutputData outputData) {
         SortState state = viewModel.getState();
         if (outputData != null && outputData.getSortedEvents() != null) {
-            viewModel.getState().setSortedResults(outputData.getSortedEvents());
+            viewModel.getState().setSortedResult(outputData.getSortedEvents());
         } else {
-            viewModel.getState().setSortedResults(Collections.emptyList());
+            viewModel.getState().setSortedResult(Collections.emptyList());
         }
         viewModel.setState(state);
         state.setError(null);
@@ -29,11 +29,11 @@ public class SortPresenter implements SortOutputBoundary {
     }
 
     @Override
-    public void setFailView(String error) {
+    public void prepareFailView(String error) {
         SortState state = viewModel.getState();
         state.setError(error);
         viewModel.setState(state);
-        state.setSortedResults(null);
+        state.setSortedResult(null);
         viewManagerModel.firePropertyChanged();
     }
 }

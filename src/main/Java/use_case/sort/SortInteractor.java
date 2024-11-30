@@ -20,9 +20,9 @@ public class SortInteractor implements SortInputBoundary {
 
         if (sortQuery.isEmpty()) {
             if (allEvents.isEmpty()) {
-                sortOutputBoundary.setFailView("No events found");
+                sortOutputBoundary.prepareFailView("No events found");
             } else {
-                sortOutputBoundary.setPassView(new SortOutputData(allEvents));
+                sortOutputBoundary.prepareSuccessView(new SortOutputData(allEvents));
             }
             return;
         }
@@ -60,10 +60,10 @@ public class SortInteractor implements SortInputBoundary {
                 break;
 
             default:
-                sortOutputBoundary.setFailView("Invalid sort query");
+                sortOutputBoundary.prepareFailView("Invalid sort query");
                 return;
         }
 
-        sortOutputBoundary.setPassView(new SortOutputData(sortedFilteredEvents));
+        sortOutputBoundary.prepareSuccessView(new SortOutputData(sortedFilteredEvents));
     }
 }

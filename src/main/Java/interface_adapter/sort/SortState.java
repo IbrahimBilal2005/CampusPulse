@@ -6,40 +6,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The state for the Sort View Model.
+ */
 public class SortState {
-    private List<Event> sortedResults;
+    private String sortQuery = "";
+    private List<Event> sortedResults = new ArrayList<>();
     private String error;
 
-    public SortState() {
-        this.sortedResults = new ArrayList<>();
-        this.error = null;
-    }
+    public String getSortQuery() { return sortQuery; }
+    public void setSortQuery(String sortQuery) { this.sortQuery = sortQuery; }
 
-    public SortState(SortState copy) {
-        this.sortedResults = copy.sortedResults;
-        this.error = copy.error;
-    }
-
-    public List<Event> getSortedResults() {
-        return sortedResults;
-    }
-
-    public void setSortedResults(List<Event> sortedResults) {
-        if (sortedResults != null) {
-            this.sortedResults = Collections.emptyList();
-        } else {
-            this.sortedResults = sortedResults;
-        }
-    }
+    public List<Event> getSortedResult() { return sortedResults; }
+    public void setSortedResult(List<Event> sortedResults) { this.sortedResults = sortedResults; }
 
     public String getError() { return error; }
-
     public void setError(String error) { this.error = error; }
 
     @Override
     public String toString() {
-        return "SortState{" +
-                "sortedResults=" + sortedResults +
-                '}';
+        return "SortState{"
+                + "sortQuery=" + sortQuery + '\''
+                + "sortedResults=" + sortedResults + '\''
+                + '}';
     }
 }
