@@ -22,6 +22,7 @@ public class DeleteEventInteractor implements DeleteEventInputBoundary{
 
     @Override
     public void deleteEvent(DeleteEventInputData deleteEventInputData) {
+
         // Get the eventPoster who's username mathces the input username
         final EventPoster eventPoster = userDataAccessObject.getUser(deleteEventInputData.getUsername());
 
