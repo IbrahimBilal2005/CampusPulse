@@ -100,6 +100,12 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
         ));
     }
 
+    public void setEvents(List<Event> events) {
+        this.events.clear();
+        this.events.addAll(events);
+    }
+
+
     // Converts a MongoDB Document into an Event object
     /*private Event documentToEvent(Document doc) {
         return new Event(
