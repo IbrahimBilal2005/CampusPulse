@@ -12,7 +12,7 @@ public class NewEventPostContoller {
 
     public void execute(String username, String eventName, String description,
                         String location, String start, String end,
-                        String tag1, String tag2) {
+                        String tag1) {
         NewEventPostInputData inputData = new NewEventPostInputData(
                 username, eventName, description, location, start, end, tag1, tag2
         );
