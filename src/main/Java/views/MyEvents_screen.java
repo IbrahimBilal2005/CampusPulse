@@ -12,14 +12,13 @@ import interface_adapter.delete_event.MyEventsViewModel;
 public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     private MyEventsViewModel myEventsViewModel;
     private DeleteEventController deleteEventController;
-    // controller for adding an event
-
 
     private JPanel eventsPanel;
 
-    public MyEvents_screen(MyEventsViewModel myEventsViewModel) {
+    public MyEvents_screen(MyEventsViewModel myEventsViewModel, DeleteEventController deleteEventController) {
         this.myEventsViewModel = myEventsViewModel;
-        this.myEventsViewModel.addPropertyChangeListener(this);
+        this.deleteEventController = deleteEventController;
+        this.myEventsViewModel.addPropertyChangeListener(this); // Listener for changes in events
         setupFrame();
         initializeComponents();
         loadEvents();
@@ -40,7 +39,9 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     }
 
     private void loadEvents() {
+        // Remove any old event panels
         eventsPanel.removeAll();
+        // Get the list of events from the ViewModel
         List<Event> events = myEventsViewModel.getEvents();
         for (Event event : events) {
             eventsPanel.add(createEventPanel(event));
@@ -55,7 +56,8 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         JButton editButton = new JButton("Edit");
         JButton deleteButton = new JButton("Delete");
 
-        deleteButton.addActionListener(e -> viewModel.deleteEvent(event));
+        // When delete button is clicked, delete the event using the controller
+        deleteButton.addActionListener(e -> deleteEventController.deleteEvent(event.getName()));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(editButton);
@@ -65,14 +67,19 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         return eventPanel;
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("events".equals(evt.getPropertyName())) {
+            // Whenever the events change in the ViewModel, reload them in the view
+            loadEvents();
+        }
+    }
+
     public static void main(String[] args) {
         // Example ViewModel instantiation
         MyEventsViewModel viewModel = new MyEventsViewModel();
-        SwingUtilities.invokeLater(() -> new MyEvents_screen(viewModel).setVisible(true));
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-
+        // Example controller instantiation (you will likely pass a real controller here)
+        DeleteEventController controller = new DeleteEventController(viewModel);
+        SwingUtilities.invokeLater(() -> new MyEvents_screen(viewModel, controller).setVisible(true));
     }
 }

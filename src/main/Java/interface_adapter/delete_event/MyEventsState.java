@@ -2,10 +2,10 @@ package interface_adapter.delete_event;
 
 import entity.Event;
 
-import java.util.Map;
+import java.util.List;
 
 public class MyEventsState {
-    private Map<String, Event> events;
+    private List<Event> events;
 
     public MyEventsState(MyEventsState copy) {
         this.events = copy.events;
@@ -13,6 +13,6 @@ public class MyEventsState {
 
     public MyEventsState() {}
 
-    public Map<String, Event> getEvents() { return events; }
-    public void setEvents(Map<String, Event> events) { this.events = events; }
+    public List<Event> getEvents() { return events; }
+    public void setEvents(List<Event> events) { this.events = events; }
 }
