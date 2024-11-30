@@ -18,4 +18,6 @@ public class NewEventPostContoller {
         );
         inputBoundary.execute(inputData);
     }
+
+    public void switchToHomeView(){inputBoundary.switchToHomeView();}
 }
