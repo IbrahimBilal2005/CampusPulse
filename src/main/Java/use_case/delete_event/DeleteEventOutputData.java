@@ -2,19 +2,20 @@ package use_case.delete_event;
 
 import entity.Event;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * Output Data for the Delete Event use case.
  */
 public class DeleteEventOutputData {
-    private List<Event> events;
+    private Map<String, Event> events;
     private boolean useCaseFailed;
 
-    public DeleteEventOutputData(List<Event> events) {
+    public DeleteEventOutputData(Map<String, Event> events, boolean useCaseFailed) {
         this.events = events;
+        this.useCaseFailed = useCaseFailed;
     }
 
-    public List<Event> getEvents() { return events; }
+    public Map<String, Event> getEvents() { return events; }
     public boolean isUseCaseFailed() { return useCaseFailed; }
 }
