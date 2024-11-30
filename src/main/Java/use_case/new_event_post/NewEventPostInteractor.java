@@ -12,7 +12,7 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
     private final NewEventPostOutputBoundary presenter;
     private final NewEventPostUserDataAccessInterface dataAccess;
 
-    private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("DD-MM-YYYY HH:MM");
+    private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:MM");
 
     public NewEventPostInteractor(NewEventPostOutputBoundary presenter,
                                   NewEventPostUserDataAccessInterface dataAccess) {
@@ -25,29 +25,33 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
         // Parse and validate the start and end dates
         LocalDateTime start = parseDateTime(inputData.getStart());
         if (start == null) {
-            presenter.presentFailure("Error: Invalid start date and time format. Please use DD-MM-YYYY HH:mm.");
+            presenter.presentFailure("Start time Error");
             return;
         }
 
         LocalDateTime end = parseDateTime(inputData.getEnd());
         if (end == null) {
-            presenter.presentFailure("Error: Invalid end date and time format. Please use DD-MM-YYYY HH:mm.");
+            presenter.presentFailure("End time Error");
             return;
         }
 
         if (start.isAfter(end)) {
-            presenter.presentFailure("Error: Start time must be before end time.");
+            presenter.presentFailure("Start time Error");
             return;
         }
 
         if (dataAccess.existsByName(inputData.getEventName())) {
-            presenter.presentFailure("Error: Event with this name already exists.");
+            presenter.presentFailure("Event name is empty or already exists.");
             return;
         }
 
-        if (inputData.getEventName().isEmpty() || inputData.getLocation().isEmpty()) {
-            presenter.presentFailure("Error: Event name and location are required.");
+        if (inputData.getEventName().isEmpty()) {
+            presenter.presentFailure("Event name is empty or already exists.");
             return;
+        }
+
+        if (inputData.getLocation().isEmpty()) {
+            presenter.presentFailure("Location is required.");
         }
 
         // Populate tags
@@ -71,8 +75,13 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
 
         // Add the event to the data store
         dataAccess.addEvent(newEvent);
-        presenter.presentSuccess(new NewEventPostOutputData(false, "Event Posted"));
+        presenter.presentSuccess(new NewEventPostOutputData(false));
 
+    }
+
+    @Override
+    public void switchToHomeView(){
+        presenter.switchToHomeView();
     }
 
     /**

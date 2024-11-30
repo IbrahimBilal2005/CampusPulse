@@ -40,14 +40,14 @@ public class EventPost_screen {
 
         // Start DateTime panel
         JPanel startTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        startTimePanel.add(new JLabel("Start Date & Time (24 hr) (DD-MM-YYYY HH:MM):"));
+        startTimePanel.add(new JLabel("Start Date & Time (24 hr) (dd-MM-yyyy HH:MM):"));
         JTextField startTimeField = new JTextField(15);
         startTimePanel.add(startTimeField);
         panel.add(startTimePanel);
 
         // End DateTime panel
         JPanel endTimePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        endTimePanel.add(new JLabel("End Date & Time  (24 hr) (DD-MM-YYYY HH:MM):"));
+        endTimePanel.add(new JLabel("End Date & Time  (24 hr) (dd-MM-yyyy HH:MM):"));
         JTextField endTimeField = new JTextField(15);
         endTimePanel.add(endTimeField);
         panel.add(endTimePanel);
