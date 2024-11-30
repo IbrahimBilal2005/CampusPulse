@@ -1,5 +1,6 @@
 package interface_adapter.filter;
 
+import entity.Event;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInputData;
 
@@ -14,8 +15,8 @@ public class FilterController {
         this.filterInteractor = filterInteractor;
     }
 
-    public void executeFilter(Map<String, Object> filters) {
-        FilterInputData inputData = new FilterInputData((Integer) filters.get("duration"), (String) filters.get("location"), (List<String>) filters.get("tags"), (String) filters.get("query"));
+    public void executeFilter(Map<String, Object> filters, List<Event> events) {
+        FilterInputData inputData = new FilterInputData((Integer) filters.get("duration"), (String) filters.get("location"), (List<String>) filters.get("tags"), events);
         filterInteractor.filter(inputData);
     }
 }

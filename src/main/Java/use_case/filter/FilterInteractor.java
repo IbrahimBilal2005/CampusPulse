@@ -22,12 +22,11 @@ public class FilterInteractor implements FilterInputBoundary {
         Map<String, Object> filterCriteria = Map.of(
                 "duration", inputData.getDuration(),
                 "location", inputData.getLocation(),
-                "tags", inputData.getTags(),
-                "query", inputData.getQuery()
+                "tags", inputData.getTags()
         );
 
         // Use the transformed criteria in the data access layer
-        List<Event> filteredEvents = dataAccess.filterEvents(filterCriteria);
+        List<Event> filteredEvents = dataAccess.filterEvents(filterCriteria, inputData.getEvents());
 
         // Provide the output through the boundary
         if (!filteredEvents.isEmpty()) {

@@ -1,5 +1,7 @@
 package use_case.filter;
 
+import entity.Event;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -9,13 +11,13 @@ public class FilterInputData {
     private final Integer duration;
     private final List<String> tags;
     private final String location;
-    private final String query;
+    private final List<Event> events;
 
-    public FilterInputData(Integer duration, String location, List<String> tags, String query) {
+    public FilterInputData(Integer duration, String location, List<String> tags, List<Event> events) {
         this.duration = duration;
         this.tags = tags;
         this.location = location;
-        this.query = query;
+        this.events = events;
     }
 
     public Integer getDuration() {
@@ -30,7 +32,7 @@ public class FilterInputData {
         return Objects.requireNonNullElse(this.location, "");
     }
 
-    public String getQuery() {
-        return this.query;
+    public List<Event> getEvents() {
+        return this.events;
     }
 }

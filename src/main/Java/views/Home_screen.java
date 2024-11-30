@@ -9,6 +9,7 @@ import interface_adapter.filter.FilterViewState;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInteractor;
 import use_case.search.SearchDataAccessInterface;
 import entity.Event;
@@ -164,8 +165,7 @@ public class Home_screen extends JFrame {
         JButton applyButton = new JButton("Apply Filters");
         applyButton.addActionListener(e -> {
             System.out.println("Filters Applied: " + filterCriteria); // Debugging
-            filterCriteria.put("query", searchField.getText());
-            filterController.executeFilter(filterCriteria);
+            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
             updateEventsList(filterViewModel.getState().getFilteredEvents());// Call a method in the controller
         });
         JButton resetButton = new JButton("Reset Filters");
@@ -174,9 +174,8 @@ public class Home_screen extends JFrame {
             filterCriteria.put("duration", null);
             filterCriteria.put("location", null);
             filterCriteria.put("tags", null);
-            filterCriteria.put("query", searchField.getText());
             System.out.println("Filters Applied: " + filterCriteria); // Debugging
-            filterController.executeFilter(filterCriteria); // Call a method in the controller
+            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults()); // Call a method in the controller
             updateEventsList(filterViewModel.getState().getFilteredEvents());
         });
         filterPanel.add(applyButton);
@@ -227,6 +226,11 @@ public class Home_screen extends JFrame {
 
     private void triggerInitialSearch() {
         searchController.search("");
+        HashMap filterCriteria = new HashMap<>();
+        filterCriteria.put("duration", null);
+        filterCriteria.put("location", null);
+        filterCriteria.put("tags", null);
+        filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
         updateEventsList(searchViewModel.getState().getResults());
     }
 
@@ -284,6 +288,7 @@ public class Home_screen extends JFrame {
 
     public static void main(String[] args) {
         EventDAO dataAccess = new EventDAO();
+        FilterDataAccessInterface filterdao = dataAccess;
         SearchViewModel viewModel = new SearchViewModel();
         ViewManagerModel viewManagerModel = new ViewManagerModel();
         SearchPresenter presenter = new SearchPresenter(viewModel, viewManagerModel);
