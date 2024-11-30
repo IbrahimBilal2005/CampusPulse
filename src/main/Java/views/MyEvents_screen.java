@@ -12,7 +12,7 @@ import interface_adapter.delete_event.MyEventsViewModel;
 public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     private MyEventsViewModel myEventsViewModel;
     private DeleteEventController deleteEventController;
-    // add controller for adding an event
+    // controller for adding an event
 
 
     private JPanel eventsPanel;
