@@ -14,4 +14,9 @@ public class AdminApprovalController {
         AdminApprovalInputData inputData = new AdminApprovalInputData(targetUid);
         inputBoundary.approveUser(inputData);
     }
+
+    public void rejectUser(String targetUid) {
+        AdminApprovalInputData inputData = new AdminApprovalInputData(targetUid);
+        inputBoundary.rejectUser(inputData); // Calls the reject logic
+    }
 }
