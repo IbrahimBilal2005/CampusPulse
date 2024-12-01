@@ -37,22 +37,32 @@ public class ApprovalRequests_screen extends JFrame {
             JButton approveButton = new JButton("Approve");
             JButton rejectButton = new JButton("Reject");
 
-//            rejectButton.addActionListener(e -> {
-//                pendingRequests.remove(user);
-//                JOptionPane.showMessageDialog(this, "Rejected " + user.getUsername() + "'s request.");
-//                refreshUI();
-//            });
-
             userPanel.add(userLabel);
             userPanel.add(approveButton);
             userPanel.add(rejectButton);
             requestsPanel.add(userPanel);
+
+            // Approve Button Logic
             approveButton.addActionListener(
                     new ActionListener() {
                         public void actionPerformed(ActionEvent evt) {
                             if (evt.getSource().equals(approveButton)) {
-
                                 approvalController.approveUser(user.getUsername());
+                                pendingRequests.remove(user);
+                                refreshUI();
+                            }
+                        }
+                    }
+            );
+
+            // Reject Button Logic
+            rejectButton.addActionListener(
+                    new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            if (evt.getSource().equals(rejectButton)) {
+                                approvalController.rejectUser(user.getUsername());
+                                pendingRequests.remove(user);
+                                refreshUI();
                             }
                         }
                     }
@@ -73,7 +83,7 @@ public class ApprovalRequests_screen extends JFrame {
     public static void main(String[] args) {
 //        // Dummy data
 //        List<User> pending = new ArrayList<>();
-//        pending.add(new User("Jerry", "jerry@utoronto.ca", "jerryu", Role.PENDING));
+//        pending.add(new User());
 //        new ApprovalRequests_screen(pending);
     }
 }
