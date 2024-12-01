@@ -14,14 +14,11 @@ import java.util.List;
 public class DeleteEventInteractor implements DeleteEventInputBoundary{
     private final DeleteEventDataAccessInterface userDataAccessObject;
     private final DeleteEventOutputBoundary userPresenter;
-    private final AccountCreationStrategy accountCreator;
 
     public DeleteEventInteractor(DeleteEventDataAccessInterface deleteEventDataAccessInterface,
-                            DeleteEventOutputBoundary deleteEventOutputBoundary,
-                            AccountCreationStrategy accountCreator) {
+                            DeleteEventOutputBoundary deleteEventOutputBoundary) {
         this.userDataAccessObject = deleteEventDataAccessInterface;
         this.userPresenter = deleteEventOutputBoundary;
-        this.accountCreator = accountCreator;
 
     }
 
@@ -42,7 +39,5 @@ public class DeleteEventInteractor implements DeleteEventInputBoundary{
 
             userPresenter.prepareSuccessView(deleteEventOutputData);
         }
-
-
     }
 }

@@ -2,6 +2,8 @@ package use_case.delete_event;
 
 import data_access.InMemoryUserDataAccessObject;
 import entity.*;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -9,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 
 class DeleteEventInteractorTest {
 
@@ -35,20 +36,25 @@ class DeleteEventInteractorTest {
         Account eventPoster = accountCreator.createAccount("username", "password123", "TechCorp", "http://sop.link", eventMap);
         userRepository.addAccount((EventPoster) eventPoster);
 
+        DeleteEventInputBoundary interactor = getDeleteEventInputBoundary(expectedMap, eventPoster, userRepository);
+        interactor.deleteEvent(deleteEventInputData);
+    }
+
+    @NotNull
+    private static DeleteEventInputBoundary getDeleteEventInputBoundary(Map<String, Event> expectedMap, Account eventPoster, DeleteEventDataAccessInterface userRepository) {
         DeleteEventOutputBoundary successPresenter = new DeleteEventOutputBoundary() {
             @Override
             public void prepareSuccessView(DeleteEventOutputData outputData) {
-                assertEquals(expectedMap, ((EventPoster) eventPoster).getEvents());
-                assertTrue(userRepository.getUser(eventPoster.getUsername()).getEvents().equals(expectedMap));
+                Assertions.assertEquals(expectedMap, ((EventPoster) eventPoster).getEvents());
+                Assertions.assertEquals(userRepository.getUser(eventPoster.getUsername()).getEvents(), expectedMap);
             }
 
             @Override
             public void prepareFailView(String errorMessage) {
-                fail("Use case failure is unexpected");
+                Assertions.fail("Use case failure is unexpected");
             }
         };
-        DeleteEventInputBoundary interactor = new DeleteEventInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
-        interactor.deleteEvent(deleteEventInputData);
+        return new DeleteEventInteractor(userRepository, successPresenter);
     }
 
     @Test
@@ -69,19 +75,24 @@ class DeleteEventInteractorTest {
         Account eventPoster = accountCreator.createAccount("username", "password123", "TechCorp", "http://sop.link", eventMap);
         userRepository.addAccount((EventPoster) eventPoster);
 
+        DeleteEventInputBoundary interactor = getDeleteEventInputBoundary(userRepository);
+        interactor.deleteEvent(deleteEventInputData);
+    }
+
+    @NotNull
+    private static DeleteEventInputBoundary getDeleteEventInputBoundary(DeleteEventDataAccessInterface userRepository) {
         DeleteEventOutputBoundary failurePresenter = new DeleteEventOutputBoundary() {
             @Override
             public void prepareSuccessView(DeleteEventOutputData outputData) {
-                fail("Success not expected.");
+                Assertions.fail("Success not expected.");
             }
 
             @Override
             public void prepareFailView(String errorMessage) {
-                assertEquals("Event does not exist.", errorMessage);
+                Assertions.assertEquals("Event does not exist.", errorMessage);
             }
         };
-        DeleteEventInputBoundary interactor = new DeleteEventInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());
-        interactor.deleteEvent(deleteEventInputData);
+        return new DeleteEventInteractor(userRepository, failurePresenter);
     }
 
 }

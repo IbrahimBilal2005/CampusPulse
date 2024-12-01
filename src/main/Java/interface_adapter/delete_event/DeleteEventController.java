@@ -21,7 +21,6 @@ public class DeleteEventController {
      */
     public void deleteEvent(String username, Event eventToDelete) {
         final DeleteEventInputData deleteEventInputData = new DeleteEventInputData(username, eventToDelete);
-
         deleteEventUseCaseInteractor.deleteEvent(deleteEventInputData);
     }
 }
