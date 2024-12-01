@@ -86,5 +86,12 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
     public void addAccount(EventPoster eventPoster) {
         users.put(eventPoster.getUsername(), eventPoster);
     }
+
+    @Override
+    public boolean eventExists(String username, Event event) {
+        EventPoster eventPoster = (EventPoster) users.get(username);
+
+        return !eventPoster.getEvents().containsKey(event.getName());
+    }
 }
 

@@ -34,7 +34,7 @@ public class DeleteEventPresenter implements DeleteEventOutputBoundary {
     @Override
     public void prepareFailView(String errorMessage) {
         final MyEventsState myEventsState = myEventsViewModel.getState();
-        // implementation if we have an error
+        myEventsState.setError(errorMessage);
         myEventsViewModel.firePropertyChanged();
     }
 }
