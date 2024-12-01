@@ -3,6 +3,14 @@ package entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * A strategy for creating standard events.
+ * <p>
+ * This class implements the {@link EventCreationStrategy} interface and provides the logic
+ * to create a standard {@link Event} object. It ensures that the event's start time
+ * is before its end time.
+ * </p>
+ */
 public class StandardEventCreationStrategy implements EventCreationStrategy {
 
     @Override
