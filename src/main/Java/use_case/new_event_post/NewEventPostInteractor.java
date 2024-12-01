@@ -12,7 +12,7 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
     private final NewEventPostOutputBoundary presenter;
     private final NewEventPostUserDataAccessInterface dataAccess;
 
-    private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:MM");
+    private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public NewEventPostInteractor(NewEventPostOutputBoundary presenter,
                                   NewEventPostUserDataAccessInterface dataAccess) {
@@ -52,16 +52,14 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
 
         if (inputData.getLocation().isEmpty()) {
             presenter.presentFailure("Location is required.");
+            return;
         }
 
         // Populate tags
         List<String> tags = new ArrayList<>();
-        if (inputData.getTag1() != null && !inputData.getTag1().isEmpty()) {
-            tags.add(inputData.getTag1());
-        }
-        if (inputData.getTag2() != null && !inputData.getTag2().isEmpty()) {
-            tags.add(inputData.getTag2());
-        }
+
+        tags.add(inputData.getTag1());
+        tags.add(inputData.getTag2());
 
         // Create the Event entity
         Event newEvent = new Event(
@@ -91,12 +89,13 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
      * @return LocalDateTime object if the format is valid; otherwise, null
      */
     private LocalDateTime parseDateTime(String dateTimeStr) {
-        try {
-            return LocalDateTime.parse(dateTimeStr, CUSTOM_FORMATTER);
-        } catch (DateTimeParseException e) {
-            return null;
+        if (!dateTimeStr.matches("\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}")) {
+            return null; // If it doesn't match the pattern, return null
+        }
+        // If pattern matches, proceed with parsing
+        return LocalDateTime.parse(dateTimeStr, CUSTOM_FORMATTER);
+
         }
     }
 
 
-}
