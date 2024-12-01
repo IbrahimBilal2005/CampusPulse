@@ -10,11 +10,11 @@ public class NewEventPostContoller {
        this.inputBoundary = inputBoundary;
    }
 
-    public void execute(String username, String eventName, String description,
+    public void execute(String eventName, String description,
                         String location, String start, String end,
-                        String tag1) {
+                        String tag1, String tag2) {
         NewEventPostInputData inputData = new NewEventPostInputData(
-                username, eventName, description, location, start, end, tag1, tag2
+                 eventName, description, location, start, end, tag1, tag2
         );
         inputBoundary.execute(inputData);
     }

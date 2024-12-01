@@ -2,7 +2,6 @@ package use_case.new_event_post;
 
 
 public class NewEventPostInputData {
-    private final String username;
     private final String eventName;
     private final String description;
     private final String location;
@@ -11,9 +10,9 @@ public class NewEventPostInputData {
     private final String tag1;
     private final String tag2;
 
-    public NewEventPostInputData(String username, String eventName, String description,
+    public NewEventPostInputData(String eventName, String description,
                                  String location, String start, String end, String tag1, String tag2) {
-        this.username = username;
+
         this.eventName = eventName;
         this.description = description;
         this.location = location;
@@ -22,8 +21,6 @@ public class NewEventPostInputData {
         this.tag1 = tag1;
         this.tag2 = tag2;
     }
-
-    public String getUsername() {return username;}
 
     public String getEventName() {
         return eventName;
