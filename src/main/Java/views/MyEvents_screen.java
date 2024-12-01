@@ -5,27 +5,44 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+
 import java.util.List;
-import entity.Event;
+
+import data_access.EventDAO;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.delete_event.DeleteEventController;
+import interface_adapter.delete_event.MyEventsState;
 import interface_adapter.delete_event.MyEventsViewModel;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
+import org.jetbrains.annotations.NotNull;
+
+//Testing imports. Not apart of logic:
+import entity.Event;
+import entity.EventPoster;
+import java.util.Map;
+import java.util.HashMap;
+import java.time.LocalDateTime;
+
 
 public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     private MyEventsViewModel myEventsViewModel;
-    private DeleteEventController deleteEventController;
-
     private LoggedInViewModel loggedInViewModel;
+
+    private DeleteEventController deleteEventController;
+    // add the AddEventController here, and action listener to new event button
 
     private JPanel eventsPanel;
     private final JButton addEventButton;
 
-    public MyEvents_screen(MyEventsViewModel myEventsViewModel, DeleteEventController deleteEventController) {
+    public MyEvents_screen(MyEventsViewModel myEventsViewModel, LoggedInViewModel loggedInViewModel) {
         this.myEventsViewModel = myEventsViewModel;
+        this.loggedInViewModel = loggedInViewModel;
         this.myEventsViewModel.addPropertyChangeListener(this);
+        this.loggedInViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel("Logged In Screen");
+
+        final JLabel title = new JLabel("My Events");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final JPanel addEventPanel = new JPanel();
@@ -34,16 +51,25 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
 
         eventsPanel = new JPanel();
         eventsPanel.setLayout(new BoxLayout(eventsPanel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(eventsPanel);
-        eventsPanel.add(scrollPane);
 
-        loadEvents();
+        initializeEvents();
+    }
+
+    private void initializeEvents() {
+        eventsPanel.removeAll();
+        final LoggedInState loggedInState = new LoggedInState();
+        List<Event> events = new ArrayList<>(loggedInState.getEvents().values());
+        for (Event event : events) {
+            eventsPanel.add(createEventPanel(event));
+        }
+        eventsPanel.revalidate();
+        eventsPanel.repaint();
     }
 
     private void loadEvents() {
         eventsPanel.removeAll();
-        final LoggedInState loggedInState = new LoggedInState();
-        List<Event> events = new ArrayList<>(loggedInState.getEvents().values());
+        final MyEventsState myEventsState = new MyEventsState();
+        List<Event> events = new ArrayList<>(myEventsState.getEvents());
         for (Event event : events) {
             eventsPanel.add(createEventPanel(event));
         }
@@ -55,6 +81,29 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         JPanel eventPanel = new JPanel(new BorderLayout());
         eventPanel.add(new JLabel(event.getName()), BorderLayout.CENTER);
 
+        JPanel detailsContentPanel = getEventPanel(event);
+        eventPanel.add(detailsContentPanel);
+
+        JButton delete = new JButton("Delete");
+        delete.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(delete)) {
+                        final LoggedInState currentLoggedInState = loggedInViewModel.getState();
+                        deleteEventController.deleteEvent(currentLoggedInState.getUsername(), event);
+                        loggedInViewModel.setState(currentLoggedInState);
+                    }
+                }
+        );
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(delete);
+        eventPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        return eventPanel;
+    }
+
+    @NotNull
+    private static JPanel getEventPanel(Event event) {
         JPanel detailsContentPanel = new JPanel();
         detailsContentPanel.setLayout(new BoxLayout(detailsContentPanel, BoxLayout.Y_AXIS)); // Vertical layout for details
 
@@ -69,17 +118,7 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         detailsContentPanel.add(locationLabel);
         detailsContentPanel.add(startLabel);
         detailsContentPanel.add(endLabel);
-
-        eventPanel.add(detailsContentPanel);
-
-        JButton deleteButton = new JButton("Delete");
-        deleteButton.addActionListener(e -> deleteEventController.deleteEvent(LoggedInState.getUsername(),  .getName()));
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(deleteButton);
-        eventPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        return eventPanel;
+        return detailsContentPanel;
     }
 
     @Override
@@ -91,10 +130,34 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     }
 
     public static void main(String[] args) {
-        // Example ViewModel instantiation
+        // Create an Event instance
+        Event event1 = new Event("Tech Conference", "A conference about tech innovations.", "New York",
+                LocalDateTime.of(2024, 12, 1, 9, 0), LocalDateTime.of(2024, 12, 1, 17, 0), List.of("tag1", "tag2"));
+
+        Event event2 = new Event("Education Seminar", "A seminar on modern education techniques.", "Los Angeles",
+                LocalDateTime.of(2024, 12, 5, 10, 0), LocalDateTime.of(2024, 12, 5, 16, 0), List.of("tag1", "tag2", "tag3"));
+
+        Map<String, Event> eventMap = new HashMap<>();
+        eventMap.put("event1", event1);
+        eventMap.put("event2", event2);
+
+        EventPoster eventPoster = new EventPoster("john_doe", "password123", "TechCorp", "http://sop.link", eventMap);
+
+        // Create LoggedInState and set events
+        LoggedInState loggedInState = new LoggedInState();
+        loggedInState.setEvents(eventPoster.getEvents());
+        loggedInState.setUsername(eventPoster.getUsername());
+        loggedInState.setPassword(eventPoster.getPassword());
+
+        // Create LoggedInViewModel and link it with LoggedInState
+        LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
+        loggedInViewModel.setState(loggedInState); // THIS IS IMPORTANT!
+
         MyEventsViewModel viewModel = new MyEventsViewModel();
-        // Example controller instantiation (you will likely pass a real controller here)
-        DeleteEventController controller = new DeleteEventController(viewModel);
-        SwingUtilities.invokeLater(() -> new MyEvents_screen(viewModel, controller).setVisible(true));
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+
+        // Initialize the MyEvents_screen and pass the ViewModel and LoggedInViewModel to it
+        SwingUtilities.invokeLater(() -> new MyEvents_screen(viewModel, loggedInViewModel));
     }
+
 }
