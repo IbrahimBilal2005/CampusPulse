@@ -80,6 +80,28 @@ class NewEventPostInteractorTest {
     }
 
     @Test
+    void testStartTimeAfterEndTime() {
+        // Arrange
+        NewEventPostInputData inputData = new NewEventPostInputData(
+                "Tech Talk",
+                "A seminar on AI and ML",
+                "Conference Hall",
+                "10-10-2024 18:00", // Start time
+                "10-10-2024 15:00", // End time
+                "Technology",
+                "Education"
+        );
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        NewEventPostInState state = viewModel.getState();
+        assertEquals("Start time Error", state.getStartError()); // Check for the error message
+        assertFalse(dataAccess.existsByName("Tech Talk")); // Event should not exist
+    }
+
+    @Test
     void testInvalidEndTime() {
         // Arrange
         NewEventPostInputData inputData = new NewEventPostInputData(
@@ -102,6 +124,28 @@ class NewEventPostInteractorTest {
 
         // Assert: Event is not added
         assertFalse(dataAccess.existsByName("Tech Talk"));
+    }
+
+    @Test
+    void testEmptyEventName() {
+        // Arrange
+        NewEventPostInputData inputData = new NewEventPostInputData(
+                "",
+                "A seminar on AI and ML",
+                "Conference Hall",
+                "10-10-2024 15:00",
+                "10-10-2024 17:00",
+                "Technology",
+                "Education"
+        );
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        NewEventPostInState state = viewModel.getState();
+        assertEquals("Event name is empty or already exists.", state.getEventNameError()); // Check for the error message
+        assertFalse(dataAccess.existsByName("")); // Ensure the event was not added
     }
 
     @Test
