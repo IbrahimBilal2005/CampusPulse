@@ -14,13 +14,13 @@ public class Event {
     private final LocalDateTime end;
     private final List<String> tags;
 
-    public Event(
-                 String name,
+    public Event(String name,
                  String description,
                  String location,
                  LocalDateTime start,
                  LocalDateTime end,
                  List<String> tags) {
+
         this.name = name;
         this.description = description;
         this.location = location;
@@ -28,11 +28,6 @@ public class Event {
         this.end = end;
         this.tags = tags;
     }
-
-    // TODO identification system.
-    //  Do we need a unique id for each event in the event posters events?
-    //  Is the name/title enough?
-
 
     public String getName() {
         return name;
@@ -46,9 +41,6 @@ public class Event {
         return location;
     }
 
-    // TODO discuss how we want to represent start/end date and start/end time.
-    //  LocalDateTime represents time and date data independent of time zone.
-    //  We could separate each component, represent it as Strings/Ints etc.
     public LocalDateTime getStart() {
         return start;
     }
