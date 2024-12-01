@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.Account;
+import entity.Event;
+import entity.EventPoster;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
+import use_case.delete_event.DeleteEventDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.UserSignupDataAccessInterface;
 
@@ -14,7 +17,8 @@ import use_case.signup.UserSignupDataAccessInterface;
  */
 public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterface,
         LoginUserDataAccessInterface,
-        ChangePasswordUserDataAccessInterface {
+        ChangePasswordUserDataAccessInterface,
+        DeleteEventDataAccessInterface {
 
     private final Map<String, Account> users = new HashMap<>();
 
@@ -63,6 +67,24 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
      */
     public void addAccount(Account account) {
         users.put(account.getUsername(), account);
+    }
+
+    @Override
+    public EventPoster getUser(String username) {
+        return (EventPoster) users.get(username);
+    }
+
+    @Override
+    public void deleteEvent(EventPoster eventPoster, Event eventToDelete) {
+        EventPoster eventPosterToDelete = (EventPoster) users.get(eventPoster.getUsername());
+        eventPosterToDelete.getEvents().remove(eventToDelete.getName());
+        users.put(eventPoster.getUsername(), eventPosterToDelete);
+
+    }
+
+    @Override
+    public void addAccount(EventPoster eventPoster) {
+        users.put(eventPoster.getUsername(), eventPoster);
     }
 }
 

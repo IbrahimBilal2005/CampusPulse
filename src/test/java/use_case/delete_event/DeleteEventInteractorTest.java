@@ -1,14 +1,15 @@
 package use_case.delete_event;
 
 import data_access.InMemoryUserDataAccessObject;
-import entity.Event;
-import entity.EventPoster;
+import entity.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 class DeleteEventInteractorTest {
 
@@ -21,12 +22,32 @@ class DeleteEventInteractorTest {
                 LocalDateTime.of(2024, 12, 5, 10, 0), LocalDateTime.of(2024, 12, 5, 16, 0), List.of("tag1", "tag2", "tag3"));
 
         Map<String, Event> eventMap = new HashMap<>();
-        eventMap.put("event1", event1);
-        eventMap.put("event2", event2);
+        eventMap.put(event1.getName(), event1);
+        eventMap.put(event2.getName(), event2);
 
-        EventPoster eventPoster = new EventPoster("john_doe", "password123", "TechCorp", "http://sop.link", eventMap);
+        Map<String, Event> expectedMap = new HashMap<>();
+        expectedMap.put(event1.getName(), event1);
 
-        DeleteEventInputData deleteEventInputData = new DeleteEventInputData("username", event1);
-        DeleteEventDataAccessInterface userRepository = new InMemoryUserDataAccessObject()
+        DeleteEventInputData deleteEventInputData = new DeleteEventInputData("username", event2);
+        DeleteEventDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+
+        AccountCreationStrategy accountCreator = new EventPosterCreationStrategy();
+        Account eventPoster = accountCreator.createAccount("username", "password123", "TechCorp", "http://sop.link", eventMap);
+        userRepository.addAccount((EventPoster) eventPoster);
+
+        DeleteEventOutputBoundary successPresenter = new DeleteEventOutputBoundary() {
+            @Override
+            public void prepareSuccessView(DeleteEventOutputData outputData) {
+                assertEquals(expectedMap, ((EventPoster) eventPoster).getEvents());
+                assertTrue(userRepository.getUser(eventPoster.getUsername()).getEvents().equals(expectedMap));
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                fail("Use case failure is unexpected");
+            }
+        };
+        DeleteEventInputBoundary interactor = new DeleteEventInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
+        interactor.deleteEvent(deleteEventInputData);
     }
 }

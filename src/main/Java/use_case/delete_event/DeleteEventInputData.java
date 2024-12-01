@@ -13,5 +13,5 @@ public class DeleteEventInputData {
 
     String getUsername() { return username; }
 
-    String getEventToDelete() { return eventToDelete.toString(); }
+    Event getEventToDelete() { return eventToDelete; }
 }

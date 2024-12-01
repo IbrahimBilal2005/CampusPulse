@@ -12,5 +12,7 @@ public interface DeleteEventDataAccessInterface {
 
     EventPoster getUser(String username);
 
-    void deleteEvent(EventPoster eventPoster, String eventToDelete);
+    void deleteEvent(EventPoster eventPoster, Event eventToDelete);
+
+    void addAccount(EventPoster eventPoster);
 }
