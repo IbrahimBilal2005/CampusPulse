@@ -23,5 +23,19 @@ public class AdminApprovalInteractor {
             outputBoundary.presentFailure("Error: " + e.getMessage());
         }
     }
-}
 
+    public void rejectUser(AdminApprovalInputData inputData) {
+        try {
+            // Reject the target user
+            boolean success = userDataAccess.rejectUserAsEventPoster(inputData.getTargetUid());
+            if (success) {
+                AdminApprovalOutputData outputData = new AdminApprovalOutputData("User rejected successfully", true);
+                outputBoundary.presentSuccess(outputData);
+            } else {
+                outputBoundary.presentFailure("Failed to reject user.");
+            }
+        } catch (Exception e) {
+            outputBoundary.presentFailure("Error: " + e.getMessage());
+        }
+    }
+}
