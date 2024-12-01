@@ -45,8 +45,8 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
         add(createFieldPanel("Event Name:", eventNameField));
         add(createFieldPanel("Description:", new JScrollPane(descriptionArea)));
         add(createFieldPanel("Location:", locationField));
-        add(createFieldPanel("Start (dd-MM-yyyy HH:mm):", startField));
-        add(createFieldPanel("End (dd-MM-yyyy HH:mm):", endField));
+        add(createFieldPanel("Start (dd-MM-yyyy HH:mm 24 hrs):", startField));
+        add(createFieldPanel("End (dd-MM-yyyy HH:mm 24 hrs):", endField));
         add(createFieldPanel("Tag 1:", tag1ComboBox));
         add(createFieldPanel("Tag 2:", tag2ComboBox));
 
@@ -82,7 +82,7 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
 
 
     private JPanel createFieldPanel(String label, Component input) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.add(new JLabel(label));
         panel.add(input);
         return panel;
@@ -189,6 +189,23 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
                 feedbackLabel.setForeground(Color.GREEN);
             }
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("New Event Post Test");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(600, 600);
+
+            // Create a simple ViewModel for testing
+            NewEventViewModel viewModel = new NewEventViewModel();
+            NewEventPostContoller controller = null; // No controller functionality needed for now
+
+            NewEventPostView view = new NewEventPostView(viewModel, controller);
+
+            frame.add(view);
+            frame.setVisible(true);
+        });
     }
 }
 
