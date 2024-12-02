@@ -1,7 +1,12 @@
 package entity;
 
 /**
- * An admin in our program.
+ * Represents an admin account in the program.
+ * <p>
+ * Admins have the ability to approve or deny events and manage event posters.
+ * This class provides basic functionality to represent an admin's credentials
+ * and placeholder comments for potential additional logic related to the approval process.
+ * </p>
  */
 public class Admin implements Account {
     private final String username;
