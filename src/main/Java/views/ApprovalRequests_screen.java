@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApprovalRequests_screen extends JFrame {
@@ -79,9 +80,19 @@ public class ApprovalRequests_screen extends JFrame {
     }
 
     public static void main(String[] args) {
-//        // Dummy data
-//        List<User> pending = new ArrayList<>();
-//        pending.add(new User());
-//        new ApprovalRequests_screen(pending);
+        // Dummy data
+        List<User> pending = new ArrayList<>();
+        pending.add(new User(
+                "dummyUsername",      // username
+                "dummyPassword",      // password
+                "Dummy",              // firstName
+                "User",               // lastName
+                25,                   // age
+                "Male",               // gender
+                List.of("sports", "tech") // interests
+        ));
+        new ApprovalRequests_screen(pending);
+
+        SwingUtilities.invokeLater(() -> new ApprovalRequests_screen(pending).setVisible(true));
     }
 }
