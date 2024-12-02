@@ -1,7 +1,7 @@
 package interface_adapter.change_password;
 
 public class ChangePasswordState {
-    private String username;
+    private String username = "";
     private String currentPassword = "";
     private String currentPasswordError;
     private String newPassword = "";
@@ -10,9 +10,9 @@ public class ChangePasswordState {
     private String confirmPasswordError;
 
     // Getters and Setters
-    public String getUsername() {return username;}
+    public String getUsername() { return username;}
 
-    public void setUsername(String username) {this.username = username;}
+    public void setUsername(String username) { this.username = username;}
 
     public String getCurrentPassword() {
         return currentPassword;

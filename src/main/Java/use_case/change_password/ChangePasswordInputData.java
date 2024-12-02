@@ -12,9 +12,8 @@ public class ChangePasswordInputData {
         this.newPassword = newPassword;
         this.confirmPassword = confirmPassword;
     }
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() {return username;}
+
     public String getCurrentPassword() {
         return currentPassword;
     }
