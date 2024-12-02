@@ -45,7 +45,8 @@ class NewEventPostInteractorTest {
                 "10-10-2024 05:00",
                 "10-10-2024 17:00",
                 "Technology",
-                "Education"
+                "Education",
+                "abcd"
         );
 
         // Act
@@ -64,7 +65,8 @@ class NewEventPostInteractorTest {
                 "invalid-date",
                 "10-10-2024 17:00",
                 "Technology",
-                "Education"
+                "Education",
+                "abcd"
         );
 
         // Act
@@ -89,7 +91,8 @@ class NewEventPostInteractorTest {
                 "10-10-2024 18:00", // Start time
                 "10-10-2024 15:00", // End time
                 "Technology",
-                "Education"
+                "Education",
+                "abcd"
         );
 
         // Act
@@ -111,7 +114,8 @@ class NewEventPostInteractorTest {
                 "10-10-2024 15:00",
                 "invalid-date",
                 "Technology",
-                "Education"
+                "Education",
+                "abcd"
         );
 
         // Act
@@ -136,7 +140,8 @@ class NewEventPostInteractorTest {
                 "10-10-2024 15:00",
                 "10-10-2024 17:00",
                 "Technology",
-                "Education"
+                "Education",
+                "abcd"
         );
 
         // Act
@@ -167,7 +172,8 @@ class NewEventPostInteractorTest {
                 "10-10-2024 15:00",
                 "10-10-2024 17:00",
                 "Technology",
-                "Education"
+                "Education",
+                "abcd"
         );
 
         // Act
@@ -191,7 +197,8 @@ class NewEventPostInteractorTest {
                 "10-10-2024 15:00",
                 "10-10-2024 17:00",
                 "Technology",
-                "Education"
+                "Education",
+                "abcd"
         );
 
         // Act
