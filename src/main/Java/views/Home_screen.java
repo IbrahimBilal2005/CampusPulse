@@ -164,18 +164,13 @@ public class Home_screen extends JFrame {
         // Apply Button
         JButton applyButton = new JButton("Apply Filters");
         applyButton.addActionListener(e -> {
-            System.out.println("Filters Applied: " + filterCriteria); // Debugging
             filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
-            updateEventsList(filterViewModel.getState().getFilteredEvents());// Call a method in the controller
+            updateEventsList(filterViewModel.getState().getFilteredEvents());
         });
         JButton resetButton = new JButton("Reset Filters");
         resetButton.addActionListener(e -> {
-            System.out.println("Filters Applied: " + filterCriteria);
-            filterCriteria.put("duration", null);
-            filterCriteria.put("location", null);
-            filterCriteria.put("tags", null);
-            System.out.println("Filters Applied: " + filterCriteria); // Debugging
-            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults()); // Call a method in the controller
+            filterCriteria.clear();
+            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
             updateEventsList(filterViewModel.getState().getFilteredEvents());
         });
         filterPanel.add(applyButton);
@@ -183,7 +178,6 @@ public class Home_screen extends JFrame {
 
         return filterPanel;
     }
-
 
     private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
@@ -216,21 +210,11 @@ public class Home_screen extends JFrame {
             searchController.search(query);
             updateEventsList(searchViewModel.getState().getResults());
         });
-
-        searchViewModel.addPropertyChangeListener(evt -> {
-            if ("results".equals(evt.getPropertyName())) {
-                updateEventsList(searchViewModel.getState().getResults());
-            }
-        });
     }
 
     private void triggerInitialSearch() {
         searchController.search("");
-        HashMap filterCriteria = new HashMap<>();
-        filterCriteria.put("duration", null);
-        filterCriteria.put("location", null);
-        filterCriteria.put("tags", null);
-        filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
+        filterController.executeFilter(new HashMap<>(), searchViewModel.getState().getResults());
         updateEventsList(searchViewModel.getState().getResults());
     }
 
@@ -260,8 +244,21 @@ public class Home_screen extends JFrame {
         eventDetailsPanel.add(createLabel("Location: " + event.getLocation(), new Font("Arial", Font.PLAIN, 20)));
         eventDetailsPanel.add(createLabel("Date: " + event.getStart().toString(), new Font("Arial", Font.PLAIN, 20)));
 
+        // Add mouse listener for event click
+        eventPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                onEventClicked(event); // Handle event click
+            }
+        });
+
         eventPanel.add(eventDetailsPanel, BorderLayout.CENTER);
         return eventPanel;
+    }
+
+    private void onEventClicked(Event event) {
+        System.out.println("Event clicked: " + event.getName());
+        // Trigger logic to navigate to Event Details screen
     }
 
     private JLabel createLabel(String text, Font font) {
@@ -271,7 +268,6 @@ public class Home_screen extends JFrame {
     }
 
     private boolean checkIfEventPoster() {
-        // Implement logic to determine if the user is an event poster
         return true; // Replace with actual condition
     }
 
