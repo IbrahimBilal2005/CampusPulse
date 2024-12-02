@@ -87,11 +87,6 @@ public class InMemoryUserDataAccessObject implements AccountSignupDataAccessInte
     }
 
     @Override
-    public EventPoster getUser(String username) {
-        return (EventPoster) users.get(username);
-    }
-
-    @Override
     public void deleteEvent(EventPoster eventPoster, Event eventToDelete) {
         EventPoster eventPosterToDelete = (EventPoster) users.get(eventPoster.getUsername());
         eventPosterToDelete.getEvents().remove(eventToDelete.getName());
