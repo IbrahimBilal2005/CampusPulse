@@ -1,7 +1,6 @@
 package use_case.home;
 
 import entity.Event;
-
 import java.util.List;
 
 public class HomeScreenOutputData {
