@@ -72,6 +72,7 @@ public class EventDataAccessObject implements SearchDataAccessInterface,
      * Add an event
      * @param event the event to add
      */
+    //@Override
     private void addEvent(Event event) {
         events.put(event.getName(), event);
         save(event);
