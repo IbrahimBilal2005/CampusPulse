@@ -8,6 +8,10 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The interactor for the New Event Post Use Case.
+ */
+
 public class NewEventPostInteractor implements NewEventPostInputBoundary{
     private final NewEventPostOutputBoundary presenter;
     private final NewEventPostUserDataAccessInterface dataAccess;

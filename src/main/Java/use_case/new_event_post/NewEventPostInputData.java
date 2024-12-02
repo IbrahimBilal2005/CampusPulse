@@ -1,5 +1,9 @@
 package use_case.new_event_post;
 
+/**
+ * The input data for the New Event Post Use Case.
+ */
+
 
 public class NewEventPostInputData {
     private final String eventName;
