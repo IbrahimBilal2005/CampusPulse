@@ -16,14 +16,15 @@ public class EventPosterDataAccessObject implements EventPosterSignupDataAccessI
 
     private readDBInterface mongoConnection = new MongoConnection();
     private MongoCollection<Document> EventPostersCollection;
-    private Map<String, Account> accounts = new HashMap<>();
+    private Map<String, EventPoster> eventPosters = new HashMap<>();
     private AccountCreationStrategy accountCreationStrategy;
 
     public EventPosterDataAccessObject(AccountCreationStrategy accountCreationStrategy,
-                                       Map<String, Account> accounts,
+                                       Map<String, EventPoster> eventPosters,
                                        readDBInterface mongoConnection) {
+
         this.accountCreationStrategy = accountCreationStrategy;
-        this.accounts = accounts;
+        this.eventPosters = eventPosters;
         this.mongoConnection = mongoConnection;
         this.EventPostersCollection = mongoConnection.getEventPostersCollection();
 
@@ -36,15 +37,15 @@ public class EventPosterDataAccessObject implements EventPosterSignupDataAccessI
                 String sopLink = doc.getString("sopLink");
                 Map<String, Event> events = (Map<String, Event>) doc.get("events");
 
-                Account eventPoster = accountCreationStrategy.createAccount(username, password, organizationName, sopLink, events);
-                accounts.put(username, eventPoster);
+                EventPoster eventPoster = (EventPoster) accountCreationStrategy.createAccount(username, password, organizationName, sopLink, events);
+                eventPosters.put(username, eventPoster);
             }
         }
     }
 
     @Override
     public boolean existsByName(String username) {
-        return accounts.containsKey(username);
+        return eventPosters.containsKey(username);
     }
 
     @Override
@@ -58,6 +59,6 @@ public class EventPosterDataAccessObject implements EventPosterSignupDataAccessI
         doc.append("events", eventPoster.getEvents());
 
         EventPostersCollection.insertOne(doc);
-        accounts.put(eventPoster.getUsername(), eventPoster);
+        eventPosters.put(eventPoster.getUsername(), eventPoster);
     }
 }
