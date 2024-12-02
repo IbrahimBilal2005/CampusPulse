@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.time.LocalDateTime;
 
 public class MyEvents_screen extends JFrame implements PropertyChangeListener {
-    private static final String viewName = "My Events";
+    private static final String VIEW_NAME = "My Events";
 
     private MyEventsViewModel myEventsViewModel;
     private LoggedInViewModel loggedInViewModel;
@@ -31,7 +31,7 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
 
     private final JPanel eventsPanel;
     private final JButton addEventButton;
-    private final JButton backButton; // For Back button
+    private final JButton backButton;
 
     public MyEvents_screen(MyEventsViewModel myEventsViewModel, LoggedInViewModel loggedInViewModel) {
         this.myEventsViewModel = myEventsViewModel;
@@ -39,21 +39,11 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         this.myEventsViewModel.addPropertyChangeListener(this);
         this.loggedInViewModel.addPropertyChangeListener(this);
 
-        setTitle(viewName);
+        setTitle(VIEW_NAME);
+        setupFrame();
 
-        // Get screen insets (taskbar size)
-        Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
-        int taskbarHeight = screenInsets.bottom;
-
-        // Adjust window size to avoid taskbar overlap
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(screenSize.width, screenSize.height - taskbarHeight);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center window
-
-        // Create title label
         // For title at the top
-        JLabel titleLabel = new JLabel(viewName, SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel(VIEW_NAME, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0)); // Top and bottom padding
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -85,6 +75,31 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         add(scrollPane, BorderLayout.CENTER); // Event list
         add(buttonPanel, BorderLayout.SOUTH); // Buttons at the bottom
 
+        addBackButtonListener(loggedInViewModel);
+        addAddEventButtonListener(loggedInViewModel);
+    }
+
+    /**
+     * Add back button action listener.
+     * @param loggedInViewModel the loggedInViewModel
+     */
+    private void addAddEventButtonListener(LoggedInViewModel loggedInViewModel) {
+        addEventButton.addActionListener(
+                // This creates an anonymous subclass of ActionListener and instantiates it.
+                evt -> {
+                    if (evt.getSource().equals(addEventButton)) {
+                        final LoggedInState currentState = loggedInViewModel.getState();
+                        // add event controller to switch to add event screen
+                    }
+                }
+        );
+    }
+
+    /**
+     * Add the add Event button action listener.
+     * @param loggedInViewModel the loggedInViewModel
+     */
+    private void addBackButtonListener(LoggedInViewModel loggedInViewModel) {
         backButton.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
                 evt -> {
@@ -94,18 +109,26 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
                     }
                 }
         );
-
-        addEventButton.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
-                evt -> {
-                    if (evt.getSource().equals(addEventButton)) {
-                        final LoggedInState currentState = loggedInViewModel.getState();
-                        // add event controller
-                    }
-                }
-        );
     }
 
+    /**
+     * Set up the frame settings for this view.
+     */
+    private void setupFrame() {
+        // Get screen insets (taskbar size)
+        Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+        int taskbarHeight = screenInsets.bottom;
+
+        // Adjust window size to avoid taskbar overlap
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, screenSize.height - taskbarHeight);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Center window
+    }
+
+    /**
+     * Initialize the events from the logged in view.
+     */
     private void initializeEvents() {
         final LoggedInState loggedInState = loggedInViewModel.getState();
         List<Event> events = new ArrayList<>(loggedInState.getEvents().values());
@@ -206,7 +229,7 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     }
 
     public String getViewName() {
-        return viewName;
+        return VIEW_NAME;
     }
 
     public void setDeleteEventController(DeleteEventController deleteEventController) {

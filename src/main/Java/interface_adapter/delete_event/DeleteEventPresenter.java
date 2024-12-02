@@ -20,12 +20,12 @@ public class DeleteEventPresenter implements DeleteEventOutputBoundary {
     public void prepareSuccessView(DeleteEventOutputData updatedEventsData) {
         final MyEventsState myEventsState = myEventsViewModel.getState();
         myEventsState.setEvents(updatedEventsData.getEvents());
+        myEventsState.setError("");
         this.myEventsViewModel.setState(myEventsState);
         this.myEventsViewModel.firePropertyChanged();
 
         this.viewManagerModel.setState(myEventsViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
-
     }
 
     @Override

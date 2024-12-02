@@ -6,7 +6,7 @@ import java.util.List;
 
 public class MyEventsState {
     private List<Event> events;
-    private String error;
+    private String error = "";
 
     public MyEventsState(MyEventsState copy) {
         this.events = copy.events;

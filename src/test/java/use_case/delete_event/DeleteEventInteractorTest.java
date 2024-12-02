@@ -79,6 +79,7 @@ class DeleteEventInteractorTest {
         interactor.deleteEvent(deleteEventInputData);
     }
 
+
     @NotNull
     private static DeleteEventInputBoundary getDeleteEventInputBoundary(DeleteEventDataAccessInterface userRepository) {
         DeleteEventOutputBoundary failurePresenter = new DeleteEventOutputBoundary() {

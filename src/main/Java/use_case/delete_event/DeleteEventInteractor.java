@@ -39,5 +39,6 @@ public class DeleteEventInteractor implements DeleteEventInputBoundary{
 
             userPresenter.prepareSuccessView(deleteEventOutputData);
         }
+
     }
 }
