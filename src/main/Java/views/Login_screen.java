@@ -1,15 +1,24 @@
 package views;
 
+import interface_adapter.login.LoginState;
+import interface_adapter.login.LoginViewModel;
+import interface_adapter.login.LoginController;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login_screen {
+public class Login_screen implements ActionListener{
 
-    public static void main(String[] args) {
+    private LoginController controller;
+
+    public Login_screen(LoginViewModel view) {
+
         // Create a new frame
-        JFrame frame = new JFrame("Login Screen"); // Create Frame and have it close when the x is clicked
+        JFrame frame = new JFrame(view.LOGIN_SCREEN); // Create Frame and have it close when the x is clicked
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         //Set the screen size to a quarter the users screen and center it
@@ -18,7 +27,7 @@ public class Login_screen {
         frame.setLocationRelativeTo(null);
 
         //Made a banner with application name at the top
-        JLabel bannerLabel = new JLabel("CampusPulse");
+        JLabel bannerLabel = new JLabel(view.TITLE);
         bannerLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Set font size and style
         bannerLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0)); // Add padding around the text
         bannerLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the label in BoxLayout
@@ -30,15 +39,19 @@ public class Login_screen {
 
         //Create panel (container) for the username field
         JPanel username_panel = new JPanel();
-        username_panel.add(new JLabel("Username:"));
-        username_panel.add(new JTextField(20));
+        username_panel.add(new JLabel(view.USERNAME));
+        JTextField username_input = new JTextField(20);
+        username_panel.add(username_input);
+        
         //Create panel (container) for the password field
         JPanel password_panel = new JPanel();
-        password_panel.add(new JLabel("Password:"));
-        password_panel.add(new JTextField(20));
+        password_panel.add(new JLabel(view.PASSWORD));
+        JPasswordField password_input = new JPasswordField(20);
+        password_panel.add(password_input);
         //Added in login button
-        JPanel button_panel = new JPanel();
-        button_panel.add(new JButton("Login"));
+        JPanel login_panel = new JPanel();
+        JButton login = new JButton(view.LOG_IN);
+        login_panel.add(login);
 
         //Create the main panel and set the frame to display it the order matters since some things should not be centered within the frame
         JPanel main_panel = new JPanel();
@@ -48,11 +61,74 @@ public class Login_screen {
         main_panel.add(Box.createVerticalGlue());
         main_panel.add(username_panel);
         main_panel.add(password_panel);
-        main_panel.add(button_panel);
+        main_panel.add(login_panel);
         frame.setContentPane(main_panel);
         frame.setVisible(true);
 
-        //ActionListeners to be added
+        login.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(login)) {
+                            System.out.println("click");
+                            final LoginState currentState = view.getState();
+//                            The below lines are used for useCase
+                            controller.execute(
+                                    currentState.getUsername(),
+                                    currentState.getPassword()
+                            );
+                        }
+                    }
+                }
+        );
+
+        username_input.getDocument().addDocumentListener(new DocumentListener() {
+            private void documentListenerHelper() {
+                final LoginState currentState = view.getState();
+                currentState.setUsername(username_input.getText());
+                view.setState(currentState);
+            }
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+
+        password_input.getDocument().addDocumentListener(new DocumentListener() {
+            private void documentListenerHelper() {
+                final LoginState currentState = view.getState();
+                currentState.setPassword(new String(password_input.getPassword()));
+                view.setState(currentState);
+            }
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }
 

@@ -1,11 +1,16 @@
 package entity;
 
 /**
- * An admin in our program.
+ * Represents an admin account in the program.
+ * <p>
+ * Admins have the ability to approve or deny events and manage event posters.
+ * This class provides basic functionality to represent an admin's credentials
+ * and placeholder comments for potential additional logic related to the approval process.
+ * </p>
  */
 public class Admin implements Account {
     private final String username;
-    private final String password;
+    private  String password;
 
     // TODO do we need to add any other logic to make our approval process easier?
     //  Ex map of approved event posters, map of pending event posters awaiting approval etc.
@@ -23,5 +28,15 @@ public class Admin implements Account {
 
     public String getPassword() {
         return this.password;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public void setUsername(String username) {
+
     }
 }
