@@ -1,13 +1,16 @@
 package views;
 
+import data_access.GeoapifyRequest;
 import interface_adapter.event_details.EventDetailsController;
 import interface_adapter.event_details.EventDetailsViewModel;
+import entity.CustomImagePanel;
 import entity.Event;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.util.List; //TO BE REMOVED ONCE FILE COMPLETED
 import java.util.ArrayList; //TO BE REMOVED ONCE FILE COMPLETED
@@ -18,14 +21,13 @@ public class EventDetails_screen {
 
     public EventDetails_screen(EventDetailsViewModel view, Event event) {
 
-    //public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        //TESTING CODE
 //        EventDetailsViewModel view = new EventDetailsViewModel();
 //        LocalDateTime dateTime = LocalDateTime.of(2025, 1, 1,12, 15);
 //        List<String> stringList = new ArrayList<>();
 //        stringList.add("Monday");
 //        Event event = new Event("test name", "This is description", "22 Shorten Place", dateTime, dateTime, stringList);
-//
 
         // Create a new frame
         JFrame frame = new JFrame("Event Details Screen"); // Create Frame and have it close when the x is clicked
@@ -106,16 +108,22 @@ public class EventDetails_screen {
         backButton.setPreferredSize(new Dimension(80, 30));
         detailsPanel.add(backButton);
 
-        JPanel imagePanel = new JPanel();
+        CustomImagePanel imagePanel = new CustomImagePanel();
         imagePanel.setPreferredSize(new Dimension(300, 300));
         imagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        JLabel imageLabel = new JLabel("image/default image", SwingConstants.CENTER);
-        imagePanel.add(imageLabel);
+
+        try {
+            BufferedImage map = mapLoc(event.getLocation());
+            imagePanel.setMap(map);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
 
         // Add components to the main panel
         main_panel.add(detailsPanel, BorderLayout.CENTER);
         main_panel.add(imagePanel, BorderLayout.EAST);
-        //main_panel.add(backButtonPanel, BorderLayout.NORTH);
+        main_panel.add(backButtonPanel, BorderLayout.SOUTH);
         main_panel.add(eventNameLabel, BorderLayout.NORTH); // Add the event name at the top
 
         // Add panels to the frame
@@ -143,6 +151,11 @@ public class EventDetails_screen {
             return time.getHour() + ":0" + time.getMinute();
         }
         return time.getHour() + ":" + time.getMinute();
+    }
+
+    private static BufferedImage mapLoc(String loc) throws Exception {
+        GeoapifyRequest locImage = new GeoapifyRequest("00b11d0dc6c34c75bb7f719c3d745872");
+        return locImage.getMapImage(loc);
     }
 
 }
