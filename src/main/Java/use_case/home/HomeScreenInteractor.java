@@ -1,6 +1,6 @@
 package use_case.home;
 
-import entity.User;
+import entity.Event;
 import use_case.home.HomeScreenDataAccessInterface;
 
 public class HomeScreenInteractor implements HomeScreenInputBoundary {
@@ -13,12 +13,17 @@ public class HomeScreenInteractor implements HomeScreenInputBoundary {
     }
 
     @Override
-    public void handleRequest(HomeScreenInputData inputData) {
-        User user = inputData.getUser();
-        boolean isEventPoster = user.isEventPoster();
-        var events = dataAccess.fetchEvents(user);
-
+    public void loadMyEvents(HomeScreenInputData inputData) {
+        boolean isEventPoster = inputData.getUser().isEventPoster();
+        var events = dataAccess.fetchEvents(inputData.getUser());
         HomeScreenOutputData outputData = new HomeScreenOutputData(isEventPoster, events);
         outputBoundary.presentHomeScreen(outputData);
+    }
+
+    @Override
+    public void loadEventDetails(HomeScreenEventInputData inputData) {
+        Event event = inputData.getEvent();
+        HomeScreenEventOutputData outputData = new HomeScreenEventOutputData(event);
+        outputBoundary.presentEventDetails(outputData);
     }
 }
