@@ -18,9 +18,9 @@ import use_case.signup.AccountSignupDataAccessInterface;
  * NOT persist data between runs of the program.
  */
 public class InMemoryUserDataAccessObject implements AccountSignupDataAccessInterface,
-        LoginUserDataAccessInterface,
-        ChangePasswordUserDataAccessInterface,
-        DeleteEventDataAccessInterface {
+                                                     LoginUserDataAccessInterface,
+                                                     ChangePasswordUserDataAccessInterface,
+                                                     DeleteEventDataAccessInterface {
 
     private final Map<String, Account> users = new HashMap<>();
 

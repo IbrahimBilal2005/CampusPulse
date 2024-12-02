@@ -18,31 +18,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AccountDataAccessObject implements DeleteEventDataAccessInterface, ChangePasswordUserDataAccessInterface, AccountSignupDataAccessInterface {
+public class AccountDataAccessObject implements DeleteEventDataAccessInterface,
+                                                ChangePasswordUserDataAccessInterface,
+                                                AccountSignupDataAccessInterface {
+
+    private final EventDataAccessObject eventDataAccessObject;
+
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
 
     private readDBInterface mongoConnection = new MongoConnection();
 
-    private final MongoCollection<Document> EventPostersCollection;
-    private final MongoCollection<Document> UsersCollection;
+    private final MongoCollection<Document> eventPosterCollection;
+    private final MongoCollection<Document> userCollection;
+    private final MongoCollection<Document> adminCollection;
 
     private Map<String, Account> accounts = new HashMap<>();
+
     private final AccountCreationStrategy eventPosterCreationStrategy;
     private final AccountCreationStrategy userCreationStrategy;
+    private final AccountCreationStrategy adminCreationStrategy;
 
 
     public AccountDataAccessObject(AccountCreationStrategy eventPosterCreationStrategy,
                                    AccountCreationStrategy userCreationStrategy,
+                                   AccountCreationStrategy adminCreationStrategy,
                                    Map<String, Account> accounts,
-                                   readDBInterface mongoConnection) {
+                                   readDBInterface mongoConnection,
+                                   EventDataAccessObject eventDataAccessObject) {
+
         this.eventPosterCreationStrategy = eventPosterCreationStrategy;
         this.userCreationStrategy = userCreationStrategy;
+        this.adminCreationStrategy = adminCreationStrategy;
+        this.eventDataAccessObject = eventDataAccessObject;
+
         this.accounts = accounts;
         this.mongoConnection = mongoConnection;
 
-        this.EventPostersCollection = mongoConnection.getEventPostersCollection();
-        this.UsersCollection = mongoConnection.getUsersCollection();
+        this.eventPosterCollection = mongoConnection.getEventPostersCollection();
+        this.userCollection = mongoConnection.getUsersCollection();
+        this.adminCollection = mongoConnection.getAdminCollection();
 
         loadEventPosters();
         loadUsers();
@@ -52,7 +67,7 @@ public class AccountDataAccessObject implements DeleteEventDataAccessInterface, 
      * Load EventPosters from MongoDB and add them to the accounts map
      */
     private void loadEventPosters() {
-        try (MongoCursor<Document> cursor = EventPostersCollection.find().iterator()) {
+        try (MongoCursor<Document> cursor = eventPosterCollection.find().iterator()) {
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
             String username = doc.getString(USERNAME);
@@ -71,7 +86,7 @@ public class AccountDataAccessObject implements DeleteEventDataAccessInterface, 
      * Load Users from MongoDB and add them to the accounts map
      */
     private void loadUsers() {
-        try (MongoCursor<Document> cursor = UsersCollection.find().iterator()) {
+        try (MongoCursor<Document> cursor = userCollection.find().iterator()) {
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
                 String username = doc.getString(USERNAME);
@@ -85,6 +100,36 @@ public class AccountDataAccessObject implements DeleteEventDataAccessInterface, 
                 User user = (User) userCreationStrategy.createAccount(username, password, firstName, lastName, age, gender, interests);
                 accounts.put(username, user);  // Add User to accounts map
             }
+        }
+    }
+
+    /**
+     * Save the account
+     * @param account the account to save
+     */
+    @Override
+    public void save(Account account) {
+        Document accountDoc = new Document(USERNAME, account.getUsername())
+                .append(PASSWORD, account.getPassword());
+
+        if (account instanceof EventPoster) {
+            EventPoster eventPoster = (EventPoster) account;
+            accountDoc.append("organizationName", eventPoster.getOrganizationName())
+                    .append("sopLink", eventPoster.getSopLink())
+                    .append("events", eventPoster.getEvents());
+
+            // Save to EventPosters collection
+            eventPosterCollection.insertOne(accountDoc);
+        } else if (account instanceof User) {
+            User user = (User) account;
+            accountDoc.append("firstName", user.getFirstName())
+                    .append("lastName", user.getLastName())
+                    .append("age", user.getAge())
+                    .append("gender", user.getGender())
+                    .append("interests", user.getInterests());
+
+            // Save to Users collection
+            userCollection.insertOne(accountDoc);
         }
     }
 
@@ -103,6 +148,9 @@ public class AccountDataAccessObject implements DeleteEventDataAccessInterface, 
             // Save the updated EventPoster to the map and the database
             accounts.put(eventPoster.getUsername(), eventPosterForDelete);
             save(eventPosterForDelete);  // Save the updated EventPoster to the database
+
+            //delete the event from the events collection in the eventDAO
+            eventDataAccessObject.deleteEvent(eventToDelete);
         }
     }
 
@@ -165,35 +213,5 @@ public class AccountDataAccessObject implements DeleteEventDataAccessInterface, 
         account.setPassword(newPassword);
         accounts.put(account.getUsername(), account);
         save(account);  // This will ensure the password change is reflected in the database as well
-    }
-
-    /**
-     * Save the account
-     * @param account the account to save
-     */
-    @Override
-    public void save(Account account) {
-        Document accountDoc = new Document(USERNAME, account.getUsername())
-                .append(PASSWORD, account.getPassword());
-
-        if (account instanceof EventPoster) {
-            EventPoster eventPoster = (EventPoster) account;
-            accountDoc.append("organizationName", eventPoster.getOrganizationName())
-                    .append("sopLink", eventPoster.getSopLink())
-                    .append("events", eventPoster.getEvents());
-
-            // Save to EventPosters collection
-            EventPostersCollection.insertOne(accountDoc);
-        } else if (account instanceof User) {
-            User user = (User) account;
-            accountDoc.append("firstName", user.getFirstName())
-                    .append("lastName", user.getLastName())
-                    .append("age", user.getAge())
-                    .append("gender", user.getGender())
-                    .append("interests", user.getInterests());
-
-            // Save to Users collection
-            UsersCollection.insertOne(accountDoc);
-        }
     }
 }
