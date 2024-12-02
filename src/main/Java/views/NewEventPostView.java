@@ -21,8 +21,8 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
     private final JTextField locationField = new JTextField(15);
     private final JTextField startField = new JTextField(15);
     private final JTextField endField = new JTextField(15);
-    private final JComboBox<String> tag1ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology"});
-    private final JComboBox<String> tag2ComboBox = new JComboBox<>(new String[]{"Education", "Art", "Environment"});
+    private final JComboBox<String> tag1ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology", "Education", "Art", "Environment"});
+    private final JComboBox<String> tag2ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology", "Education", "Art", "Environment"});
     private final JButton postButton = new JButton("Post Event");
     private final JLabel feedbackLabel = new JLabel("");
 
