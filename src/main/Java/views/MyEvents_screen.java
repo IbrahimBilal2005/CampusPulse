@@ -80,12 +80,11 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     }
 
     /**
-     * Add back button action listener.
+     * Add action listener for the "Add Event" button.
      * @param loggedInViewModel the loggedInViewModel
      */
     private void addAddEventButtonListener(LoggedInViewModel loggedInViewModel) {
         addEventButton.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
                 evt -> {
                     if (evt.getSource().equals(addEventButton)) {
                         final LoggedInState currentState = loggedInViewModel.getState();
@@ -96,12 +95,11 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     }
 
     /**
-     * Add the add Event button action listener.
+     * Add action listener for the "Back" button.
      * @param loggedInViewModel the loggedInViewModel
      */
     private void addBackButtonListener(LoggedInViewModel loggedInViewModel) {
         backButton.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
                 evt -> {
                     if (evt.getSource().equals(backButton)) {
                         final LoggedInState currentState = loggedInViewModel.getState();
@@ -113,6 +111,7 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
 
     /**
      * Set up the frame settings for this view.
+     * This includes setting the size of the window and ensuring that it avoids taskbar overlap.
      */
     private void setupFrame() {
         // Get screen insets (taskbar size)
@@ -127,7 +126,8 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     }
 
     /**
-     * Initialize the events from the logged in view.
+     * Initialize the events from the logged in view model and set them in the MyEventsState.
+     * This method updates the view with the list of events associated with the logged-in user.
      */
     private void initializeEvents() {
         final LoggedInState loggedInState = loggedInViewModel.getState();
@@ -142,6 +142,12 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         }
     }
 
+    /**
+     * Load and refresh events in the event panel based on the provided MyEventsState.
+     * This method ensures the UI is updated whenever the events change.
+     *
+     * @param myEventsState the state holding the current list of events
+     */
     private void loadEvents(MyEventsState myEventsState) {
         List<Event> events = myEventsState.getEvents();
         eventsPanel.removeAll();
@@ -155,6 +161,12 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Create a panel for displaying a single event.
+     *
+     * @param event the event object to display
+     * @return a JPanel that represents the event's information and actions
+     */
     private JPanel createEventPanel(Event event) {
         // Create a panel with BoxLayout for horizontal arrangement of details and button
         JPanel eventPanel = new JPanel();
@@ -179,6 +191,13 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         return eventPanel;
     }
 
+    /**
+     * Create and return a "Delete" button for the event.
+     * This button will trigger the deletion of the event when clicked.
+     *
+     * @param event the event to delete
+     * @return a JButton for deleting the event
+     */
     @NotNull
     private JButton getjButton(Event event) {
         JButton delete = new JButton("Delete");
@@ -193,6 +212,12 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         return delete;
     }
 
+    /**
+     * Create a panel displaying the details of an event.
+     *
+     * @param event the event to display
+     * @return a JPanel containing the event's details (name, description, etc.)
+     */
     @NotNull
     private static JPanel getEventPanel(Event event) {
         JPanel detailsContentPanel = new JPanel();
@@ -220,6 +245,12 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         return detailsContentPanel;
     }
 
+    /**
+     * Listen to property change events and update the events displayed on the screen.
+     * This method is triggered when the state of the MyEventsViewModel changes.
+     *
+     * @param evt the property change event
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("state".equals(evt.getPropertyName())) {
