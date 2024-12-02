@@ -29,7 +29,7 @@ public class DeleteEventInteractor implements DeleteEventInputBoundary{
         }
         else {
             // Get the eventPoster whose username matches the input username
-            final EventPoster eventPoster = userDataAccessObject.getUser(deleteEventInputData.getUsername());
+            final EventPoster eventPoster = (EventPoster )userDataAccessObject.getEventPoster(deleteEventInputData.getUsername());
 
             // Delete the event from the eventposter's events.
             userDataAccessObject.deleteEvent(eventPoster, deleteEventInputData.getEventToDelete());

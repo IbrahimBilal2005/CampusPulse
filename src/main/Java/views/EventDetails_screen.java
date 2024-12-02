@@ -1,6 +1,6 @@
 package views;
 
-import data_access.GeoapifyRequest;
+import data_access.geo.GeoapifyRequest;
 import interface_adapter.event_details.EventDetailsController;
 import interface_adapter.event_details.EventDetailsViewModel;
 import entity.CustomImagePanel;

@@ -1,11 +1,12 @@
 package use_case.signup.general_user_signup;
 
-import data_access.InMemoryUserDataAccessInterface;
+import data_access.InMemoryUserDataAccessObject;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import entity.Account;
 import entity.UserCreationStrategy;
 import entity.AccountCreationStrategy;
+import use_case.signup.AccountSignupDataAccessInterface;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ class UserSignupInteractorTest {
     @Test
     void successTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 18, "gender", List.of("art"));
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupOutputBoundary successPresenter = new UserSignupOutputBoundary() {
 
             @Override
@@ -46,7 +47,7 @@ class UserSignupInteractorTest {
     @Test
     void failurePasswordMismatchTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "wrong", "firstName", "lastName", 18, "gender", List.of("art"));
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupInputBoundary interactor = getUserSignupInputBoundary("Passwords do not match", userRepository);
         interactor.execute(inputData);
     }
@@ -54,7 +55,7 @@ class UserSignupInteractorTest {
     @Test
     void failureInvalidFirstNameTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "123", "lastName", 18, "gender", List.of("art"));
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupInputBoundary interactor = getUserSignupInputBoundary("Invalid first name", userRepository);
         interactor.execute(inputData);
     }
@@ -62,7 +63,7 @@ class UserSignupInteractorTest {
     @Test
     void failureInvalidLastNameTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "123", 18, "gender", List.of("art"));
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupInputBoundary interactor = getUserSignupInputBoundary("Invalid last name", userRepository);
         interactor.execute(inputData);
     }
@@ -70,7 +71,7 @@ class UserSignupInteractorTest {
     @Test
     void failureShortPasswordTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "short", "short", "firstName", "lastName", 18, "gender", List.of("art"));
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupInputBoundary interactor = getUserSignupInputBoundary("Password must be at least 8 characters", userRepository);
         interactor.execute(inputData);
     }
@@ -78,7 +79,7 @@ class UserSignupInteractorTest {
     @Test
     void failureInvalidGenderTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "123", "lastName", 18, "", List.of("art"));
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupInputBoundary interactor = getUserSignupInputBoundary("No gender selected", userRepository);
         interactor.execute(inputData);
     }
@@ -86,7 +87,7 @@ class UserSignupInteractorTest {
     @Test
     void failureInvalidInterestsTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 18, "gender", null);
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupInputBoundary interactor = getUserSignupInputBoundary("No interests selected", userRepository);
         interactor.execute(inputData);
     }
@@ -94,7 +95,7 @@ class UserSignupInteractorTest {
     @Test
     void failureUserExistsTest() {
         UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 18, "gender", List.of("art"));
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessInterface();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         AccountCreationStrategy accountCreator = new UserCreationStrategy();
         Account user = accountCreator.createAccount("username", "password", "firstName", "lastName", 18, "gender", List.of("art"));
@@ -106,7 +107,7 @@ class UserSignupInteractorTest {
 
 
     @NotNull
-    private static UserSignupInputBoundary getUserSignupInputBoundary(String error, UserSignupDataAccessInterface userRepository) {
+    private static UserSignupInputBoundary getUserSignupInputBoundary(String error, AccountSignupDataAccessInterface userRepository) {
         UserSignupOutputBoundary failurePresenter = new UserSignupOutputBoundary() {
 
             @Override

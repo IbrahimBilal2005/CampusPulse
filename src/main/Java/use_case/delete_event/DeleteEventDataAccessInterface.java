@@ -1,5 +1,6 @@
 package use_case.delete_event;
 
+import entity.Account;
 import entity.Event;
 import entity.EventPoster;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public interface DeleteEventDataAccessInterface {
 
-    EventPoster getUser(String username);
+    Account getAccountByUsername(String username);
 
     void deleteEvent(EventPoster eventPoster, Event eventToDelete);
 

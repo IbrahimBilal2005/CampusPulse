@@ -8,13 +8,13 @@ import entity.User;
 import org.bson.Document;
 import entity.Account;
 import entity.AccountCreationStrategy;
-import use_case.signup.general_user_signup.UserSignupDataAccessInterface;
+import use_case.signup.AccountSignupDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserDataAccessObject implements UserSignupDataAccessInterface {
+public class UserDataAccessObject implements AccountSignupDataAccessInterface {
 
     private readDBInterface mongoConnection = new MongoConnection();
     private MongoCollection<Document> UsersCollection;
