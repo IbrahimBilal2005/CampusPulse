@@ -48,7 +48,6 @@ public class ApprovalRequests_screen extends JFrame {
                         public void actionPerformed(ActionEvent evt) {
                             if (evt.getSource().equals(approveButton)) {
                                 approvalController.approveUser(user.getUsername());
-                                pendingRequests.remove(user);
                                 refreshUI();
                             }
                         }
@@ -61,7 +60,6 @@ public class ApprovalRequests_screen extends JFrame {
                         public void actionPerformed(ActionEvent evt) {
                             if (evt.getSource().equals(rejectButton)) {
                                 approvalController.rejectUser(user.getUsername());
-                                pendingRequests.remove(user);
                                 refreshUI();
                             }
                         }
