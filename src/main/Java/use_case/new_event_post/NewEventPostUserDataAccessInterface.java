@@ -13,12 +13,6 @@ public interface NewEventPostUserDataAccessInterface {
     //checks if event exists
     boolean existsByName(String Eventname);
 
-    /**
-     * adds event to the database
-     */
-
-    //adds event to mongo and internal memory
-    void addEvent(Event event);
 
     /**
      * Adds event to given username

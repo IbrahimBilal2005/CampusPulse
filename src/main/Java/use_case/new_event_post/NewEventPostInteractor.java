@@ -72,7 +72,6 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
         );
 
         // Add the event to the data store
-        dataAccess.addEvent(newEvent);
         dataAccess.addtoMyevents(newEvent,inputData.getUsername());
         presenter.presentSuccess(new NewEventPostOutputData(false));
 

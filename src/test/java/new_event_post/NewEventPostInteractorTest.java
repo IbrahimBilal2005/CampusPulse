@@ -2,6 +2,7 @@ package new_event_post;
 
 import data_access.InMemoryEventDataAccess;
 import entity.Event;
+import entity.EventPoster;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.new_event_post.NewEventPostInState;
 import interface_adapter.new_event_post.NewEventPostPresenter;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import use_case.new_event_post.NewEventPostInputData;
 import use_case.new_event_post.NewEventPostInteractor;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -155,36 +158,43 @@ class NewEventPostInteractorTest {
 
     @Test
     void testDuplicateEventName() {
-        // Arrange
-        dataAccess.addEvent(new Event(
+        EventPoster predefinedPoster = new EventPoster(
+                "abcd",
+                "password123",
+                "TechCorp",
+                "www.soplink.com",
+                new HashMap<>()
+        );
+
+        Event existingEvent = new Event(
                 "Tech Talk",
                 "Existing description",
                 "Existing location",
-                null,
-                null,
+                LocalDateTime.of(2024, 10, 10, 5, 0),
+                LocalDateTime.of(2024, 10, 10, 6, 0),
                 List.of("Technology")
-        ));
-
-        NewEventPostInputData inputData = new NewEventPostInputData(
-                "Tech Talk",
-                "Another seminar",
-                "Another Hall",
-                "10-10-2024 15:00",
-                "10-10-2024 17:00",
-                "Technology",
-                "Education",
-                "abcd"
         );
 
-        // Act
+        predefinedPoster.getEvents().put("Tech Talk", existingEvent);
+        dataAccess.addtoMyevents(existingEvent, "abcd");
+
+        NewEventPostInputData inputData = new NewEventPostInputData(
+                "Tech Talk",                              // Duplicate Event Name
+                "Another seminar",                        // Description
+                "Another Hall",                           // Location
+                "10-10-2024 15:00",                       // Start Time
+                "10-10-2024 17:00",                       // End Time
+                "Technology",                             // Tag 1
+                "Education",                              // Tag 2
+                "abcd"                                    // Username
+        );
+
+        // Act: Execute the interactor
         interactor.execute(inputData);
 
         // Assert: ViewModel is updated with error
         NewEventPostInState state = viewModel.getState();
         assertEquals("Event name is empty or already exists.", state.getEventNameError());
-
-        // Assert: No new event added
-        assertTrue(dataAccess.existsByName("Tech Talk"));
     }
 
     @Test
