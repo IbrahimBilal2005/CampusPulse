@@ -10,6 +10,7 @@ import interface_adapter.home.HomeScreenViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.signup.general_user_signup.UserSignupController;
 import interface_adapter.sort.SortController;
 import interface_adapter.sort.SortPresenter;
 import interface_adapter.sort.SortViewModel;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Filter;
 
 public class Home_screen extends JFrame {
 
@@ -366,6 +368,16 @@ public class Home_screen extends JFrame {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void setSearchController(SearchController searchController) {
+        this.searchController = searchController;
+    }
+    public void setSortController(SortController sortController) {
+        this.sortController = sortController;
+    }
+    public void setFilterController(FilterController filterController) {
+        this.filterController = filterController;
     }
 
     public static void main(String[] args) {
