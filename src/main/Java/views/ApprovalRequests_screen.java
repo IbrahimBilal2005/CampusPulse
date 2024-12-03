@@ -2,13 +2,20 @@ package views;
 
 import entity.User;
 import interface_adapter.admin_approval.AdminApprovalController;
+import interface_adapter.admin_approval.AdminApprovalPresenter;
+import interface_adapter.admin_approval.AdminApprovalState;
+import use_case.admin_account_approval.AdminApprovalInteractor;
+import use_case.admin_account_approval.AdminApprovalInputData;
+import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ApprovalRequests_screen extends JFrame {
     private List<User> pendingRequests;
@@ -74,25 +81,72 @@ public class ApprovalRequests_screen extends JFrame {
         setVisible(true);
     }
 
+    public void setApprovalController(AdminApprovalController approvalController) {
+        this.approvalController = approvalController;
+    }
+
     private void refreshUI() {
         dispose();
-        new ApprovalRequests_screen(pendingRequests);
+        new ApprovalRequests_screen(pendingRequests).setApprovalController(approvalController);
     }
 
     public static void main(String[] args) {
-        // Dummy data
-        List<User> pending = new ArrayList<>();
-        pending.add(new User(
-                "dummyUsername",      // username
-                "dummyPassword",      // password
-                "Dummy",              // firstName
-                "User",               // lastName
-                25,                   // age
-                "Male",               // gender
-                List.of("sports", "tech") // interests
+        // Step 1: Create Dummy Data for Pending Requests
+        List<User> pendingRequests = new ArrayList<>();
+        pendingRequests.add(new User(
+                "johndoe",             // username
+                "password123",         // password
+                "John",                // firstName
+                "Doe",                 // lastName
+                20,                    // age
+                "Male",                // gender
+                List.of("tech", "art") // interests
         ));
-        new ApprovalRequests_screen(pending);
+        pendingRequests.add(new User(
+                "janedoe",             // username
+                "password456",         // password
+                "Jane",                // firstName
+                "Doe",                 // lastName
+                22,                    // age
+                "Female",              // gender
+                List.of("sports", "music") // interests
+        ));
 
-        SwingUtilities.invokeLater(() -> new ApprovalRequests_screen(pending).setVisible(true));
+        // Step 2: Create the Required Components for AdminApprovalController
+        AdminApprovalState adminApprovalState = new AdminApprovalState();
+        AdminApprovalPresenter presenter = new AdminApprovalPresenter(adminApprovalState);
+
+        AdminApprovalUserDataAccessInterface dataAccess = new AdminApprovalUserDataAccessInterface() {
+            private final Set<String> approvedUsers = new HashSet<>();
+            private final Set<String> rejectedUsers = new HashSet<>();
+
+            @Override
+            public boolean approveUserAsEventPoster(String uid) {
+                if ("johndoe".equals(uid) || "janedoe".equals(uid)) {
+                    approvedUsers.add(uid);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean rejectUserAsEventPoster(String uid) {
+                if ("johndoe".equals(uid) || "janedoe".equals(uid)) {
+                    rejectedUsers.add(uid);
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        AdminApprovalInteractor interactor = new AdminApprovalInteractor(presenter, dataAccess);
+        AdminApprovalController controller = new AdminApprovalController(interactor);
+
+        // Step 3: Create and Show the ApprovalRequests_screen with Controller
+        SwingUtilities.invokeLater(() -> {
+            ApprovalRequests_screen screen = new ApprovalRequests_screen(pendingRequests);
+            screen.setApprovalController(controller);
+            screen.setVisible(true);
+        });
     }
 }
