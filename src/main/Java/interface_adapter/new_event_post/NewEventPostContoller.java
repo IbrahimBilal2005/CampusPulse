@@ -8,7 +8,7 @@ import use_case.new_event_post.NewEventPostInputData;
  */
 
 public class NewEventPostContoller {
-   private NewEventPostInputBoundary inputBoundary;
+   private final NewEventPostInputBoundary inputBoundary;
 
    public NewEventPostContoller(NewEventPostInputBoundary inputBoundary) {
        this.inputBoundary = inputBoundary;
