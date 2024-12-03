@@ -11,6 +11,7 @@ public class EventPoster implements Account{
     private final String organizationName;
     private final String sopLink;
     private final Map<String, Event> events;
+    private boolean isApproved;
 
     public EventPoster(String username,
                        String password,
@@ -23,6 +24,7 @@ public class EventPoster implements Account{
         this.organizationName = organizationName;
         this.sopLink = sopLink;
         this.events = events;
+        this.isApproved = false;
 
     }
 
@@ -56,5 +58,13 @@ public class EventPoster implements Account{
     @Override
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 }
