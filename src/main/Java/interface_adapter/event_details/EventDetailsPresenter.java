@@ -19,7 +19,7 @@ public class EventDetailsPresenter implements EventDetailsOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(EventDetailsOutputData data){
+    public void changeView(EventDetailsOutputData data){
         if (!data.isClick()) {
             final HomeScreenState homeScreenState = homeScreenViewModel.getState();
             this.homeScreenViewModel.setState(homeScreenState);
