@@ -2,6 +2,9 @@ package interface_adapter.login;
 
 import interface_adapter.ViewModel;
 
+/**
+ * View model for Login
+ */
 public class LoginViewModel extends ViewModel<LoginState> {
 
     public final String LOGIN_SCREEN = "Login Screen";
