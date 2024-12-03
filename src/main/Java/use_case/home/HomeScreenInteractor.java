@@ -14,10 +14,10 @@ public class HomeScreenInteractor implements HomeScreenInputBoundary {
 
     @Override
     public void loadMyEvents(HomeScreenInputData inputData) {
-        boolean isEventPoster = inputData.getUser().isEventPoster();
-        var events = dataAccess.fetchEvents(inputData.getUser());
-        HomeScreenOutputData outputData = new HomeScreenOutputData(isEventPoster, events);
-        outputBoundary.presentHomeScreen(outputData);
+//        boolean isEventPoster = inputData.getUser().isEventPoster();
+//        var events = dataAccess.fetchEvents(inputData.getUser());
+//        HomeScreenOutputData outputData = new HomeScreenOutputData(isEventPoster, events);
+//        outputBoundary.presentHomeScreen(outputData);
     }
 
     @Override
