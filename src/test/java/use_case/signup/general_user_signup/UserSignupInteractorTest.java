@@ -32,11 +32,6 @@ class UserSignupInteractorTest {
             }
 
             @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
             public void switchToBaseView() {
                 //expected
             }
@@ -118,11 +113,6 @@ class UserSignupInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {
                 assertEquals(error, errorMessage);
-            }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
             }
 
             @Override

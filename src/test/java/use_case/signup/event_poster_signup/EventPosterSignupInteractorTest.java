@@ -38,11 +38,6 @@ class EventPosterSignupInteractorTest {
             }
 
             @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
             public void switchToBaseView() {
                 //expected
             }
@@ -126,11 +121,6 @@ class EventPosterSignupInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {
                 assertEquals(expected, errorMessage);
-            }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
             }
 
             @Override
