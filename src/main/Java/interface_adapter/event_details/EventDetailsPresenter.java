@@ -6,18 +6,19 @@ import interface_adapter.home.HomeScreenViewModel;
 import use_case.event_details.EventDetailsOutputBoundary;
 import use_case.event_details.EventDetailsOutputData;
 
+/**
+ * Presenter for Event Details use case
+ */
 public class EventDetailsPresenter implements EventDetailsOutputBoundary {
-    private final EventDetailsViewModel eventViewModel;
     private final ViewManagerModel viewManagerModel;
     private final HomeScreenViewModel homeScreenViewModel;
 
-    public EventDetailsPresenter(EventDetailsViewModel viewModel, EventDetailsViewModel eventViewModel, ViewManagerModel viewManagerModel, HomeScreenViewModel homeScreenViewModel){
-        this.eventViewModel = eventViewModel;
+    public EventDetailsPresenter(ViewManagerModel viewManagerModel, HomeScreenViewModel homeScreenViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.homeScreenViewModel = homeScreenViewModel;
     }
 
-
+    @Override
     public void prepareSuccessView(EventDetailsOutputData data){
         if (!data.isClick()) {
             final HomeScreenState homeScreenState = homeScreenViewModel.getState();
