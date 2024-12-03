@@ -6,6 +6,8 @@ import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
 import interface_adapter.filter.FilterViewState;
+import interface_adapter.home.HomeScreenState;
+import interface_adapter.home.HomeScreenViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
@@ -36,12 +38,14 @@ public class Home_screen extends JFrame {
     private SearchViewModel searchViewModel;
     private FilterController filterController;
     private FilterViewModel filterViewModel;
+    private HomeScreenViewModel homeScreenViewModel;
 
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel) {
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel, HomeScreenViewModel homeScreenViewModel) {
         this.searchViewModel = searchViewModel;
         this.searchController = searchController;
         this.filterController = filterController;
         this.filterViewModel = filterViewModel;
+        this.homeScreenViewModel = homeScreenViewModel;
 
         // Frame settings
         setupFrame();
@@ -165,13 +169,15 @@ public class Home_screen extends JFrame {
         JButton applyButton = new JButton("Apply Filters");
         applyButton.addActionListener(e -> {
             filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
-            updateEventsList(filterViewModel.getState().getFilteredEvents());
+            homeScreenViewModel.getState().setEvents(filterViewModel.getState().getFilteredEvents());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
         });
         JButton resetButton = new JButton("Reset Filters");
         resetButton.addActionListener(e -> {
             filterCriteria.clear();
             filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
-            updateEventsList(filterViewModel.getState().getFilteredEvents());
+            homeScreenViewModel.getState().setEvents(filterViewModel.getState().getFilteredEvents());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
         });
         filterPanel.add(applyButton);
         filterPanel.add(resetButton);
@@ -208,14 +214,16 @@ public class Home_screen extends JFrame {
         searchField.addActionListener(e -> {
             String query = searchField.getText();
             searchController.search(query);
-            updateEventsList(searchViewModel.getState().getResults());
+            homeScreenViewModel.getState().setEvents(searchViewModel.getState().getResults());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
         });
     }
 
     private void triggerInitialSearch() {
         searchController.search("");
         filterController.executeFilter(new HashMap<>(), searchViewModel.getState().getResults());
-        updateEventsList(searchViewModel.getState().getResults());
+        homeScreenViewModel.getState().setEvents(searchViewModel.getState().getResults());
+        updateEventsList(homeScreenViewModel.getState().getEvents());
     }
 
     private void updateEventsList(List<Event> events) {
@@ -294,7 +302,8 @@ public class Home_screen extends JFrame {
         FilterPresenter filterPresenter = new FilterPresenter(filterViewModel, viewManagerModel);
         FilterInteractor filterInteractor = new FilterInteractor(dataAccess, filterPresenter);
         FilterController filterController = new FilterController(filterInteractor);
+        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel();
 
-        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel).setVisible(true));
+        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel, homeScreenViewModel).setVisible(true));
     }
 }
