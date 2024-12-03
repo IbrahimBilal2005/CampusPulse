@@ -85,12 +85,33 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
         users.put(account.getUsername(), account);
     }
 
-    @Override
-    public void deleteEvent(EventPoster eventPoster, Event eventToDelete) {
-        EventPoster eventPosterToDelete = (EventPoster) users.get(eventPoster.getUsername());
-        eventPosterToDelete.getEvents().remove(eventToDelete.getName());
-        users.put(eventPoster.getUsername(), eventPosterToDelete);
+    /**
+     * Retrieves the EventPoster associated with the specified username.
+     *
+     * @param username      the username of the event poster.
+     * @param eventToDelete
+     * @return the EventPoster object associated with the username.
+     */
 
+
+    @Override
+    public void deleteEvent(String username, Event eventToDelete) {
+        EventPoster eventPosterToDelete = (EventPoster) users.get(username);
+        eventPosterToDelete.getEvents().remove(eventToDelete.getName());
+        users.put(username, eventPosterToDelete);
+
+    }
+
+    /**
+     * Get event poster's events
+     *
+     * @param username the username of the EventPoster.
+     * @return true if the event exists for the specified user, false otherwise.
+     */
+    @Override
+    public Map<String, Event> getUserEvents(String username) {
+        EventPoster eventPoster = (EventPoster) users.get(username);
+        return eventPoster.getEvents();
     }
 
     @Override

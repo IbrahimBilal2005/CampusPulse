@@ -5,6 +5,7 @@ import entity.Event;
 import entity.EventPoster;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The interface of the Data Access Object (DAO) for the Delete Event use case.
@@ -13,22 +14,21 @@ import java.util.List;
  */
 public interface DeleteEventDataAccessInterface {
 
-
-    /**
-     * Retrieves the EventPoster associated with the specified username.
-     *
-     * @param username the username of the event poster.
-     * @return the EventPoster object associated with the username.
-     */
-    EventPoster getUser(String username);
-
     /**
      * Deletes the specified event from the EventPoster's list of events.
      *
-     * @param eventPoster  the EventPoster who owns the event.
+     * @param username  the username for the event poster who owns the event.
      * @param eventToDelete the Event to be deleted.
      */
-    void deleteEvent(EventPoster eventPoster, Event eventToDelete);
+    void deleteEvent(String username, Event eventToDelete);
+
+    /**
+     * Get event poster's events
+     *
+     * @param username the username of the EventPoster.
+     * @return true if the event exists for the specified user, false otherwise.
+     */
+    Map<String, Event> getUserEvents(String username);
 
     /**
      * Checks if the specified event exists for the given username.

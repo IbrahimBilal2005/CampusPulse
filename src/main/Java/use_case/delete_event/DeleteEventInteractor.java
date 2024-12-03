@@ -6,6 +6,7 @@ import entity.EventPoster;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The interactor class for the Delete Event use case.
@@ -41,15 +42,15 @@ public class DeleteEventInteractor implements DeleteEventInputBoundary {
         if (!userDataAccessObject.eventExists(deleteEventInputData.getUsername(), deleteEventInputData.getEventToDelete())) {
             userPresenter.prepareFailView("Event does not exist.");
         } else {
-            // Retrieve the EventPoster using the provided username
-            final EventPoster eventPoster = userDataAccessObject.getUser(deleteEventInputData.getUsername());
 
             // Delete the event from the EventPoster's list of events
-            userDataAccessObject.deleteEvent(eventPoster, deleteEventInputData.getEventToDelete());
+            userDataAccessObject.deleteEvent(deleteEventInputData.getUsername(), deleteEventInputData.getEventToDelete());
+
+            // Get the updated events from the db
+            List<Event> updatedEvents = new ArrayList<>(userDataAccessObject.getUserEvents(deleteEventInputData.getUsername()).values());
 
             // Prepare the updated list of events
-            List<Event> events = new ArrayList<>(eventPoster.getEvents().values());
-            final DeleteEventOutputData deleteEventOutputData = new DeleteEventOutputData(events, false);
+            final DeleteEventOutputData deleteEventOutputData = new DeleteEventOutputData(updatedEvents, false);
 
             // Pass the success response to the presenter
             userPresenter.prepareSuccessView(deleteEventOutputData);

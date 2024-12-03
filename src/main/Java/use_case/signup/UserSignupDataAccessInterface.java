@@ -5,7 +5,7 @@ import entity.Account;
 /**
  * Data access interface for signup use case.
  */
-public interface AccountSignupDataAccessInterface {
+public interface UserSignupDataAccessInterface {
     /**
      * Checks if the given username exists.
      * @param username the username to look for

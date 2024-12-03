@@ -13,7 +13,7 @@ import org.bson.Document;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_event.DeleteEventDataAccessInterface;
 import use_case.new_event_post.NewEventPostUserDataAccessInterface;
-import use_case.signup.AccountSignupDataAccessInterface;
+import use_case.signup.UserSignupDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class AccountDataAccessObject implements DeleteEventDataAccessInterface,
                                                 ChangePasswordUserDataAccessInterface,
-                                                AccountSignupDataAccessInterface,
+                                                UserSignupDataAccessInterface,
                                                 NewEventPostUserDataAccessInterface {
     private final EventDataAccessObject eventDataAccessObject;
 
@@ -138,21 +138,33 @@ public class AccountDataAccessObject implements DeleteEventDataAccessInterface,
      * Delete the event from the given event poster's events field
      */
     @Override
-    public void deleteEvent(EventPoster eventPoster, Event eventToDelete) {
+    public void deleteEvent(String username, Event eventToDelete) {
         // Retrieve the EventPoster from the accounts map
-        EventPoster eventPosterForDelete = (EventPoster) accounts.get(eventPoster.getUsername());
+        EventPoster eventPosterForDelete = (EventPoster) accounts.get(username);
 
         if (eventPosterForDelete != null && eventPosterForDelete.getEvents().containsKey(eventToDelete.getName())) {
             // Remove the event from the EventPoster's events
             eventPosterForDelete.getEvents().remove(eventToDelete.getName());
 
             // Save the updated EventPoster to the map and the database
-            accounts.put(eventPoster.getUsername(), eventPosterForDelete);
+            accounts.put(username, eventPosterForDelete);
             save(eventPosterForDelete);  // Save the updated EventPoster to the database
 
             //delete the event from the events collection in the eventDAO
             eventDataAccessObject.deleteEvent(eventToDelete);
         }
+    }
+
+    /**
+     * Get event poster's events
+     *
+     * @param username the username of the EventPoster.
+     * @return true if the event exists for the specified user, false otherwise.
+     */
+    @Override
+    public Map<String, Event> getUserEvents(String username) {
+        EventPoster eventPoster = (EventPoster )accounts.get(username);
+        return eventPoster.getEvents();
     }
 
     /**

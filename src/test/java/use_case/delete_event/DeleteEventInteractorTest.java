@@ -47,7 +47,7 @@ class DeleteEventInteractorTest {
             @Override
             public void prepareSuccessView(DeleteEventOutputData outputData) {
                 Assertions.assertEquals(expectedMap, ((EventPoster) eventPoster).getEvents());
-                Assertions.assertEquals(userRepository.getUser(eventPoster.getUsername()).getEvents(), expectedMap);
+                Assertions.assertEquals(userRepository.getUserEvents(eventPoster.getUsername()), expectedMap);
                 Assertions.assertEquals(outputData.getEvents(), new ArrayList<>(expectedMap.values()));
                 Assertions.assertFalse(outputData.isUseCaseFailed());
             }
