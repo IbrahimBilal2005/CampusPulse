@@ -62,6 +62,34 @@ class AdminApprovalInteractorTest {
         assertFalse(userDataAccess.rejectedUsers.contains("invalidUid"));
     }
 
+    @Test
+    void testApproveUserException() {
+        // Arrange: Trigger exception in the data access layer
+        userDataAccess.throwException = true;
+
+        // Act: Try approving a user
+        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
+        interactor.approveUser(inputData);
+
+        // Assert: Ensure the exception is handled gracefully
+        assertFalse(outputBoundary.success);
+        assertTrue(outputBoundary.errorMessage.startsWith("Error:"));
+    }
+
+    @Test
+    void testRejectUserException() {
+        // Arrange: Trigger exception in the data access layer
+        userDataAccess.throwException = true;
+
+        // Act: Try rejecting a user
+        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
+        interactor.rejectUser(inputData);
+
+        // Assert: Ensure the exception is handled gracefully
+        assertFalse(outputBoundary.success);
+        assertTrue(outputBoundary.errorMessage.startsWith("Error:"));
+    }
+
     // Concrete implementation of AdminApprovalOutputBoundary
     private static class TestOutputBoundary implements AdminApprovalOutputBoundary {
         boolean success;
@@ -85,9 +113,13 @@ class AdminApprovalInteractorTest {
     private static class TestUserDataAccess implements AdminApprovalUserDataAccessInterface {
         Set<String> approvedUsers = new HashSet<>();
         Set<String> rejectedUsers = new HashSet<>();
+        boolean throwException = false;
 
         @Override
         public boolean approveUserAsEventPoster(String uid) {
+            if (throwException) {
+                throw new RuntimeException("Simulated exception during approval");
+            }
             if ("validUid".equals(uid)) {
                 approvedUsers.add(uid);
                 return true;
@@ -97,6 +129,9 @@ class AdminApprovalInteractorTest {
 
         @Override
         public boolean rejectUserAsEventPoster(String uid) {
+            if (throwException) {
+                throw new RuntimeException("Simulated exception during rejection");
+            }
             if ("validUid".equals(uid)) {
                 rejectedUsers.add(uid);
                 return true;
