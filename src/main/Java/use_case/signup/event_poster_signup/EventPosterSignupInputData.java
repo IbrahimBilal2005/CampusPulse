@@ -2,7 +2,6 @@ package use_case.signup.event_poster_signup;
 
 import entity.Event;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class EventPosterSignupInputData {

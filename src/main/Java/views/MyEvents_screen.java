@@ -275,6 +275,7 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         Event event2 = new Event("Education Seminar", "A seminar on modern education techniques.", "Los Angeles",
                 LocalDateTime.of(2024, 12, 5, 10, 0), LocalDateTime.of(2024, 12, 5, 16, 0), List.of("tag1", "tag2", "tag3"));
 
+
         Map<String, Event> eventMap = new HashMap<>();
         eventMap.put(event1.getName(), event1);
         eventMap.put(event2.getName(), event2);

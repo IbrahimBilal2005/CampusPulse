@@ -22,8 +22,13 @@ class EventPosterSignupInteractorTest {
         EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "https://sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary(userRepository);
+        interactor.execute(inputData);
+    }
 
-        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+    @NotNull
+    private static EventPosterSignupInputBoundary getEventPosterSignupInputBoundary(UserSignupDataAccessInterface userRepository) {
         EventPosterSignupOutputBoundary successPresenter = new EventPosterSignupOutputBoundary() {
 
             @Override
@@ -36,19 +41,9 @@ class EventPosterSignupInteractorTest {
             public void prepareFailView(String errorMessage) {
                 fail("User case failure is unexpected.");
             }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
-            }
         };
         EventPosterSignupInputBoundary interactor = new EventPosterSignupInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
-        interactor.execute(inputData);
+        return interactor;
     }
 
     @Test
@@ -126,16 +121,6 @@ class EventPosterSignupInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {
                 assertEquals(expected, errorMessage);
-            }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
             }
         };
         return new EventPosterSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());

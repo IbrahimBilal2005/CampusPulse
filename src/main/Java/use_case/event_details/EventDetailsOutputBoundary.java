@@ -1,8 +1,12 @@
 package use_case.event_details;
 
-import use_case.event_details.EventDetailsOutputData;
-
+/**
+ * The output boundary for the event details use case
+ */
 public interface EventDetailsOutputBoundary {
-
-    void prepareSuccessView(EventDetailsOutputData data);
+    /**
+     * changes the view to the new view in data
+     * @param data the output data
+     */
+    void changeView(EventDetailsOutputData data);
 }

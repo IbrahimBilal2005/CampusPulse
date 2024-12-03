@@ -30,16 +30,6 @@ class UserSignupInteractorTest {
             public void prepareFailView(String errorMessage) {
                 fail("User case failure is unexpected.");
             }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
-            }
         };
         UserSignupInputBoundary interactor = new UserSignupInteractor(userRepository, successPresenter, new UserCreationStrategy());
         interactor.execute(inputData);
@@ -86,9 +76,17 @@ class UserSignupInteractorTest {
 
     @Test
     void failureInvalidInterestsTest() {
-        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 18, "gender", null);
-        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 8, "gender", List.of("art"));
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         UserSignupInputBoundary interactor = getUserSignupInputBoundary("No interests selected", userRepository);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    void failureInvalidAgeTest() {
+        UserSignupInputData inputData = new UserSignupInputData("username", "password", "password", "firstName", "lastName", 18, "gender", null);
+        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        UserSignupInputBoundary interactor = getUserSignupInputBoundary("Age must be at least 18", userRepository);
         interactor.execute(inputData);
     }
 
@@ -118,16 +116,6 @@ class UserSignupInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {
                 assertEquals(error, errorMessage);
-            }
-
-            @Override
-            public void switchToLoginView() {
-                //expected
-            }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
             }
         };
         return new UserSignupInteractor(userRepository, failurePresenter, new UserCreationStrategy());

@@ -2,10 +2,11 @@ package interface_adapter.delete_event;
 
 import entity.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyEventsState {
-    private List<Event> events;
+    private List<Event> events = new ArrayList<>();
     private String error = "";
 
     public MyEventsState(MyEventsState copy) {
