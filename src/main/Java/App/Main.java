@@ -33,10 +33,8 @@ public class Main {
                     .addEventSortingUseCase()
                     .addMyEventsScreen()
                     .addEventDetailsScreen()
-                    .addApprovalRequestsScreen()
                     .addEventDetailsUseCase()
-                    .addDeleteEventUseCase()
-                    .addAdminAccountApprovalUseCase();
+                    .addDeleteEventUseCase();
 
             JFrame applicationFrame = appBuilder.build();
             applicationFrame.setVisible(true);
