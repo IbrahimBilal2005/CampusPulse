@@ -55,7 +55,7 @@ public class EventDetails_screen {
 
         // Allows for the description area to have a scroll bar if needed
         JScrollPane scrollPane = new JScrollPane(descriptionArea);
-        scrollPane.setPreferredSize(new Dimension(600, 100));
+        scrollPane.setPreferredSize(new Dimension(600, 75));
         scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT); // Align description to the left
         detailsPanel.add(scrollPane);
 
