@@ -1,43 +1,36 @@
 package interface_adapter.home;
 
-import entity.Event;
+import interface_adapter.search.SearchState;
 
-import java.util.List;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public class HomeScreenViewModel {
-    private boolean isEventPoster; // Whether the user is an Event Poster
-    private List<Event> events; // Events to display on the Home Screen
-    private Event selectedEvent; // The event selected by the user for detailed view
 
-    // Getter and Setter for isEventPoster
-    public boolean isEventPoster() {
-        return isEventPoster;
+    private final PropertyChangeSupport support;
+    private HomeScreenState state;
+
+    public HomeScreenViewModel() {
+        this.support = new PropertyChangeSupport(this);
+        this.state = new HomeScreenState();
     }
 
-    public void setEventPoster(boolean eventPoster) {
-        isEventPoster = eventPoster;
+    public HomeScreenState getState() {
+        return state;
     }
 
-    // Getter and Setter for events
-    public List<Event> getEvents() {
-        return events;
+    public void setState(HomeScreenState newstate) {
+        HomeScreenState oldState = this.state;
+        this.state = newstate;
+        support.firePropertyChange("state", oldState, newstate);
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
     }
 
-    // Getter and Setter for selectedEvent
-    public Event getSelectedEvent() {
-        return selectedEvent;
-    }
-
-    public void setSelectedEvent(Event selectedEvent) {
-        this.selectedEvent = selectedEvent;
-    }
-
-    // Notify the UI to switch to the Event Details screen
-    public void switchToEventDetailsScreen() {
-        System.out.println("Switching to Event Details screen for event: " + selectedEvent.getName());
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        support.removePropertyChangeListener(listener);
     }
 }
+
