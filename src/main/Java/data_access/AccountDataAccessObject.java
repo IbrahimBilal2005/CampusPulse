@@ -12,6 +12,7 @@ import entity.User;
 import org.bson.Document;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_event.DeleteEventDataAccessInterface;
+import use_case.new_event_post.NewEventPostUserDataAccessInterface;
 import use_case.signup.AccountSignupDataAccessInterface;
 
 import java.util.HashMap;
@@ -20,8 +21,8 @@ import java.util.Map;
 
 public class AccountDataAccessObject implements DeleteEventDataAccessInterface,
                                                 ChangePasswordUserDataAccessInterface,
-                                                AccountSignupDataAccessInterface {
-
+                                                AccountSignupDataAccessInterface,
+                                                NewEventPostUserDataAccessInterface {
     private final EventDataAccessObject eventDataAccessObject;
 
     private static final String USERNAME = "username";
@@ -191,6 +192,27 @@ public class AccountDataAccessObject implements DeleteEventDataAccessInterface,
     public boolean existsByName(String username) {
         // Return true if the account exists in the map.
         return accounts.containsKey(username);
+    }
+
+    /**
+     * Adds event to given username
+     *
+     * @param event the event to add
+     * @param username the eventPoster who created the event
+     */
+    @Override
+    public void addtoMyevents(Event event, String username) {
+        // find the associated event poster
+        EventPoster eventPoster = (EventPoster) accounts.get(username);
+
+        //update the event posters events
+        eventPoster.getEvents().put(event.getName(), event);
+
+        //save the event poster to the database
+        save(eventPoster);
+
+        //add the event to the events database
+        eventDataAccessObject.addEvent(event);
     }
 
     /**

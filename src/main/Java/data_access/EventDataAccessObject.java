@@ -19,6 +19,7 @@ public class EventDataAccessObject implements SearchDataAccessInterface,
                                               FilterDataAccessInterface {
 
     private readDBInterface mongoConnection = new MongoConnection();
+
     private final MongoCollection<Document> eventsCollection;
     private final EventCreationStrategy eventCreationStrategy;
     private Map<String, Event> events = new HashMap<>();
@@ -40,13 +41,13 @@ public class EventDataAccessObject implements SearchDataAccessInterface,
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
                 String name = doc.getString("name");
-                String discription = doc.getString("description");
+                String description = doc.getString("description");
                 String location = doc.getString("location");
                 LocalDateTime start = LocalDateTime.parse(doc.getString("start"), DateTimeFormatter.ISO_DATE_TIME);
                 LocalDateTime end = LocalDateTime.parse(doc.getString("end"), DateTimeFormatter.ISO_DATE_TIME);
                 List<String> tags = (List<String>) doc.get("tags");
 
-                Event event = eventCreationStrategy.createEvent(name, discription, location, start, end, tags);
+                Event event = eventCreationStrategy.createEvent(name, description, location, start, end, tags);
                 events.put(event.getName(), event);  // Add event to accounts map
             }
         }
@@ -57,7 +58,7 @@ public class EventDataAccessObject implements SearchDataAccessInterface,
      * @param event the account to save
      */
     // @Override
-    public void save(Event event) {
+    private void save(Event event) {
         Document accountDoc = new Document("name", event.getName())
                 .append("description", event.getDescription())
                 .append("location", event.getLocation())
@@ -72,8 +73,7 @@ public class EventDataAccessObject implements SearchDataAccessInterface,
      * Add an event
      * @param event the event to add
      */
-    //@Override
-    private void addEvent(Event event) {
+    void addEvent(Event event) {
         events.put(event.getName(), event);
         save(event);
     }
