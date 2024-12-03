@@ -1,16 +1,19 @@
 package interface_adapter.home;
 
+import interface_adapter.ViewModel;
 import interface_adapter.search.SearchState;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class HomeScreenViewModel {
+public class HomeScreenViewModel extends ViewModel<HomeScreenState> {
 
     private final PropertyChangeSupport support;
     private HomeScreenState state;
 
     public HomeScreenViewModel() {
+        super("Home_screen");
+        setState(new HomeScreenState());
         this.support = new PropertyChangeSupport(this);
         this.state = new HomeScreenState();
     }
