@@ -17,6 +17,4 @@ public interface NewEventPostOutputBoundary {
      * @param errorMessage the explanation of the failure
      */
     void presentFailure(String errorMessage);
-
-    void switchToHomeView();
 }

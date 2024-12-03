@@ -10,12 +10,13 @@ public interface NewEventPostUserDataAccessInterface {
 
     /**
      * Checks if the given event exists.
-     * @param Eventname the event to look for
+     * @param eventName the event to look for
      * @return true if an event with the given exists; false otherwise
      */
 
     //checks if event exists
-    boolean existsByName(String Eventname);
+    boolean existsByName(String eventName);
+
 
 
     /**
@@ -23,6 +24,4 @@ public interface NewEventPostUserDataAccessInterface {
      */
 
     void addtoMyevents(Event event, String username);
-
-
 }

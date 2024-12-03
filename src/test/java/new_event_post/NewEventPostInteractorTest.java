@@ -1,9 +1,11 @@
 package new_event_post;
 
 import data_access.InMemoryEventDataAccess;
+import data_access.InMemoryUserDataAccessObject;
 import entity.Event;
 import entity.EventPoster;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.delete_event.MyEventsViewModel;
 import interface_adapter.new_event_post.NewEventPostInState;
 import interface_adapter.new_event_post.NewEventPostPresenter;
 import interface_adapter.new_event_post.NewEventViewModel;
@@ -25,6 +27,7 @@ class NewEventPostInteractorTest {
     private NewEventPostPresenter presenter;
     private NewEventViewModel viewModel;
     private ViewManagerModel viewManager;
+    private MyEventsViewModel myEventsViewModel;
 
     @BeforeEach
     void setUp() {
@@ -32,10 +35,11 @@ class NewEventPostInteractorTest {
         dataAccess = new InMemoryEventDataAccess();
         viewManager = new ViewManagerModel();
         viewModel = new NewEventViewModel();
-        presenter = new NewEventPostPresenter(viewModel, viewManager);
+        myEventsViewModel = new MyEventsViewModel();
+        presenter = new NewEventPostPresenter(viewModel, viewManager, myEventsViewModel);
 
         // Initialize interactor
-        interactor = new NewEventPostInteractor(presenter, dataAccess);
+        interactor = new NewEventPostInteractor(presenter,dataAccess);
     }
 
     @Test

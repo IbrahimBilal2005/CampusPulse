@@ -5,22 +5,21 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
+import interface_adapter.filter.FilterViewState;
+import interface_adapter.home.HomeScreenState;
+import interface_adapter.home.HomeScreenViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
-import interface_adapter.sort.SortController;
-import interface_adapter.sort.SortPresenter;
-import interface_adapter.sort.SortState;
-import interface_adapter.sort.SortViewModel;
+import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInteractor;
+import use_case.search.SearchDataAccessInterface;
 import entity.Event;
 import use_case.search.SearchInteractor;
-import use_case.sort.SortInteractor;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -39,21 +38,14 @@ public class Home_screen extends JFrame {
     private SearchViewModel searchViewModel;
     private FilterController filterController;
     private FilterViewModel filterViewModel;
+    private HomeScreenViewModel homeScreenViewModel;
 
-    private SortController sortController;
-    private SortViewModel sortViewModel;
-
-    private final JComboBox<String> sortComboBox = new JComboBox<>();
-
-
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel, SortController sortController, SortViewModel sortViewModel) {
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel, HomeScreenViewModel homeScreenViewModel) {
         this.searchViewModel = searchViewModel;
         this.searchController = searchController;
         this.filterController = filterController;
         this.filterViewModel = filterViewModel;
-
-        this.sortController = sortController;
-        this.sortViewModel = sortViewModel;
+        this.homeScreenViewModel = homeScreenViewModel;
 
         // Frame settings
         setupFrame();
@@ -77,7 +69,6 @@ public class Home_screen extends JFrame {
         // Trigger an initial empty search to display all events
         triggerInitialSearch();
     }
-
 
     private void setupFrame() {
         setTitle("CampusPulse - Home");
@@ -105,27 +96,7 @@ public class Home_screen extends JFrame {
         searchField = new JTextField(20);
         centerPanel.add(searchField);
         centerPanel.add(createFilterComboBox());
-        centerPanel.add(createSortComboBox());
         return centerPanel;
-    }
-
-    private JComboBox<String> createSortComboBox() {
-        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Sort Results"});
-        comboBox.setPrototypeDisplayValue("Sort Results");
-        comboBox.setEditable(false);
-
-        for (String sortOption : List.of("shortest", "longest", "earliest", "latest")) {
-            comboBox.addItem(sortOption);
-        }
-        comboBox.addActionListener(e -> {
-            SortState currentState = sortViewModel.getState();
-            currentState.setSortQuery((String) comboBox.getSelectedItem());
-            sortViewModel.setState(currentState);
-
-            sortController.sort(currentState.getSortQuery(), filterViewModel.getState().getFilteredEvents());
-            updateEventsList(currentState.getSortedResult());
-        });
-        return comboBox;
     }
 
     private JComboBox<String> createFilterComboBox() {
@@ -197,28 +168,22 @@ public class Home_screen extends JFrame {
         // Apply Button
         JButton applyButton = new JButton("Apply Filters");
         applyButton.addActionListener(e -> {
-            System.out.println("Filters Applied: " + filterCriteria); // Debugging
-            filterCriteria.put("query", searchField.getText());
-            filterController.executeFilter(filterCriteria);
-            updateEventsList(filterViewModel.getState().getFilteredEvents());// Call a method in the controller
+            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
+            homeScreenViewModel.getState().setEvents(filterViewModel.getState().getFilteredEvents());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
         });
         JButton resetButton = new JButton("Reset Filters");
         resetButton.addActionListener(e -> {
-            System.out.println("Filters Applied: " + filterCriteria);
-            filterCriteria.put("duration", null);
-            filterCriteria.put("location", null);
-            filterCriteria.put("tags", null);
-            filterCriteria.put("query", searchField.getText());
-            System.out.println("Filters Applied: " + filterCriteria); // Debugging
-            filterController.executeFilter(filterCriteria); // Call a method in the controller
-            updateEventsList(filterViewModel.getState().getFilteredEvents());
+            filterCriteria.clear();
+            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
+            homeScreenViewModel.getState().setEvents(filterViewModel.getState().getFilteredEvents());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
         });
         filterPanel.add(applyButton);
         filterPanel.add(resetButton);
 
         return filterPanel;
     }
-
 
     private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
@@ -249,19 +214,16 @@ public class Home_screen extends JFrame {
         searchField.addActionListener(e -> {
             String query = searchField.getText();
             searchController.search(query);
-            updateEventsList(searchViewModel.getState().getResults());
-        });
-
-        searchViewModel.addPropertyChangeListener(evt -> {
-            if ("results".equals(evt.getPropertyName())) {
-                updateEventsList(searchViewModel.getState().getResults());
-            }
+            homeScreenViewModel.getState().setEvents(searchViewModel.getState().getResults());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
         });
     }
 
     private void triggerInitialSearch() {
         searchController.search("");
-        updateEventsList(searchViewModel.getState().getResults());
+        filterController.executeFilter(new HashMap<>(), searchViewModel.getState().getResults());
+        homeScreenViewModel.getState().setEvents(searchViewModel.getState().getResults());
+        updateEventsList(homeScreenViewModel.getState().getEvents());
     }
 
     private void updateEventsList(List<Event> events) {
@@ -290,8 +252,21 @@ public class Home_screen extends JFrame {
         eventDetailsPanel.add(createLabel("Location: " + event.getLocation(), new Font("Arial", Font.PLAIN, 20)));
         eventDetailsPanel.add(createLabel("Date: " + event.getStart().toString(), new Font("Arial", Font.PLAIN, 20)));
 
+        // Add mouse listener for event click
+        eventPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                onEventClicked(event); // Handle event click
+            }
+        });
+
         eventPanel.add(eventDetailsPanel, BorderLayout.CENTER);
         return eventPanel;
+    }
+
+    private void onEventClicked(Event event) {
+        System.out.println("Event clicked: " + event.getName());
+        // Trigger logic to navigate to Event Details screen
     }
 
     private JLabel createLabel(String text, Font font) {
@@ -301,7 +276,6 @@ public class Home_screen extends JFrame {
     }
 
     private boolean checkIfEventPoster() {
-        // Implement logic to determine if the user is an event poster
         return true; // Replace with actual condition
     }
 
@@ -318,6 +292,7 @@ public class Home_screen extends JFrame {
 
     public static void main(String[] args) {
         EventDAO dataAccess = new EventDAO();
+        FilterDataAccessInterface filterdao = dataAccess;
         SearchViewModel viewModel = new SearchViewModel();
         ViewManagerModel viewManagerModel = new ViewManagerModel();
         SearchPresenter presenter = new SearchPresenter(viewModel, viewManagerModel);
@@ -327,12 +302,8 @@ public class Home_screen extends JFrame {
         FilterPresenter filterPresenter = new FilterPresenter(filterViewModel, viewManagerModel);
         FilterInteractor filterInteractor = new FilterInteractor(dataAccess, filterPresenter);
         FilterController filterController = new FilterController(filterInteractor);
+        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel();
 
-        SortViewModel sortViewModel = new SortViewModel();
-        SortPresenter sortPresenter = new SortPresenter(sortViewModel, viewManagerModel);
-        SortInteractor sortInteractor = new SortInteractor(sortPresenter);
-        SortController sortController = new SortController(sortInteractor);
-
-        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel, sortController, sortViewModel).setVisible(true));
+        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel, homeScreenViewModel).setVisible(true));
     }
 }
