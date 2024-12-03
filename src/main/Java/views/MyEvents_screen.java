@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.time.LocalDateTime;
 
-public class MyEvents_screen extends JFrame implements PropertyChangeListener {
+public class MyEvents_screen extends JPanel implements PropertyChangeListener {
     private static final String VIEW_NAME = "My Events";
 
     private MyEventsViewModel myEventsViewModel;
@@ -40,10 +40,6 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         this.myEventsViewModel = myEventsViewModel;
         this.loggedInViewModel = loggedInViewModel;
         this.myEventsViewModel.addPropertyChangeListener(this);
-        this.loggedInViewModel.addPropertyChangeListener(this);
-
-        setTitle(VIEW_NAME);
-        setupFrame();
 
         // For title at the top
         JLabel titleLabel = new JLabel(VIEW_NAME, SwingConstants.CENTER);
@@ -70,7 +66,9 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Initialize events and add panels to the frame
-        initializeEvents();
+        if (loggedInViewModel !=null) {
+            initializeEvents();
+        }
 
         // Set the layout for the frame
         setLayout(new BorderLayout());
@@ -124,8 +122,6 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         // Adjust window size to avoid taskbar overlap
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(screenSize.width, screenSize.height - taskbarHeight);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center window
     }
 
     /**

@@ -117,6 +117,7 @@ public class AppBuilder {
     private final EventDAO eventDAO;
 
     // Views and ViewModels
+    private WelcomeView welcomeView;
     private ChooseAccountTypeView chooseAccountTypeView;
     private GeneralUserSignupView generalUserSignupView;
     private EventPosterSignupView eventPosterSignupView;
@@ -156,6 +157,15 @@ public class AppBuilder {
         cardPanel.setLayout(cardLayout);
     }
 
+    public AppBuilder addWelcomeScreen() {
+        WelcomeView welcomeScreen = new WelcomeView(
+                e -> viewManagerModel.setState(loginView.getViewName()), // Action for login button
+                e -> viewManagerModel.setState(generalUserSignupView.getViewName()) // Action for signup button
+        );
+        cardPanel.add(welcomeScreen, welcomeScreen.getViewName());
+        return this;
+    }
+
     public AppBuilder addChooseAccountTypeView() {
         accountTypeViewModel = new AccountTypeViewModel();
         chooseAccountTypeView = new ChooseAccountTypeView(accountTypeViewModel);
@@ -185,29 +195,36 @@ public class AppBuilder {
     }
 
     public AppBuilder addHomeScreen() {
-        loggedInViewModel = new LoggedInViewModel();
-        loggedInView = new ChangePasswordView(changePasswordViewModel);
-        cardPanel.add(loggedInView);
+        homeScreenViewModel = new HomeScreenViewModel();
+        searchViewModel = new SearchViewModel();
+        filterViewModel = new FilterViewModel();
+        sortViewModel = new SortViewModel();
+        final SearchOutputBoundary eventSearchOutputBoundary = new SearchPresenter(searchViewModel, viewManagerModel);
+        final SearchInputBoundary eventSearchInteractor = new SearchInteractor(eventDAO, eventSearchOutputBoundary);
+        final SearchController eventSearchController = new SearchController(eventSearchInteractor);
+        homeView = new Home_screen(searchViewModel, eventSearchController, filterViewModel, sortViewModel, homeScreenViewModel);
+        cardPanel.add(homeView, homeScreenViewModel.getViewName());
         return this;
     }
 
     public AppBuilder addMyEventsScreen() {
         myEventsViewModel = new MyEventsViewModel();
+        loginViewModel = new LoginViewModel();
         myEventsView = new MyEvents_screen(myEventsViewModel, loggedInViewModel);
         cardPanel.add(myEventsView, myEventsView.getViewName());
         return this;
     }
 
     public AppBuilder addEventDetailsScreen() {
-        eventDetailsViewModel = new EventDetailsViewModel();
-        eventDetailsview = new EventDetails_screen(eventDetailsViewModel, );
-        cardPanel.add(eventDetailsview);
+        //eventDetailsViewModel = new EventDetailsViewModel();
+        //eventDetailsview = new EventDetails_screen(eventDetailsViewModel, );
+        //cardPanel.add(eventDetailsview);
         return this;
     }
 
     public AppBuilder addApprovalRequestsScreen() {
-        adminApprovalViewModel = new AdminApprovalViewModel(adminApprovalState);
-        approvalRequestsView = new ApprovalRequests_screen(adminApprovalViewModel);
+        //adminApprovalViewModel = new AdminApprovalViewModel(adminApprovalState);
+        //approvalRequestsView = new ApprovalRequests_screen(adminApprovalViewModel);
         cardPanel.add(approvalRequestsView);
         return this;
     }
@@ -269,23 +286,23 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
-                loggedInViewModel, loginViewModel);
+        //final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
+        //        loggedInViewModel, loginViewModel);
 
-        final LogoutInputBoundary logoutInteractor =
-                new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
+        //final LogoutInputBoundary logoutInteractor =
+        //        new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
-        final LogoutController logoutController = new LogoutController(logoutInteractor);
-        homeView.setLogoutController(logoutController);
+        //final LogoutController logoutController = new LogoutController(logoutInteractor);
+        //homeView.setLogoutController(logoutController);
         return this;
     }
 
     public AppBuilder addNewEventPostUseCase() {
-        final NewEventPostOutputBoundary eventPostingOutputBoundary = new NewEventPostPresenter(newEventViewModel, viewManagerModel, myEventsViewModel);
-        final NewEventPostInputBoundary eventPostingInteractor = new NewEventPostInteractor(eventPostingOutputBoundary, userDataAccessObject);
+        //final NewEventPostOutputBoundary eventPostingOutputBoundary = new NewEventPostPresenter(newEventViewModel, viewManagerModel, myEventsViewModel);
+        //final NewEventPostInputBoundary eventPostingInteractor = new NewEventPostInteractor(eventPostingOutputBoundary, userDataAccessObject);
 
-        final NewEventPostContoller eventPostingController = new NewEventPostContoller(eventPostingInteractor);
-        myEventsView.setNewEventPostController(eventPostingController);
+        //final NewEventPostContoller eventPostingController = new NewEventPostContoller(eventPostingInteractor);
+        //myEventsView.setNewEventPostController(eventPostingController);
         return this;
     }
 
@@ -315,9 +332,9 @@ public class AppBuilder {
 
     public AppBuilder addEventDetailsUseCase() {
         final EventDetailsOutputBoundary eventDetailsOutputBoundary = new EventDetailsPresenter(viewManagerModel, homeScreenViewModel);
-        final EventDetailsInputBoundary eventDetailsInteractor = new EventDetailsInteractor(eventDetailsOutputBoundary);
-        final EventDetailsController eventDetailsController = new EventDetailsController(eventDetailsInteractor);
-        eventDetailsview.setEventDetailsController(eventDetailsController);
+        //final EventDetailsInputBoundary eventDetailsInteractor = new EventDetailsInteractor(eventDetailsOutputBoundary);
+        //final EventDetailsController eventDetailsController = new EventDetailsController(eventDetailsInteractor);
+        //eventDetailsview.setEventDetailsController(eventDetailsController);
         return this;
     }
 
@@ -338,12 +355,16 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("Signup Example");
+        JFrame application = new JFrame("CampusPulse");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.add(cardPanel);
 
-        viewManagerModel.setState(chooseAccountTypeView.getViewName());
-        viewManagerModel.firePropertyChanged();
+        // Set the initial view to be displayed
+        viewManagerModel.setState("Welcome"); // Set the initial state to WelcomeScreen
+        viewManagerModel.firePropertyChanged(); // Notify the model to update the view
+
+        application.setSize(800, 600);
+        application.setVisible(true);
 
         return application;
     }
