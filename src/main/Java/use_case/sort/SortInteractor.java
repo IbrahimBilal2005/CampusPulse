@@ -6,6 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The interactor for the sort use case.
+ */
 public class SortInteractor implements SortInputBoundary {
     private final SortOutputBoundary sortOutputBoundary;
 
@@ -16,7 +19,7 @@ public class SortInteractor implements SortInputBoundary {
     @Override
     public void sort(SortInputData inputData) {
         String sortQuery = inputData.getSortQuery();
-        List<Event> allEvents = inputData.getFilteredEvents();
+        List<Event> allEvents = inputData.getCurrentEvents();
 
         if (sortQuery.isEmpty()) {
             if (allEvents.isEmpty()) {

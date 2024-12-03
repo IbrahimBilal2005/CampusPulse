@@ -5,17 +5,20 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
-import interface_adapter.filter.FilterViewState;
-import interface_adapter.home.HomeScreenState;
+
 import interface_adapter.home.HomeScreenViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.sort.SortController;
+import interface_adapter.sort.SortPresenter;
+import interface_adapter.sort.SortViewModel;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInteractor;
-import use_case.search.SearchDataAccessInterface;
 import entity.Event;
 import use_case.search.SearchInteractor;
+import use_case.sort.SortDataAccessInterface;
+import use_case.sort.SortInteractor;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Home_screen extends JFrame {
 
@@ -38,13 +42,18 @@ public class Home_screen extends JFrame {
     private SearchViewModel searchViewModel;
     private FilterController filterController;
     private FilterViewModel filterViewModel;
+
+    private SortController sortController;
+    private SortViewModel sortViewModel;
     private HomeScreenViewModel homeScreenViewModel;
 
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel, HomeScreenViewModel homeScreenViewModel) {
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel, SortController sortController, SortViewModel sortViewModel, HomeScreenViewModel homeScreenViewModel) {
         this.searchViewModel = searchViewModel;
         this.searchController = searchController;
         this.filterController = filterController;
         this.filterViewModel = filterViewModel;
+        this.sortController = sortController;
+        this.sortViewModel = sortViewModel;
         this.homeScreenViewModel = homeScreenViewModel;
 
         // Frame settings
@@ -96,7 +105,109 @@ public class Home_screen extends JFrame {
         searchField = new JTextField(20);
         centerPanel.add(searchField);
         centerPanel.add(createFilterComboBox());
+        centerPanel.add(createSortComboBox());
         return centerPanel;
+    }
+
+    private JComboBox<String> createSortComboBox() {
+        JComboBox<String> comboBox = new JComboBox<>(new String[]{"Sort"});
+        comboBox.setPrototypeDisplayValue("Sort");
+        comboBox.setEditable(false);
+
+        comboBox.addActionListener(e -> {
+            if (comboBox.isPopupVisible()) {
+                JPopupMenu popup = createSortPopup();
+                Component comp = (Component) e.getSource();
+                popup.show(comp, 0, comp.getHeight());
+            }
+        });
+
+        return comboBox;
+    }
+
+    private JPopupMenu createSortPopup() {
+        JPopupMenu popup = new JPopupMenu();
+        JPanel sortPanel = createSortPanel();
+        JScrollPane scrollsort = new JScrollPane(sortPanel);
+        scrollsort.setPreferredSize(new Dimension(250, 200));
+        popup.setLayout(new BorderLayout());
+        popup.add(scrollsort, BorderLayout.CENTER);
+        return popup;
+    }
+
+    private JPanel createSortPanel() {
+        JPanel sortPanel = new JPanel();
+        sortPanel.setLayout(new BoxLayout(sortPanel, BoxLayout.Y_AXIS));
+
+//        // Duration slider
+//        sortPanel.add(new JLabel("Duration (Hours):"));
+//        JSlider durationSlider = new JSlider(1, 4);
+//        durationSlider.setMajorTickSpacing(1);
+//        durationSlider.setPaintTicks(true);
+//        durationSlider.setPaintLabels(true);
+//        durationSlider.addChangeListener(e -> sortCriteria.put("duration", durationSlider.getValue()));
+//        sortPanel.add(durationSlider);
+
+//        // Location text field
+//        sortPanel.add(new JLabel("Location:"));
+//        JTextField locationField = new JTextField();
+//        locationField.setMaximumSize(new Dimension(200, 25));
+//        locationField.addActionListener(e -> sortCriteria.put("location", locationField.getText()));
+//        sortPanel.add(locationField);
+
+//        // Tags checkboxes
+//        sortPanel.add(new JLabel("Categories:"));
+//        String[] categories = {"Sports", "Drawing", "Environmental"};
+//        List<String> selectedTags = new ArrayList<>();
+//        for (String category : categories) {
+//            JCheckBox checkBox = new JCheckBox(category);
+//            checkBox.addActionListener(e -> {
+//                if (checkBox.isSelected()) {
+//                    selectedTags.add(category);
+//                } else {
+//                    selectedTags.remove(category);
+//                }
+//                sortCriteria.put("tags", new ArrayList<>(selectedTags));
+//            });
+//            sortPanel.add(checkBox);
+//        }
+
+        // Sort categories radio buttons
+        sortPanel.add(new JLabel("Category:"));
+        String[] categories = {"earliest", "latest", "shortest", "longest"};
+        ButtonGroup categoryGroup = new ButtonGroup();  // Group to ensure only one is selected
+
+        // AtomicReference to store the selected category
+        AtomicReference<String> selectedCategory = new AtomicReference<>("");
+
+        for (String category : categories) {
+            JRadioButton radioButton = new JRadioButton(category);
+            radioButton.addActionListener(e -> {
+                // Update the selected category when a radio button is selected
+                selectedCategory.set(category);
+            });
+            categoryGroup.add(radioButton);  // Add radio button to the group
+            sortPanel.add(radioButton);  // Add radio button to the panel
+        }
+
+        // Apply Button
+        JButton applyButton = new JButton("Apply Sort");
+        applyButton.addActionListener(e -> {
+            sortController.sort(selectedCategory.get(), searchViewModel.getState().getResults());
+            homeScreenViewModel.getState().setEvents(sortViewModel.getState().getSortedResult());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
+        });
+        JButton resetButton = new JButton("Reset Filters");
+        resetButton.addActionListener(e -> {
+            selectedCategory.set("");
+            sortController.sort(selectedCategory.get(), searchViewModel.getState().getResults());
+            homeScreenViewModel.getState().setEvents(sortViewModel.getState().getSortedResult());
+            updateEventsList(homeScreenViewModel.getState().getEvents());
+        });
+        sortPanel.add(applyButton);
+        sortPanel.add(resetButton);
+
+        return sortPanel;
     }
 
     private JComboBox<String> createFilterComboBox() {
@@ -222,6 +333,7 @@ public class Home_screen extends JFrame {
     private void triggerInitialSearch() {
         searchController.search("");
         filterController.executeFilter(new HashMap<>(), searchViewModel.getState().getResults());
+        sortController.sort("", searchViewModel.getState().getResults());
         homeScreenViewModel.getState().setEvents(searchViewModel.getState().getResults());
         updateEventsList(homeScreenViewModel.getState().getEvents());
     }
@@ -292,6 +404,7 @@ public class Home_screen extends JFrame {
 
     public static void main(String[] args) {
         EventDAO dataAccess = new EventDAO();
+        EventDAO sortDataAccess = new EventDAO();
         FilterDataAccessInterface filterdao = dataAccess;
         SearchViewModel viewModel = new SearchViewModel();
         ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -302,8 +415,14 @@ public class Home_screen extends JFrame {
         FilterPresenter filterPresenter = new FilterPresenter(filterViewModel, viewManagerModel);
         FilterInteractor filterInteractor = new FilterInteractor(dataAccess, filterPresenter);
         FilterController filterController = new FilterController(filterInteractor);
+
+        SortViewModel sortViewModel = new SortViewModel();
+        SortPresenter sortPresenter = new SortPresenter(sortViewModel, viewManagerModel);
+        SortInteractor sortInteractor = new SortInteractor(sortPresenter);
+        SortController sortController = new SortController(sortInteractor);
+
         HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel();
 
-        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel, homeScreenViewModel).setVisible(true));
+        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel, sortController, sortViewModel, homeScreenViewModel).setVisible(true));
     }
 }

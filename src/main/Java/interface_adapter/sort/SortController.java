@@ -6,6 +6,9 @@ import use_case.sort.SortInputData;
 
 import java.util.List;
 
+/**
+ * The Controller for the sort use case
+ */
 public class SortController {
 
     private final SortInputBoundary inputBoundary;

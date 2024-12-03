@@ -9,13 +9,13 @@ import java.util.List;
  */
 public class SortInputData {
     private String sortQuery;
-    private List<Event> filteredEvents;
+    private List<Event> currentEvents;
 
-    public SortInputData(String sortQuery, List<Event> filteredEvents) {
+    public SortInputData(String sortQuery, List<Event> currentEvents) {
         this.sortQuery = sortQuery;
-        this.filteredEvents = filteredEvents;
+        this.currentEvents = currentEvents;
     }
 
     public String getSortQuery() { return sortQuery; }
-    public List<Event> getFilteredEvents() { return filteredEvents; }
+    public List<Event> getCurrentEvents() { return currentEvents; }
 }
