@@ -13,8 +13,8 @@ public class HomeScreenViewModel extends ViewModel<HomeScreenState> {
 
     public HomeScreenViewModel() {
         super("Home_screen");
-        setState(new HomeScreenState());
         this.support = new PropertyChangeSupport(this);
+        setState(new HomeScreenState());
         this.state = new HomeScreenState();
     }
 
