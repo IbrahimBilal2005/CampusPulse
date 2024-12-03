@@ -17,7 +17,6 @@ import use_case.filter.FilterDataAccessInterface;
 import use_case.filter.FilterInteractor;
 import entity.Event;
 import use_case.search.SearchInteractor;
-import use_case.sort.SortDataAccessInterface;
 import use_case.sort.SortInteractor;
 
 import javax.imageio.ImageIO;
@@ -139,42 +138,9 @@ public class Home_screen extends JFrame {
         JPanel sortPanel = new JPanel();
         sortPanel.setLayout(new BoxLayout(sortPanel, BoxLayout.Y_AXIS));
 
-//        // Duration slider
-//        sortPanel.add(new JLabel("Duration (Hours):"));
-//        JSlider durationSlider = new JSlider(1, 4);
-//        durationSlider.setMajorTickSpacing(1);
-//        durationSlider.setPaintTicks(true);
-//        durationSlider.setPaintLabels(true);
-//        durationSlider.addChangeListener(e -> sortCriteria.put("duration", durationSlider.getValue()));
-//        sortPanel.add(durationSlider);
-
-//        // Location text field
-//        sortPanel.add(new JLabel("Location:"));
-//        JTextField locationField = new JTextField();
-//        locationField.setMaximumSize(new Dimension(200, 25));
-//        locationField.addActionListener(e -> sortCriteria.put("location", locationField.getText()));
-//        sortPanel.add(locationField);
-
-//        // Tags checkboxes
-//        sortPanel.add(new JLabel("Categories:"));
-//        String[] categories = {"Sports", "Drawing", "Environmental"};
-//        List<String> selectedTags = new ArrayList<>();
-//        for (String category : categories) {
-//            JCheckBox checkBox = new JCheckBox(category);
-//            checkBox.addActionListener(e -> {
-//                if (checkBox.isSelected()) {
-//                    selectedTags.add(category);
-//                } else {
-//                    selectedTags.remove(category);
-//                }
-//                sortCriteria.put("tags", new ArrayList<>(selectedTags));
-//            });
-//            sortPanel.add(checkBox);
-//        }
-
         // Sort categories radio buttons
         sortPanel.add(new JLabel("Category:"));
-        String[] categories = {"earliest", "latest", "shortest", "longest"};
+        String[] categories = {"Earliest", "Latest", "Shortest", "Longest"};
         ButtonGroup categoryGroup = new ButtonGroup();  // Group to ensure only one is selected
 
         // AtomicReference to store the selected category
@@ -193,14 +159,14 @@ public class Home_screen extends JFrame {
         // Apply Button
         JButton applyButton = new JButton("Apply Sort");
         applyButton.addActionListener(e -> {
-            sortController.sort(selectedCategory.get(), searchViewModel.getState().getResults());
+            sortController.sort(selectedCategory.get(), homeScreenViewModel.getState().getEvents());
             homeScreenViewModel.getState().setEvents(sortViewModel.getState().getSortedResult());
             updateEventsList(homeScreenViewModel.getState().getEvents());
         });
-        JButton resetButton = new JButton("Reset Filters");
+        JButton resetButton = new JButton("Reset Sort");
         resetButton.addActionListener(e -> {
             selectedCategory.set("");
-            sortController.sort(selectedCategory.get(), searchViewModel.getState().getResults());
+            sortController.sort(selectedCategory.get(), filterViewModel.getState().getFilteredEvents());
             homeScreenViewModel.getState().setEvents(sortViewModel.getState().getSortedResult());
             updateEventsList(homeScreenViewModel.getState().getEvents());
         });
@@ -279,7 +245,7 @@ public class Home_screen extends JFrame {
         // Apply Button
         JButton applyButton = new JButton("Apply Filters");
         applyButton.addActionListener(e -> {
-            filterController.executeFilter(filterCriteria, searchViewModel.getState().getResults());
+            filterController.executeFilter(filterCriteria, homeScreenViewModel.getState().getEvents());
             homeScreenViewModel.getState().setEvents(filterViewModel.getState().getFilteredEvents());
             updateEventsList(homeScreenViewModel.getState().getEvents());
         });

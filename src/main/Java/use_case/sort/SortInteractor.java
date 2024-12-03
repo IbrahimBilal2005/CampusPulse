@@ -19,13 +19,13 @@ public class SortInteractor implements SortInputBoundary {
     @Override
     public void sort(SortInputData inputData) {
         String sortQuery = inputData.getSortQuery();
-        List<Event> allEvents = inputData.getCurrentEvents();
+        List<Event> currentEvents = inputData.getCurrentEvents();
 
         if (sortQuery.isEmpty()) {
-            if (allEvents.isEmpty()) {
+            if (currentEvents.isEmpty()) {
                 sortOutputBoundary.prepareFailView("No events found");
             } else {
-                sortOutputBoundary.prepareSuccessView(new SortOutputData(allEvents));
+                sortOutputBoundary.prepareSuccessView(new SortOutputData(currentEvents));
             }
             return;
         }
@@ -34,19 +34,19 @@ public class SortInteractor implements SortInputBoundary {
 
         switch (sortQuery) {
             case "Earliest":
-                sortedFilteredEvents = allEvents.stream()
+                sortedFilteredEvents = currentEvents.stream()
                         .sorted(Comparator.comparing(Event::getStart))
                         .collect(Collectors.toList());
                 break;
 
             case "Latest":
-                sortedFilteredEvents = allEvents.stream()
+                sortedFilteredEvents = currentEvents.stream()
                         .sorted(Comparator.comparing(Event::getStart).reversed())
                         .collect(Collectors.toList());
                 break;
 
             case "Longest":
-                sortedFilteredEvents = allEvents.stream()
+                sortedFilteredEvents = currentEvents.stream()
                         .sorted((event1, event2) -> {
                             Duration duration1 = Duration.between(event1.getStart(), event1.getEnd());
                             Duration duration2 = Duration.between(event2.getStart(), event2.getEnd());
@@ -57,7 +57,7 @@ public class SortInteractor implements SortInputBoundary {
 
 
             case "Shortest":
-                sortedFilteredEvents = allEvents.stream()
+                sortedFilteredEvents = currentEvents.stream()
                         .sorted(Comparator.comparing(event -> Duration.between(event.getStart(), event.getEnd())))
                         .collect(Collectors.toList());
                 break;
