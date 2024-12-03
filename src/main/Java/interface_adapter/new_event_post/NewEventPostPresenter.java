@@ -20,7 +20,7 @@ public class NewEventPostPresenter implements NewEventPostOutputBoundary {
 
     @Override
     public void presentSuccess(NewEventPostOutputData outputData) {
-        // Switch to home view
+        // Switch to my events screen
     }
 
     @Override
