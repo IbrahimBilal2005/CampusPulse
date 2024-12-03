@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ class DeleteEventInteractorTest {
             public void prepareSuccessView(DeleteEventOutputData outputData) {
                 Assertions.assertEquals(expectedMap, ((EventPoster) eventPoster).getEvents());
                 Assertions.assertEquals(userRepository.getUser(eventPoster.getUsername()).getEvents(), expectedMap);
-                Assertions.assertEquals(1, outputData.getEvents().size());
+                Assertions.assertEquals(outputData.getEvents(), new ArrayList<>(expectedMap.values()));
                 Assertions.assertFalse(outputData.isUseCaseFailed());
             }
 
