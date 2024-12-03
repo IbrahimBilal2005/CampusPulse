@@ -14,7 +14,11 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.ChangePasswordViewModel;
+import interface_adapter.delete_event.DeleteEventController;
+import interface_adapter.delete_event.DeleteEventPresenter;
 import interface_adapter.delete_event.MyEventsViewModel;
+import interface_adapter.event_details.EventDetailsController;
+import interface_adapter.event_details.EventDetailsPresenter;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
@@ -40,9 +44,18 @@ import interface_adapter.signup.event_poster_signup.EventPosterSignupViewModel;
 import interface_adapter.signup.general_user_signup.UserSignupController;
 import interface_adapter.signup.general_user_signup.UserSignupPresenter;
 import interface_adapter.signup.general_user_signup.UserSignupViewModel;
+import interface_adapter.sort.SortController;
+import interface_adapter.sort.SortPresenter;
+import interface_adapter.sort.SortViewModel;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.delete_event.DeleteEventInputBoundary;
+import use_case.delete_event.DeleteEventInteractor;
+import use_case.delete_event.DeleteEventOutputBoundary;
+import use_case.event_details.EventDetailsInputBoundary;
+import use_case.event_details.EventDetailsInteractor;
+import use_case.event_details.EventDetailsOutputBoundary;
 import use_case.filter.FilterInputBoundary;
 import use_case.filter.FilterInteractor;
 import use_case.filter.FilterOutputBoundary;
@@ -67,6 +80,9 @@ import use_case.signup.event_poster_signup.EventPosterSignupInputBoundary;
 import use_case.signup.choose_account_type.AccountTypeInteractor;
 import use_case.signup.choose_account_type.AccountTypeOutputBoundary;
 import use_case.signup.choose_account_type.AccountTypeInputBoundary;
+import use_case.sort.SortInputBoundary;
+import use_case.sort.SortInteractor;
+import use_case.sort.SortOutputBoundary;
 import views.ChangePasswordView;
 import views.Home_screen;
 import views.Login_screen;
@@ -108,6 +124,7 @@ public class AppBuilder {
     private MyEventsViewModel myEventsViewModel;
     private SearchViewModel searchViewModel;
     private FilterViewModel filterViewModel;
+    private SortViewModel sortViewModel;
 
     private LoginViewModel loginViewModel;
     private LoggedInViewModel loggedInViewModel;
@@ -252,7 +269,29 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addEventSortingUseCase() {
+        final SortOutputBoundary eventSortOutputBoundary = new SortPresenter(sortViewModel,viewManagerModel);
+        final SortInputBoundary eventSortingInteractor = new SortInteractor(eventSortOutputBoundary);
+        final SortController eventSortingController = new SortController(eventSortingInteractor);
+        homeScreenViewModel.setEventFilteringController(eventSortingController);
+        return this;
+    }
 
+    public AppBuilder addEventDetailsUseCase() {
+        final EventDetailsOutputBoundary eventDetailsOutputBoundary = new EventDetailsPresenter(viewManagerModel, homeScreenViewModel);
+        final EventDetailsInputBoundary eventDetailsInteractor = new EventDetailsInteractor(eventDetailsOutputBoundary);
+        final EventDetailsController eventDetailsController = new EventDetailsController(eventDetailsInteractor);
+        homeScreenViewModel.setEventDetailsController(eventDetailsController);
+        return this;
+    }
+
+    public AppBuilder addDeleteEventUseCase() {
+        final DeleteEventOutputBoundary deleteEventOutputBoundary = new DeleteEventPresenter(viewManagerModel, myEventsViewModel);
+        final DeleteEventInputBoundary deleteEventInteractor = new DeleteEventInteractor(userDataAccessObject, deleteEventOutputBoundary);
+        final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
+        homeScreenViewModel.setDeleteEventController(deleteEventController);
+        return this;
+    }
 
     public JFrame build() {
         final JFrame application = new JFrame("Signup Example");
