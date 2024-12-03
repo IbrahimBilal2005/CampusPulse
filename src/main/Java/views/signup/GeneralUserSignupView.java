@@ -277,9 +277,7 @@ public class GeneralUserSignupView extends BaseSignupView<UserSignupViewModel> i
 
     @Override
     public void addCancelButtonListener() {
-        cancel.addActionListener(
-                evt -> userSignupController.switchToBaseView()
-        );
+        //changed since we are not using cancel button now
     }
 
     @Override

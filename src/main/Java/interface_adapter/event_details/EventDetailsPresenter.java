@@ -1,19 +1,30 @@
 package interface_adapter.event_details;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.home.HomeScreenState;
+import interface_adapter.home.HomeScreenViewModel;
 import use_case.event_details.EventDetailsOutputBoundary;
 import use_case.event_details.EventDetailsOutputData;
 
+/**
+ * Presenter for Event Details use case
+ */
 public class EventDetailsPresenter implements EventDetailsOutputBoundary {
-    private final EventDetailsViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
+    private final HomeScreenViewModel homeScreenViewModel;
 
-    public EventDetailsPresenter(EventDetailsViewModel viewModel){
-        this.viewModel = viewModel;
+    public EventDetailsPresenter(ViewManagerModel viewManagerModel, HomeScreenViewModel homeScreenViewModel) {
+        this.viewManagerModel = viewManagerModel;
+        this.homeScreenViewModel = homeScreenViewModel;
     }
 
-
-    public void prepareSuccessView(EventDetailsOutputData data){
+    // changes the view to the home screen
+    @Override
+    public void changeView(EventDetailsOutputData data){
         if (!data.isClick()) {
-//      TODO viewManagerModel.setState(homeViewModel.getViewName());
+            final HomeScreenState homeScreenState = homeScreenViewModel.getState();
+            this.homeScreenViewModel.setState(homeScreenState);
+            this.viewManagerModel.setState(homeScreenViewModel.getViewName());
         }
     }
 }

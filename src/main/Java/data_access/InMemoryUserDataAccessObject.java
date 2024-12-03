@@ -8,10 +8,12 @@ import java.util.Map;
 import entity.Account;
 import entity.Event;
 import entity.EventPoster;
+import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_event.DeleteEventDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.UserSignupDataAccessInterface;
+import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
@@ -20,7 +22,8 @@ import use_case.signup.UserSignupDataAccessInterface;
 public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
-        DeleteEventDataAccessInterface {
+        DeleteEventDataAccessInterface,
+        AdminApprovalUserDataAccessInterface {
 
     private final Map<String, Account> users = new HashMap<>();
 
@@ -56,11 +59,6 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
     @Override
     public Account get(String username) {
         return null;
-    }
-
-    @Override
-    public String getCurrentUsername() {
-        return "";
     }
 
     @Override
@@ -109,5 +107,46 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
         EventPoster eventPoster = (EventPoster) users.get(username);
         return eventPoster.getEvents().containsKey(event.getName());
     }
+
+    @Override
+    public boolean approveUserAsEventPoster(String uid) {
+        // Check if the user exists
+        if (!users.containsKey(uid)) {
+            return false;
+        }
+
+        Account account = users.get(uid);
+
+        // If the user is already an EventPoster, no need to promote
+        if (account instanceof EventPoster) {
+            return true; // Already approved
+        }
+
+        // Create an EventPoster with the same details as the existing user
+        EventPoster eventPoster = new EventPoster(
+                account.getUsername(),
+                account.getPassword(),
+                "Default Organization",
+                "http://default.website",
+                new HashMap<>() // Initialize with no events
+        );
+
+        // Replace the user with the newly created EventPoster
+        users.put(uid, eventPoster);
+        return true;
+    }
+
+    @Override
+    public boolean rejectUserAsEventPoster(String uid) {
+        // Check if the user exists
+        if (!users.containsKey(uid)) {
+            return false;
+        }
+
+        // Remove the user from the map
+        users.remove(uid);
+        return true;
+    }
+
 }
 

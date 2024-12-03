@@ -1,6 +1,6 @@
 package use_case.admin_account_approval;
 
-public class AdminApprovalInteractor {
+public class AdminApprovalInteractor implements AdminApprovalInputBoundary{
     private final AdminApprovalOutputBoundary outputBoundary;
     private final AdminApprovalUserDataAccessInterface userDataAccess;
 

@@ -4,7 +4,6 @@ import entity.Event;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +13,14 @@ import java.util.List;
 
 public class NewEventPostInteractor implements NewEventPostInputBoundary{
     private final NewEventPostOutputBoundary presenter;
-    private final NewEventPostUserDataAccessInterface dataAccess;
+    private final NewEventPostUserDataAccessInterface dataAccessUser;
 
     private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public NewEventPostInteractor(NewEventPostOutputBoundary presenter,
-                                  NewEventPostUserDataAccessInterface dataAccess) {
+                                  NewEventPostUserDataAccessInterface dataAccessUser) {
         this.presenter = presenter;
-        this.dataAccess = dataAccess;
+        this.dataAccessUser = dataAccessUser;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
             return;
         }
 
-        if (dataAccess.existsByName(inputData.getEventName())) {
+        if (dataAccessUser.existsByName(inputData.getEventName())) {
             presenter.presentFailure("Event name is empty or already exists.");
             return;
         }
@@ -76,14 +75,9 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
         );
 
         // Add the event to the data store
-        dataAccess.addtoMyevents(newEvent,inputData.getUsername());
-        presenter.presentSuccess(new NewEventPostOutputData(false));
+        dataAccessUser.addtoMyevents(newEvent,inputData.getUsername());
+        presenter.presentSuccess(new NewEventPostOutputData(false, newEvent));
 
-    }
-
-    @Override
-    public void switchToHomeView(){
-        presenter.switchToHomeView();
     }
 
     /**

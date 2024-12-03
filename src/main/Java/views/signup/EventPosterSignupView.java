@@ -179,9 +179,7 @@ public class EventPosterSignupView extends BaseSignupView<EventPosterSignupViewM
 
     @Override
     public void addCancelButtonListener() {
-        cancel.addActionListener(
-                evt -> eventPosterSignupController.switchToBaseView()
-        );
+        // changed since we are not using cancel button now
     }
 
     public String getViewName() {
