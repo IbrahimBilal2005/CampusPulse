@@ -18,8 +18,9 @@ public class EventDetailsPresenter implements EventDetailsOutputBoundary {
         this.homeScreenViewModel = homeScreenViewModel;
     }
 
+    // changes the view to the home screen
     @Override
-    public void prepareSuccessView(EventDetailsOutputData data){
+    public void changeView(EventDetailsOutputData data){
         if (!data.isClick()) {
             final HomeScreenState homeScreenState = homeScreenViewModel.getState();
             this.homeScreenViewModel.setState(homeScreenState);
