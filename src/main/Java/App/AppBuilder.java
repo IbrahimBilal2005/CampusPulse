@@ -140,6 +140,7 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private ChangePasswordView loggedInView;
     private Login_screen loginView;
+    private Home_screen homeView;
 
     public AppBuilder(UserCreationStrategy userFactory, ViewManagerModel viewManagerModel,
                       InMemoryUserDataAccessObject userDataAccessObject, EventDAO eventDAO) {
@@ -267,7 +268,7 @@ public class AppBuilder {
         final SearchOutputBoundary eventSearchOutputBoundary = new SearchPresenter(searchViewModel, viewManagerModel);
         final SearchInputBoundary eventSearchInteractor = new SearchInteractor(eventDAO, eventSearchOutputBoundary);
         final SearchController eventSearchController = new SearchController(eventSearchInteractor);
-        homeScreenViewModel.setEventSearchController(eventSearchController);
+        homeView.setSearchController(eventSearchController);
         return this;
     }
 
@@ -275,7 +276,7 @@ public class AppBuilder {
         final FilterOutputBoundary eventFilteringOutputBoundary = new FilterPresenter(filterViewModel,viewManagerModel);
         final FilterInputBoundary eventFilteringInteractor = new FilterInteractor(eventDAO, eventFilteringOutputBoundary);
         final FilterController eventFilteringController = new FilterController(eventFilteringInteractor);
-        homeScreenViewModel.setEventFilteringController(eventFilteringController);
+        homeView.setFilterController(eventFilteringController);
         return this;
     }
 
@@ -283,7 +284,7 @@ public class AppBuilder {
         final SortOutputBoundary eventSortOutputBoundary = new SortPresenter(sortViewModel,viewManagerModel);
         final SortInputBoundary eventSortingInteractor = new SortInteractor(eventSortOutputBoundary);
         final SortController eventSortingController = new SortController(eventSortingInteractor);
-        homeScreenViewModel.setEventFilteringController(eventSortingController);
+        homeView.setSortController(eventSortingController);
         return this;
     }
 

@@ -1,5 +1,6 @@
 package views;
 
+import interface_adapter.filter.FilterController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.login.LoginController;
@@ -129,6 +130,10 @@ public class Login_screen implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
 
+    }
+
+    public void setLoginController(LoginController loginControllerController) {
+        this.controller = loginControllerController;
     }
 }
 
