@@ -36,10 +36,4 @@ public class UserSignupPresenter implements UserSignupOutputBoundary {
         signupState.setUsernameError(errorMessage);
         userSignupViewModel.firePropertyChanged();
     }
-
-    @Override
-    public void switchToBaseView() {
-        //viewManagerModel.setState(baseScreenViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
-    }
 }

@@ -34,6 +34,4 @@ public class EventPosterSignupController {
         eventPosterSignupUseCaseInteractor.execute(eventPosterSignupInputData);
 
     }
-
-    public void switchToBaseView() { eventPosterSignupUseCaseInteractor.switchToBaseView(); }
 }

@@ -60,7 +60,4 @@ public class UserSignupInteractor implements UserSignupInputBoundary {
             userPresenter.prepareSuccessView(signupOutputData);
         }
     }
-
-    @Override
-    public void switchToBaseView() { userPresenter.switchToBaseView(); }
 }

@@ -48,7 +48,4 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
             userPresenter.prepareSuccessView(signupOutputData);
         }
     }
-
-    @Override
-    public void switchToBaseView() { userPresenter.switchToBaseView(); }
 }

@@ -35,10 +35,4 @@ public class EventPosterSignupPresenter implements EventPosterSignupOutputBounda
         signupState.setUsernameError(errorMessage);
         eventPosterSignupViewModel.firePropertyChanged();
     }
-
-    @Override
-    public void switchToBaseView() {
-        // viewManagerModel.setState(baseViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
-    }
 }

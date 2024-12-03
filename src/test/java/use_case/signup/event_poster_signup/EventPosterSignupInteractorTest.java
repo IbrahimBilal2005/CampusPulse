@@ -24,6 +24,12 @@ class EventPosterSignupInteractorTest {
         }} );
 
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary(userRepository);
+        interactor.execute(inputData);
+    }
+
+    @NotNull
+    private static EventPosterSignupInputBoundary getEventPosterSignupInputBoundary(UserSignupDataAccessInterface userRepository) {
         EventPosterSignupOutputBoundary successPresenter = new EventPosterSignupOutputBoundary() {
 
             @Override
@@ -36,14 +42,9 @@ class EventPosterSignupInteractorTest {
             public void prepareFailView(String errorMessage) {
                 fail("User case failure is unexpected.");
             }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
-            }
         };
         EventPosterSignupInputBoundary interactor = new EventPosterSignupInteractor(userRepository, successPresenter, new EventPosterCreationStrategy());
-        interactor.execute(inputData);
+        return interactor;
     }
 
     @Test
@@ -121,11 +122,6 @@ class EventPosterSignupInteractorTest {
             @Override
             public void prepareFailView(String errorMessage) {
                 assertEquals(expected, errorMessage);
-            }
-
-            @Override
-            public void switchToBaseView() {
-                //expected
             }
         };
         return new EventPosterSignupInteractor(userRepository, failurePresenter, new EventPosterCreationStrategy());

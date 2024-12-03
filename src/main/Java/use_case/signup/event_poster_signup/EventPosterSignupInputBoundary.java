@@ -7,9 +7,4 @@ public interface EventPosterSignupInputBoundary {
      * @param eventPosterSignupInputData the input data
      */
     void execute(EventPosterSignupInputData eventPosterSignupInputData);
-
-    /**
-     * Executes the switch to Base view use case.
-     */
-    void switchToBaseView();
 }
