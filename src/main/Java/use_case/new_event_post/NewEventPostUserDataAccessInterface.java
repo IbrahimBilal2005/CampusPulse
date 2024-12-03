@@ -13,4 +13,5 @@ public interface NewEventPostUserDataAccessInterface {
      */
 
     void addtoMyevents(Event event, String username);
+
 }
