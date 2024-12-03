@@ -6,7 +6,6 @@ import entity.EventPoster;
 import use_case.signup.UserSignupDataAccessInterface;
 
 public class EventPosterSignupInteractor implements EventPosterSignupInputBoundary{
-
     private final UserSignupDataAccessInterface userSignupDataAccessInterface;
     private final EventPosterSignupOutputBoundary userPresenter;
     private final AccountCreationStrategy accountCreator;
@@ -44,8 +43,9 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
                     eventPosterSignupInputData.getSopLink(),
                     eventPosterSignupInputData.getEvents());
 
-            userSignupDataAccessInterface.save((EventPoster) eventPoster);
-            final EventPosterSignupOutputData signupOutputData = new EventPosterSignupOutputData(eventPoster.getUsername(), false);
+            userSignupDataAccessInterface.save(eventPoster);
+            final EventPosterSignupOutputData signupOutputData
+                    = new EventPosterSignupOutputData(eventPoster.getUsername(), false);
             userPresenter.prepareSuccessView(signupOutputData);
         }
     }
