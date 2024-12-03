@@ -7,7 +7,7 @@ import entity.EventPosterCreationStrategy;
 import entity.Account;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import use_case.signup.UserSignupDataAccessInterface;
+import use_case.signup.AccountSignupDataAccessInterface;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -22,7 +22,6 @@ class EventPosterSignupInteractorTest {
         EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "https://sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
-
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary(userRepository);
         interactor.execute(inputData);
@@ -53,7 +52,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Passwords do not match.", userRepository);
         interactor.execute(inputData);
     }
@@ -64,7 +63,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Password must be at least 8 characters", userRepository);
         interactor.execute(inputData);
     }
@@ -75,7 +74,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Invalid SOP link", userRepository);
         interactor.execute(inputData);
     }
@@ -86,7 +85,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary("Invalid organization name", userRepository);
         interactor.execute(inputData);
     }
@@ -97,7 +96,7 @@ class EventPosterSignupInteractorTest {
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
 
-        UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+        AccountSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
 
         AccountCreationStrategy accountCreator = new EventPosterCreationStrategy();
         Account user = accountCreator.createAccount("username", "password", "Organization Name", "sopLink", new HashMap<>() {{
@@ -111,7 +110,7 @@ class EventPosterSignupInteractorTest {
     }
 
     @NotNull
-    private static EventPosterSignupInputBoundary getEventPosterSignupInputBoundary(String expected, UserSignupDataAccessInterface userRepository) {
+    private static EventPosterSignupInputBoundary getEventPosterSignupInputBoundary(String expected, AccountSignupDataAccessInterface userRepository) {
         EventPosterSignupOutputBoundary failurePresenter = new EventPosterSignupOutputBoundary() {
 
             @Override

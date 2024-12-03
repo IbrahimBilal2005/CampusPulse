@@ -2,15 +2,15 @@ package use_case.signup.general_user_signup;
 
 import entity.Account;
 import entity.AccountCreationStrategy;
-import use_case.signup.UserSignupDataAccessInterface;
+import use_case.signup.AccountSignupDataAccessInterface;
 
 public class UserSignupInteractor implements UserSignupInputBoundary {
 
-    private final UserSignupDataAccessInterface userDataAccessObject;
+    private final AccountSignupDataAccessInterface userDataAccessObject;
     private final UserSignupOutputBoundary userPresenter;
     private final AccountCreationStrategy accountCreator;
 
-    public UserSignupInteractor(UserSignupDataAccessInterface userDataAccessObject,
+    public UserSignupInteractor(AccountSignupDataAccessInterface userDataAccessObject,
                                 UserSignupOutputBoundary userSignupOutputBoundary,
                                 AccountCreationStrategy accountCreator) {
         this.userDataAccessObject = userDataAccessObject;

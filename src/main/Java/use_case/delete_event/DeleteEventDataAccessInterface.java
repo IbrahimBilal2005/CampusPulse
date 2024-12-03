@@ -1,5 +1,6 @@
 package use_case.delete_event;
 
+import entity.Account;
 import entity.Event;
 import entity.EventPoster;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * and managing event posters.
  */
 public interface DeleteEventDataAccessInterface {
+
 
     /**
      * Retrieves the EventPoster associated with the specified username.

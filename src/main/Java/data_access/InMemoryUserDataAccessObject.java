@@ -19,6 +19,7 @@ import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
  * In-memory implementation of the DAO for storing user data. This implementation does
  * NOT persist data between runs of the program.
  */
+
 public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterface,
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
@@ -82,11 +83,6 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
      */
     public void addAccount(Account account) {
         users.put(account.getUsername(), account);
-    }
-
-    @Override
-    public EventPoster getUser(String username) {
-        return (EventPoster) users.get(username);
     }
 
     @Override

@@ -2,25 +2,26 @@ package use_case.signup.event_poster_signup;
 
 import entity.Account;
 import entity.AccountCreationStrategy;
-import use_case.signup.UserSignupDataAccessInterface;
+import entity.EventPoster;
+import use_case.signup.AccountSignupDataAccessInterface;
 
 public class EventPosterSignupInteractor implements EventPosterSignupInputBoundary{
 
-    private final UserSignupDataAccessInterface userDataAccessObject;
+    private final AccountSignupDataAccessInterface accountSignupDataAccessInterface;
     private final EventPosterSignupOutputBoundary userPresenter;
     private final AccountCreationStrategy accountCreator;
 
-    public EventPosterSignupInteractor(UserSignupDataAccessInterface userDataAccessObject,
+    public EventPosterSignupInteractor(AccountSignupDataAccessInterface accountSignupDataAccessInterface,
                                        EventPosterSignupOutputBoundary eventPosterSignupOutputBoundary,
                                        AccountCreationStrategy accountCreator) {
-        this.userDataAccessObject = userDataAccessObject;
+        this.accountSignupDataAccessInterface = accountSignupDataAccessInterface;
         this.userPresenter = eventPosterSignupOutputBoundary;
         this.accountCreator = accountCreator;
     }
 
     @Override
     public void execute(EventPosterSignupInputData eventPosterSignupInputData){
-        if (userDataAccessObject.existsByName(eventPosterSignupInputData.getUsername())) {
+        if (accountSignupDataAccessInterface.existsByName(eventPosterSignupInputData.getUsername())) {
             userPresenter.prepareFailView("User already exists.");
         }
         else if (!eventPosterSignupInputData.getPassword().equals(eventPosterSignupInputData.getRepeatPassword())) {
@@ -43,7 +44,7 @@ public class EventPosterSignupInteractor implements EventPosterSignupInputBounda
                     eventPosterSignupInputData.getSopLink(),
                     eventPosterSignupInputData.getEvents());
 
-            userDataAccessObject.save(eventPoster);
+            accountSignupDataAccessInterface.save((EventPoster) eventPoster);
             final EventPosterSignupOutputData signupOutputData = new EventPosterSignupOutputData(eventPoster.getUsername(), false);
             userPresenter.prepareSuccessView(signupOutputData);
         }
