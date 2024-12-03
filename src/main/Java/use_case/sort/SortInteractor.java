@@ -63,8 +63,7 @@ public class SortInteractor implements SortInputBoundary {
                 break;
 
             default:
-                sortOutputBoundary.prepareFailView("Invalid sort query");
-                return;
+                sortedFilteredEvents = currentEvents;
         }
 
         sortOutputBoundary.prepareSuccessView(new SortOutputData(sortedFilteredEvents));
