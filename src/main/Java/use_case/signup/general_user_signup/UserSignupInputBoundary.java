@@ -9,11 +9,6 @@ public interface UserSignupInputBoundary {
     void execute(UserSignupInputData userSignupInputData);
 
     /**
-     * Executes the switch to login view use case.
-     */
-    void switchToLoginView();
-
-    /**
      * Executes the switch to Base view use case.
      */
     void switchToBaseView();

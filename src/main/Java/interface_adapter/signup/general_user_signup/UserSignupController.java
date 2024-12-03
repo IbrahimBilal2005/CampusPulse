@@ -38,6 +38,4 @@ public class UserSignupController {
     }
 
     public void switchToBaseView(){ userSignupUseCaseInteractor.switchToBaseView(); }
-
-    public void switchToLoginView(){ userSignupUseCaseInteractor.switchToLoginView(); }
 }

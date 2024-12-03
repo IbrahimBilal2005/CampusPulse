@@ -14,11 +14,6 @@ public interface EventPosterSignupOutputBoundary {
     void prepareFailView(String errorMessage);
 
     /**
-     * Switches to the Login View.
-     */
-    void switchToLoginView();
-
-    /**
      * Switches to the Base View.
      */
     void switchToBaseView();
