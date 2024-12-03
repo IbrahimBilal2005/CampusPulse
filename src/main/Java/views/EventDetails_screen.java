@@ -38,28 +38,6 @@ public class EventDetails_screen {
         frame.setSize(screenSize.width/2, screenSize.height/2);
         frame.setLocationRelativeTo(null);
 
-        JPanel bannerPanel = new JPanel(new BorderLayout());
-        bannerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        JLabel bannerLabel = new JLabel(view.TITLE);
-        bannerLabel.setFont(new Font("Arial", Font.BOLD, 24));
-
-        JTextField searchField = new JTextField("Search Events...");
-        searchField.setPreferredSize(new Dimension(150, 30));
-
-        JButton profileButton = new JButton(new ImageIcon("path/to/profile/icon.png"));
-        profileButton.setPreferredSize(new Dimension(40, 40));
-
-        JSeparator separator = new JSeparator();
-        separator.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the separator
-        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
-        separator.setForeground(Color.BLACK);
-
-        bannerPanel.add(bannerLabel, BorderLayout.WEST);
-        bannerPanel.add(searchField, BorderLayout.CENTER);
-        bannerPanel.add(profileButton, BorderLayout.EAST);
-        bannerPanel.add(separator, BorderLayout.SOUTH);
-
         JPanel main_panel = new JPanel();
         main_panel.setLayout(new BorderLayout());
         main_panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -127,7 +105,6 @@ public class EventDetails_screen {
         main_panel.add(eventNameLabel, BorderLayout.NORTH); // Add the event name at the top
 
         // Add panels to the frame
-        frame.add(bannerPanel, BorderLayout.NORTH);
         frame.add(main_panel, BorderLayout.CENTER);
         frame.setVisible(true);
 
