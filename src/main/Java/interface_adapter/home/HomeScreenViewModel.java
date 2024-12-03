@@ -5,7 +5,7 @@ import interface_adapter.search.SearchState;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class HomeScreenViewModel {
+public class HomeScreenViewModel{
 
     private final PropertyChangeSupport support;
     private HomeScreenState state;
