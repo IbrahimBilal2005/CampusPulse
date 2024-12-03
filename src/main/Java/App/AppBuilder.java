@@ -11,6 +11,10 @@ import data_access.InMemoryUserDataAccessObject;
 import entity.AccountCreationStrategy;
 import entity.UserCreationStrategy;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.admin_approval.AdminApprovalController;
+import interface_adapter.admin_approval.AdminApprovalPresenter;
+import interface_adapter.admin_approval.AdminApprovalState;
+import interface_adapter.admin_approval.AdminApprovalViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.ChangePasswordViewModel;
@@ -47,6 +51,9 @@ import interface_adapter.signup.general_user_signup.UserSignupViewModel;
 import interface_adapter.sort.SortController;
 import interface_adapter.sort.SortPresenter;
 import interface_adapter.sort.SortViewModel;
+import use_case.admin_account_approval.AdminApprovalInputBoundary;
+import use_case.admin_account_approval.AdminApprovalInteractor;
+import use_case.admin_account_approval.AdminApprovalOutputBoundary;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
@@ -125,6 +132,9 @@ public class AppBuilder {
     private SearchViewModel searchViewModel;
     private FilterViewModel filterViewModel;
     private SortViewModel sortViewModel;
+    private AdminApprovalViewModel adminApprovalViewModel;
+
+    private AdminApprovalState adminApprovalState;
 
     private LoginViewModel loginViewModel;
     private LoggedInViewModel loggedInViewModel;
@@ -290,6 +300,14 @@ public class AppBuilder {
         final DeleteEventInputBoundary deleteEventInteractor = new DeleteEventInteractor(userDataAccessObject, deleteEventOutputBoundary);
         final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
         homeScreenViewModel.setDeleteEventController(deleteEventController);
+        return this;
+    }
+
+    public AppBuilder addAdminAccountApprovalUseCase() {
+        final AdminApprovalOutputBoundary adminAccountApprovalOutputBoundary = new AdminApprovalPresenter(adminApprovalState);
+        final AdminApprovalInputBoundary adminAccountApprovalInteractor = new AdminApprovalInteractor(adminAccountApprovalOutputBoundary, userDataAccessObject);
+        final AdminApprovalController adminAccountApprovalController = new AdminApprovalController(adminAccountApprovalInteractor);
+        homeScreenViewModel.setAdminApprovalController(adminAccountApprovalController);
         return this;
     }
 
