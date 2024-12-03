@@ -1,28 +1,95 @@
 package use_case.admin_account_approval;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AdminApprovalInteractorTest {
+    private TestOutputBoundary outputBoundary;
+    private TestUserDataAccess userDataAccess;
+    private AdminApprovalInteractor interactor;
 
-    // In-memory implementation of the data access interface
-    static class InMemoryAdminApprovalDataAccess implements AdminApprovalUserDataAccessInterface {
-        private final List<String> approvedUsers = new ArrayList<>();
-        private final List<String> pendingUsers;
+    @BeforeEach
+    void setUp() {
+        outputBoundary = new TestOutputBoundary();
+        userDataAccess = new TestUserDataAccess();
+        interactor = new AdminApprovalInteractor(outputBoundary, userDataAccess);
+    }
 
-        public InMemoryAdminApprovalDataAccess(List<String> pendingUsers) {
-            this.pendingUsers = pendingUsers;
+    @Test
+    void testApproveUserSuccess() {
+        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
+        interactor.approveUser(inputData);
+
+        assertTrue(outputBoundary.success);
+        assertEquals("User approved successfully", outputBoundary.outputData.getMessage());
+        assertTrue(outputBoundary.outputData.getApproved());
+        assertTrue(userDataAccess.approvedUsers.contains("validUid"));
+    }
+
+    @Test
+    void testApproveUserFailure() {
+        AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUid");
+        interactor.approveUser(inputData);
+
+        assertFalse(outputBoundary.success);
+        assertEquals("Failed to approve user.", outputBoundary.errorMessage);
+        assertFalse(userDataAccess.approvedUsers.contains("invalidUid"));
+    }
+
+    @Test
+    void testRejectUserSuccess() {
+        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
+        interactor.rejectUser(inputData);
+
+        assertTrue(outputBoundary.success);
+        assertEquals("User rejected successfully", outputBoundary.outputData.getMessage());
+        assertTrue(outputBoundary.outputData.getApproved());
+        assertTrue(userDataAccess.rejectedUsers.contains("validUid"));
+    }
+
+    @Test
+    void testRejectUserFailure() {
+        AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUid");
+        interactor.rejectUser(inputData);
+
+        assertFalse(outputBoundary.success);
+        assertEquals("Failed to reject user.", outputBoundary.errorMessage);
+        assertFalse(userDataAccess.rejectedUsers.contains("invalidUid"));
+    }
+
+    // Concrete implementation of AdminApprovalOutputBoundary
+    private static class TestOutputBoundary implements AdminApprovalOutputBoundary {
+        boolean success;
+        AdminApprovalOutputData outputData;
+        String errorMessage;
+
+        @Override
+        public void presentSuccess(AdminApprovalOutputData outputData) {
+            this.success = true;
+            this.outputData = outputData;
         }
 
         @Override
+        public void presentFailure(String errorMessage) {
+            this.success = false;
+            this.errorMessage = errorMessage;
+        }
+    }
+
+    // Concrete implementation of AdminApprovalUserDataAccessInterface
+    private static class TestUserDataAccess implements AdminApprovalUserDataAccessInterface {
+        Set<String> approvedUsers = new HashSet<>();
+        Set<String> rejectedUsers = new HashSet<>();
+
+        @Override
         public boolean approveUserAsEventPoster(String uid) {
-            if (pendingUsers.contains(uid)) {
+            if ("validUid".equals(uid)) {
                 approvedUsers.add(uid);
-                pendingUsers.remove(uid);
                 return true;
             }
             return false;
@@ -30,120 +97,11 @@ class AdminApprovalInteractorTest {
 
         @Override
         public boolean rejectUserAsEventPoster(String uid) {
-            return pendingUsers.remove(uid);
+            if ("validUid".equals(uid)) {
+                rejectedUsers.add(uid);
+                return true;
+            }
+            return false;
         }
-
-        public List<String> getApprovedUsers() {
-            return approvedUsers;
-        }
-
-        public List<String> getPendingUsers() {
-            return pendingUsers;
-        }
-    }
-
-    @Test
-    void approveUser_Success() {
-        List<String> pendingUsers = new ArrayList<>(List.of("user1", "user2", "user3"));
-        InMemoryAdminApprovalDataAccess dataAccess = new InMemoryAdminApprovalDataAccess(pendingUsers);
-
-        AdminApprovalOutputBoundary successPresenter = new AdminApprovalOutputBoundary() {
-            @Override
-            public void presentSuccess(AdminApprovalOutputData outputData) {
-                assertEquals("User approved successfully", outputData.getMessage());
-                assertTrue(outputData.getApproved());
-            }
-
-            @Override
-            public void presentFailure(String errorMessage) {
-                fail("Approval should have succeeded.");
-            }
-        };
-
-        AdminApprovalInteractor interactor = new AdminApprovalInteractor(successPresenter, dataAccess);
-
-        AdminApprovalInputData inputData = new AdminApprovalInputData("user1");
-        interactor.approveUser(inputData);
-
-        assertEquals(2, dataAccess.getPendingUsers().size());
-        assertTrue(dataAccess.getApprovedUsers().contains("user1"));
-    }
-
-    @Test
-    void approveUser_Failure() {
-        List<String> pendingUsers = new ArrayList<>(List.of("user2", "user3"));
-        InMemoryAdminApprovalDataAccess dataAccess = new InMemoryAdminApprovalDataAccess(pendingUsers);
-
-        AdminApprovalOutputBoundary failurePresenter = new AdminApprovalOutputBoundary() {
-            @Override
-            public void presentSuccess(AdminApprovalOutputData outputData) {
-                fail("Approval should have failed.");
-            }
-
-            @Override
-            public void presentFailure(String errorMessage) {
-                assertEquals("Failed to approve user.", errorMessage);
-            }
-        };
-
-        AdminApprovalInteractor interactor = new AdminApprovalInteractor(failurePresenter, dataAccess);
-
-        AdminApprovalInputData inputData = new AdminApprovalInputData("nonexistentUser");
-        interactor.approveUser(inputData);
-
-        assertEquals(2, dataAccess.getPendingUsers().size());
-        assertFalse(dataAccess.getApprovedUsers().contains("nonexistentUser"));
-    }
-
-    @Test
-    void rejectUser_Success() {
-        List<String> pendingUsers = new ArrayList<>(List.of("user1", "user2", "user3"));
-        InMemoryAdminApprovalDataAccess dataAccess = new InMemoryAdminApprovalDataAccess(pendingUsers);
-
-        AdminApprovalOutputBoundary successPresenter = new AdminApprovalOutputBoundary() {
-            @Override
-            public void presentSuccess(AdminApprovalOutputData outputData) {
-                assertEquals("User rejected successfully", outputData.getMessage());
-                assertTrue(outputData.getApproved()); // Indicates rejection success
-            }
-
-            @Override
-            public void presentFailure(String errorMessage) {
-                fail("Rejection should have succeeded.");
-            }
-        };
-
-        AdminApprovalInteractor interactor = new AdminApprovalInteractor(successPresenter, dataAccess);
-
-        AdminApprovalInputData inputData = new AdminApprovalInputData("user3");
-        interactor.rejectUser(inputData);
-
-        assertEquals(2, dataAccess.getPendingUsers().size());
-        assertFalse(dataAccess.getPendingUsers().contains("user3"));
-    }
-
-    @Test
-    void rejectUser_Failure() {
-        List<String> pendingUsers = new ArrayList<>(List.of("user1", "user2"));
-        InMemoryAdminApprovalDataAccess dataAccess = new InMemoryAdminApprovalDataAccess(pendingUsers);
-
-        AdminApprovalOutputBoundary failurePresenter = new AdminApprovalOutputBoundary() {
-            @Override
-            public void presentSuccess(AdminApprovalOutputData outputData) {
-                fail("Rejection should have failed.");
-            }
-
-            @Override
-            public void presentFailure(String errorMessage) {
-                assertEquals("Failed to reject user.", errorMessage);
-            }
-        };
-
-        AdminApprovalInteractor interactor = new AdminApprovalInteractor(failurePresenter, dataAccess);
-
-        AdminApprovalInputData inputData = new AdminApprovalInputData("nonexistentUser");
-        interactor.rejectUser(inputData);
-
-        assertEquals(2, dataAccess.getPendingUsers().size());
     }
 }
