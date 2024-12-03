@@ -115,42 +115,19 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
 
     @Override
     public boolean approveUserAsEventPoster(String uid) {
-        // Check if the user exists
-        if (!users.containsKey(uid)) {
-            return false;
-        }
-
-        Account account = users.get(uid);
-
-        // If the user is already an EventPoster, no need to promote
-        if (account instanceof EventPoster) {
-            return true; // Already approved
-        }
-
-        // Create an EventPoster with the same details as the existing user
-        EventPoster eventPoster = new EventPoster(
-                account.getUsername(),
-                account.getPassword(),
-                "Default Organization",
-                "http://default.website",
-                new HashMap<>() // Initialize with no events
-        );
-
-        // Replace the user with the newly created EventPoster
+        EventPoster eventPoster = (EventPoster) users.get(uid);
+        eventPoster.setApproved(true);
         users.put(uid, eventPoster);
         return true;
     }
 
     @Override
     public boolean rejectUserAsEventPoster(String uid) {
-        // Check if the user exists
-        if (!users.containsKey(uid)) {
-            return false;
-        }
-
-        // Remove the user from the map
-        users.remove(uid);
+        EventPoster eventPoster = (EventPoster) users.get(uid);
+        eventPoster.setApproved(false);
+        users.put(uid, eventPoster);
         return true;
+
     }
 
 }
