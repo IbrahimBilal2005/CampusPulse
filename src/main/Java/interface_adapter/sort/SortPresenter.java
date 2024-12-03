@@ -6,15 +6,27 @@ import use_case.sort.SortOutputData;
 
 import java.util.Collections;
 
+/**
+ * Presenter for the sort use case.
+ */
 public class SortPresenter implements SortOutputBoundary {
     private final SortViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
 
+    /**
+     * Creates a sort presenter based on the specified viewModel and viewManagerModel
+     * @param viewModel the viewModel
+     * @param viewManagerModel the viewManagerModel
+     */
     public SortPresenter(SortViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Prepare the success view with the relevant output data.
+     * @param outputData the output data
+     */
     @Override
     public void prepareSuccessView(SortOutputData outputData) {
         SortState state = viewModel.getState();
@@ -28,6 +40,10 @@ public class SortPresenter implements SortOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Prepare the fail view with the relevant error.
+     * @param error the error message
+     */
     @Override
     public void prepareFailView(String error) {
         SortState state = viewModel.getState();

@@ -13,12 +13,21 @@ public class SortController {
 
     private final SortInputBoundary inputBoundary;
 
+    /**
+     *  Create a SortController based on the specified inputBoundary
+     * @param inputBoundary the input boundary
+     */
     public SortController(SortInputBoundary inputBoundary) {
         this.inputBoundary = inputBoundary;
     }
 
-    public void sort(String query, List<Event> filteredEvents) {
-        SortInputData inputData = new SortInputData(query, filteredEvents);
+    /**
+     * Set up the relevant input data and execute the sort interactor
+     * @param query the query to sort the list by.
+     * @param currentEvents the current events to sort.
+     */
+    public void sort(String query, List<Event> currentEvents) {
+        SortInputData inputData = new SortInputData(query, currentEvents);
         inputBoundary.sort(inputData);
     }
 }

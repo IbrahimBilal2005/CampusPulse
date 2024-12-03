@@ -23,6 +23,10 @@ public class SortState {
     public String getError() { return error; }
     public void setError(String error) { this.error = error; }
 
+    /**
+     * String representation of the sort state.
+     * @return the string representation of the sort state.
+     */
     @Override
     public String toString() {
         return "SortState{"
