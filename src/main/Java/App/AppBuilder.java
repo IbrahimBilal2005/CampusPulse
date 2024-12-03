@@ -23,6 +23,7 @@ import interface_adapter.delete_event.DeleteEventPresenter;
 import interface_adapter.delete_event.MyEventsViewModel;
 import interface_adapter.event_details.EventDetailsController;
 import interface_adapter.event_details.EventDetailsPresenter;
+import interface_adapter.event_details.EventDetailsViewModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
@@ -51,6 +52,7 @@ import interface_adapter.signup.general_user_signup.UserSignupViewModel;
 import interface_adapter.sort.SortController;
 import interface_adapter.sort.SortPresenter;
 import interface_adapter.sort.SortViewModel;
+import kotlin.reflect.KParameter;
 import use_case.admin_account_approval.AdminApprovalInputBoundary;
 import use_case.admin_account_approval.AdminApprovalInteractor;
 import use_case.admin_account_approval.AdminApprovalOutputBoundary;
@@ -90,14 +92,11 @@ import use_case.signup.choose_account_type.AccountTypeInputBoundary;
 import use_case.sort.SortInputBoundary;
 import use_case.sort.SortInteractor;
 import use_case.sort.SortOutputBoundary;
-import views.ChangePasswordView;
-import views.Home_screen;
-import views.Login_screen;
+import views.*;
 import views.signup.BaseSignupView;
 import views.signup.ChooseAccountTypeView;
 import views.signup.EventPosterSignupView;
 import views.signup.GeneralUserSignupView;
-import views.ViewManager;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -122,6 +121,12 @@ public class AppBuilder {
     private GeneralUserSignupView generalUserSignupView;
     private EventPosterSignupView eventPosterSignupView;
     private BaseSignupView baseSignupView;
+    private ChangePasswordView loggedInView;
+    private Login_screen loginView;
+    private Home_screen homeView;
+    private MyEvents_screen myEventsView;
+    private EventDetails_screen eventDetailsview;
+    private ApprovalRequests_screen approvalRequestsView;
     private EventPosterSignupViewModel eventPosterSignupViewModel;
     private AccountTypeViewModel accountTypeViewModel;
     private UserSignupViewModel userSignupViewModel;
@@ -133,14 +138,13 @@ public class AppBuilder {
     private FilterViewModel filterViewModel;
     private SortViewModel sortViewModel;
     private AdminApprovalViewModel adminApprovalViewModel;
+    private EventDetailsViewModel eventDetailsViewModel;
 
     private AdminApprovalState adminApprovalState;
 
     private LoginViewModel loginViewModel;
     private LoggedInViewModel loggedInViewModel;
-    private ChangePasswordView loggedInView;
-    private Login_screen loginView;
-    private Home_screen homeView;
+
 
     public AppBuilder(UserCreationStrategy userFactory, ViewManagerModel viewManagerModel,
                       InMemoryUserDataAccessObject userDataAccessObject, EventDAO eventDAO) {
@@ -184,6 +188,27 @@ public class AppBuilder {
         loggedInViewModel = new LoggedInViewModel();
         loggedInView = new ChangePasswordView(changePasswordViewModel);
         cardPanel.add(loggedInView);
+        return this;
+    }
+
+    public AppBuilder addMyEventsScreen() {
+        myEventsViewModel = new MyEventsViewModel();
+        myEventsView = new MyEvents_screen(myEventsViewModel, loggedInViewModel);
+        cardPanel.add(myEventsView, myEventsView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addEventDetailsScreen() {
+        eventDetailsViewModel = new EventDetailsViewModel();
+        eventDetailsview = new EventDetails_screen(eventDetailsViewModel, );
+        cardPanel.add(eventDetailsview);
+        return this;
+    }
+
+    public AppBuilder addApprovalRequestsScreen() {
+        adminApprovalViewModel = new AdminApprovalViewModel(adminApprovalState);
+        approvalRequestsView = new ApprovalRequests_screen(adminApprovalViewModel);
+        cardPanel.add(approvalRequestsView);
         return this;
     }
 
@@ -251,16 +276,16 @@ public class AppBuilder {
                 new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
         final LogoutController logoutController = new LogoutController(logoutInteractor);
-        loggedInView.setLogoutController(logoutController);
+        homeView.setLogoutController(logoutController);
         return this;
     }
 
-    public AppBuilder addEventPostingUseCase() {
+    public AppBuilder addNewEventPostUseCase() {
         final NewEventPostOutputBoundary eventPostingOutputBoundary = new NewEventPostPresenter(newEventViewModel, viewManagerModel, myEventsViewModel);
         final NewEventPostInputBoundary eventPostingInteractor = new NewEventPostInteractor(eventPostingOutputBoundary, userDataAccessObject);
 
         final NewEventPostContoller eventPostingController = new NewEventPostContoller(eventPostingInteractor);
-        eventPosterSignupView.setEventPostingController(eventPostingController);
+        myEventsView.setNewEventPostController(eventPostingController);
         return this;
     }
 
@@ -292,7 +317,7 @@ public class AppBuilder {
         final EventDetailsOutputBoundary eventDetailsOutputBoundary = new EventDetailsPresenter(viewManagerModel, homeScreenViewModel);
         final EventDetailsInputBoundary eventDetailsInteractor = new EventDetailsInteractor(eventDetailsOutputBoundary);
         final EventDetailsController eventDetailsController = new EventDetailsController(eventDetailsInteractor);
-        homeScreenViewModel.setEventDetailsController(eventDetailsController);
+        eventDetailsview.setEventDetailsController(eventDetailsController);
         return this;
     }
 
@@ -300,7 +325,7 @@ public class AppBuilder {
         final DeleteEventOutputBoundary deleteEventOutputBoundary = new DeleteEventPresenter(viewManagerModel, myEventsViewModel);
         final DeleteEventInputBoundary deleteEventInteractor = new DeleteEventInteractor(userDataAccessObject, deleteEventOutputBoundary);
         final DeleteEventController deleteEventController = new DeleteEventController(deleteEventInteractor);
-        homeScreenViewModel.setDeleteEventController(deleteEventController);
+        myEventsView.setDeleteEventController(deleteEventController);
         return this;
     }
 
@@ -308,7 +333,7 @@ public class AppBuilder {
         final AdminApprovalOutputBoundary adminAccountApprovalOutputBoundary = new AdminApprovalPresenter(adminApprovalState);
         final AdminApprovalInputBoundary adminAccountApprovalInteractor = new AdminApprovalInteractor(adminAccountApprovalOutputBoundary, userDataAccessObject);
         final AdminApprovalController adminAccountApprovalController = new AdminApprovalController(adminAccountApprovalInteractor);
-        homeScreenViewModel.setAdminApprovalController(adminAccountApprovalController);
+        approvalRequestsView.setAdminApprovalController(adminAccountApprovalController);
         return this;
     }
 

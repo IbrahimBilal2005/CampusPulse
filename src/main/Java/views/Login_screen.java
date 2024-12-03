@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login_screen implements ActionListener{
+public class Login_screen extends JPanel implements ActionListener{
 
     private LoginController controller;
 
@@ -130,6 +130,10 @@ public class Login_screen implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
 
+    }
+
+    public String getViewName() {
+        return "Event Poster Signup";
     }
 
     public void setLoginController(LoginController loginControllerController) {

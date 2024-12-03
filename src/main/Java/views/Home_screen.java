@@ -7,6 +7,7 @@ import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
 
 import interface_adapter.home.HomeScreenViewModel;
+import interface_adapter.logout.LogoutController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
@@ -43,6 +44,7 @@ public class Home_screen extends JFrame {
     private SearchViewModel searchViewModel;
     private FilterController filterController;
     private FilterViewModel filterViewModel;
+    private LogoutController logoutController;
 
     private SortController sortController;
     private SortViewModel sortViewModel;
@@ -378,6 +380,10 @@ public class Home_screen extends JFrame {
     }
     public void setFilterController(FilterController filterController) {
         this.filterController = filterController;
+    }
+
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
     }
 
     public static void main(String[] args) {

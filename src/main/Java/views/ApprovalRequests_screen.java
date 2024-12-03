@@ -2,6 +2,7 @@ package views;
 
 import entity.User;
 import interface_adapter.admin_approval.AdminApprovalController;
+import interface_adapter.filter.FilterController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,6 +78,14 @@ public class ApprovalRequests_screen extends JFrame {
     private void refreshUI() {
         dispose();
         new ApprovalRequests_screen(pendingRequests);
+    }
+
+    public void setAdminApprovalController(AdminApprovalController adminApprovalController) {
+        this.approvalController = adminApprovalController;
+    }
+
+    public String getViewName() {
+        return "Event Poster Signup";
     }
 
     public static void main(String[] args) {

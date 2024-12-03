@@ -10,8 +10,10 @@ import java.util.List;
 import data_access.InMemoryUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.delete_event.*;
+import interface_adapter.filter.FilterController;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.new_event_post.NewEventPostContoller;
 import org.jetbrains.annotations.NotNull;
 import entity.Event;
 import entity.EventPoster;
@@ -28,6 +30,7 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
     private MyEventsViewModel myEventsViewModel;
     private LoggedInViewModel loggedInViewModel;
     private DeleteEventController deleteEventController;
+    private NewEventPostContoller newEventPostContoller;
 
     private final JPanel eventsPanel;
     private final JButton addEventButton;
@@ -265,6 +268,9 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
 
     public void setDeleteEventController(DeleteEventController deleteEventController) {
         this.deleteEventController = deleteEventController;
+    }
+    public void setNewEventPostController(NewEventPostContoller newEventPostController) {
+        this.newEventPostContoller = newEventPostController;
     }
 
     public static void main(String[] args) {
