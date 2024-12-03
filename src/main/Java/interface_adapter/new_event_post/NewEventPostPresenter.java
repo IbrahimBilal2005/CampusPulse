@@ -4,6 +4,10 @@ import interface_adapter.ViewManagerModel;
 import use_case.new_event_post.NewEventPostOutputBoundary;
 import use_case.new_event_post.NewEventPostOutputData;
 
+/**
+ * The presenter for the New Event Post Use Case.
+ */
+
 public class NewEventPostPresenter implements NewEventPostOutputBoundary {
     private final NewEventViewModel newEventViewModel;
     private final ViewManagerModel viewManagerModel;

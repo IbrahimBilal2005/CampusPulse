@@ -2,19 +2,27 @@ package use_case.new_event_post;
 
 import entity.Event;
 
+/**
+ * The data access interface for the New Event Post Use Case.
+ */
+
 public interface NewEventPostUserDataAccessInterface {
 
     /**
-     * Checks if the given username exists.
-     * @param Eventname the username to look for
-     * @return true if a user with the given username exists; false otherwise
+     * Checks if the given event exists.
+     * @param Eventname the event to look for
+     * @return true if an event with the given exists; false otherwise
      */
 
     //checks if event exists
     boolean existsByName(String Eventname);
 
-    //adds event to mongo and internal memory
-    void addEvent(Event event);
+
+    /**
+     * Adds event to given username
+     */
+
+    void addtoMyevents(Event event, String username);
 
 
 }

@@ -2,6 +2,10 @@ package interface_adapter.new_event_post;
 
 import interface_adapter.ViewModel;
 
+/**
+ * The View Model for the New Event Post Use Case.
+ */
+
 public class NewEventViewModel extends ViewModel<NewEventPostInState> {
     public NewEventViewModel() {
         super("NewEventPostViewModel");
