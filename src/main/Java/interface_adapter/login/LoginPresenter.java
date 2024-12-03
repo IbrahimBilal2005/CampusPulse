@@ -6,6 +6,9 @@ import interface_adapter.home.HomeScreenViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
+/**
+ * Presenter for Login Use Case
+ */
 public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
     private final ViewManagerModel viewManagerModel;
@@ -22,7 +25,6 @@ public class LoginPresenter implements LoginOutputBoundary {
         if (!outputData.isUseCaseFailed()) {
             final HomeScreenState homeScreenState = homeScreenViewModel.getState();
             this.homeScreenViewModel.setState(homeScreenState);
-
             this.viewManagerModel.setState(homeScreenViewModel.getViewName());
         }
     }
