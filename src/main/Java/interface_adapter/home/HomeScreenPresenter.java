@@ -18,8 +18,8 @@ public class HomeScreenPresenter implements HomeScreenOutputBoundary {
      */
     @Override
     public void presentHomeScreen(HomeScreenOutputData outputData) {
-        viewModel.setEventPoster(outputData.isEventPoster());
-        viewModel.setEvents(outputData.getEvents());
+//        viewModel.setEventPoster(outputData.isEventPoster());
+//        viewModel.setEvents(outputData.getEvents());
     }
 
     /**
@@ -29,7 +29,7 @@ public class HomeScreenPresenter implements HomeScreenOutputBoundary {
      */
     @Override
     public void presentEventDetails(HomeScreenEventOutputData eventOutputData) {
-        viewModel.setSelectedEvent(eventOutputData.getEvent()); // Set the clicked event
-        viewModel.switchToEventDetailsScreen(); // Trigger the UI to switch to Event Details
+//        viewModel.setSelectedEvent(eventOutputData.getEvent()); // Set the clicked event
+//        viewModel.switchToEventDetailsScreen(); // Trigger the UI to switch to Event Details
     }
 }
