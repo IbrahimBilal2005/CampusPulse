@@ -20,7 +20,9 @@ public class EventDetailsPresenter implements EventDetailsOutputBoundary {
 
     public void prepareSuccessView(EventDetailsOutputData data){
         if (!data.isClick()) {
-
+            final HomeScreenState homeScreenState = homeScreenViewModel.getState();
+            this.homeScreenViewModel.setState(homeScreenState);
+            this.viewManagerModel.setState(homeScreenViewModel.getViewName());
         }
     }
 }
