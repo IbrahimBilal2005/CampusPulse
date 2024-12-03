@@ -1,6 +1,8 @@
 package views;
 
 
+import interface_adapter.logged_in.LoggedInState;
+import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.new_event_post.NewEventPostContoller;
 import interface_adapter.new_event_post.NewEventPostInState;
 import interface_adapter.new_event_post.NewEventViewModel;
@@ -19,19 +21,22 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
     private final JTextField locationField = new JTextField(15);
     private final JTextField startField = new JTextField(15);
     private final JTextField endField = new JTextField(15);
-    private final JComboBox<String> tag1ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology"});
-    private final JComboBox<String> tag2ComboBox = new JComboBox<>(new String[]{"Education", "Art", "Environment"});
+    private final JComboBox<String> tag1ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology", "Education", "Art", "Environment"});
+    private final JComboBox<String> tag2ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology", "Education", "Art", "Environment"});
     private final JButton postButton = new JButton("Post Event");
     private final JLabel feedbackLabel = new JLabel("");
 
     private final NewEventPostContoller controller;
     private final NewEventViewModel viewModel;
+    private final LoggedInViewModel loggedInViewModel;
 
-    public NewEventPostView(NewEventViewModel viewModel, NewEventPostContoller controller) {
+    public NewEventPostView(NewEventViewModel viewModel, NewEventPostContoller controller, LoggedInViewModel loggedInViewModel) {
         this.viewModel = viewModel;
         this.controller = controller;
+        this.loggedInViewModel = loggedInViewModel;
 
         this.viewModel.addPropertyChangeListener(this);
+        this.loggedInViewModel.addPropertyChangeListener(this);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -67,6 +72,7 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
     private void executeUseCase() {
         // Retrieve the current state from the ViewModel
         NewEventPostInState currentState = viewModel.getState();
+        final LoggedInState currentLoggedInState = loggedInViewModel.getState();
 
         // Pass the input data from the view's state to the controller
         controller.execute(
@@ -76,7 +82,8 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
                 currentState.getStart(),
                 currentState.getEnd(),
                 currentState.getTag1(),
-                currentState.getTag2()
+                currentState.getTag2(),
+                currentLoggedInState.getUsername()
         );
     }
 
@@ -200,8 +207,9 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
             // Create a simple ViewModel for testing
             NewEventViewModel viewModel = new NewEventViewModel();
             NewEventPostContoller controller = null; // No controller functionality needed for now
+            LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
 
-            NewEventPostView view = new NewEventPostView(viewModel, controller);
+            NewEventPostView view = new NewEventPostView(viewModel, controller, loggedInViewModel);
 
             frame.add(view);
             frame.setVisible(true);
