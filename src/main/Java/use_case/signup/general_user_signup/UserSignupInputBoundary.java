@@ -1,5 +1,8 @@
 package use_case.signup.general_user_signup;
 
+/**
+ * Interface for the User Sign up Input Boundary.
+ */
 public interface UserSignupInputBoundary {
 
     /**
@@ -7,16 +10,4 @@ public interface UserSignupInputBoundary {
      * @param userSignupInputData the input data
      */
     void execute(UserSignupInputData userSignupInputData);
-
-    /**
-     * Executes the switch to login view use case.
-     */
-    void switchToLoginView();
-
-    /**
-     * Executes the switch to Base view use case.
-     */
-    void switchToBaseView();
-
-
 }
