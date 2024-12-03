@@ -1,7 +1,6 @@
 package use_case.sort;
 
 import entity.Event;
-
 import java.util.List;
 
 /**
@@ -10,5 +9,9 @@ import java.util.List;
  */
 public interface SortDataAccessInterface {
 
+    /**
+     * Get all events that the sort use case needs to sort.
+     * @return the list of events.
+     */
     List<Event> getAllEvents();
 }

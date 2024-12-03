@@ -12,10 +12,18 @@ import java.util.stream.Collectors;
 public class SortInteractor implements SortInputBoundary {
     private final SortOutputBoundary sortOutputBoundary;
 
+    /**
+     Constructs a SortInteractor with the specified output boundary.
+     * @param sortOutputBoundary The output boundary used for preparing the success or fail view.
+     */
     public SortInteractor(SortOutputBoundary sortOutputBoundary) {
         this.sortOutputBoundary = sortOutputBoundary;
     }
 
+    /**
+     * Use the specified input data to execute the sort use case.
+     * @param inputData sort input data.
+     */
     @Override
     public void sort(SortInputData inputData) {
         String sortQuery = inputData.getSortQuery();
