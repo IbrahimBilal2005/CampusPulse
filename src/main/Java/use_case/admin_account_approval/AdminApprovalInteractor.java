@@ -26,17 +26,6 @@ public class AdminApprovalInteractor implements AdminApprovalInputBoundary{
         // call the success presenter
         outputBoundary.presentSuccess(outputData);
 
-//        try {
-//            // Approve the target user
-//            if (userDataAccess.approveUserAsEventPoster(inputData.getTargetUid())) {
-//                AdminApprovalOutputData outputData = new AdminApprovalOutputData("User approved successfully", true);
-//                outputBoundary.presentSuccess(outputData);
-//            } else {
-//                outputBoundary.presentFailure("Failed to approve user.");
-//            }
-//        } catch (Exception e) {
-//            outputBoundary.presentFailure("Error: " + e.getMessage());
-//        }
 
 
     }
@@ -54,18 +43,5 @@ public class AdminApprovalInteractor implements AdminApprovalInputBoundary{
         // call the success presenter
         outputBoundary.presentSuccess(outputData);
 
-
-//        try {
-//            // Reject the target user
-//            boolean success = userDataAccess.rejectUserAsEventPoster(inputData.getTargetUid());
-//            if (success) {
-//                AdminApprovalOutputData outputData = new AdminApprovalOutputData("User rejected successfully", true);
-//                outputBoundary.presentSuccess(outputData);
-//            } else {
-//                outputBoundary.presentFailure("Failed to reject user.");
-//            }
-//        } catch (Exception e) {
-//            outputBoundary.presentFailure("Error: " + e.getMessage());
-//        }
     }
 }

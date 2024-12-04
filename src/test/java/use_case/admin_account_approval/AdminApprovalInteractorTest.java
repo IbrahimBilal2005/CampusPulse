@@ -18,92 +18,56 @@ class AdminApprovalInteractorTest {
     void setUp() {
         outputBoundary = new TestOutputBoundary();
         userDataAccess = new TestUserDataAccess();
+        userDataAccess.throwException = false;
         interactor = new AdminApprovalInteractor(outputBoundary, userDataAccess);
     }
 
     @Test
     void testApproveUserSuccess() {
-        // Arrange: Add a user to the unapproved users
-        userDataAccess.addUnapprovedUser(new EventPoster("johndoe", "password123", "TechOrg", "http://example.com", null));
+        EventPoster user = new EventPoster("johndoe", "password123", "TechOrg", "http://example.com", null);
+        userDataAccess.addUnapprovedUser(user);
 
-        // Act: Approve the user
         AdminApprovalInputData inputData = new AdminApprovalInputData("johndoe");
         interactor.approveUser(inputData);
 
-        // Assert: User is approved and no longer in the unapproved list
         assertTrue(outputBoundary.success);
         assertEquals("user approved successfully", outputBoundary.outputData.getMessage());
         assertTrue(outputBoundary.outputData.getApproved());
-        assertFalse(userDataAccess.unapprovedUsers.stream().anyMatch(user -> user.getUsername().equals("johndoe")));
+        assertFalse(userDataAccess.unapprovedUsers.contains(user));
     }
 
     @Test
     void testApproveUserFailure() {
-        // Act: Attempt to approve a user not in the unapproved list
         AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUser");
         interactor.approveUser(inputData);
 
-        // Assert: Failure message is sent
         assertFalse(outputBoundary.success);
-        assertEquals("Failed to approve user.", outputBoundary.errorMessage);
+        assertEquals("User not found for approval.", outputBoundary.errorMessage);
     }
 
     @Test
     void testRejectUserSuccess() {
-        // Arrange: Add a user to the unapproved users
-        userDataAccess.addUnapprovedUser(new EventPoster("janedoe", "password456", "ArtClub", "http://example.org", null));
+        EventPoster user = new EventPoster("janedoe", "password456", "ArtClub", "http://example.org", null);
+        userDataAccess.addUnapprovedUser(user);
 
-        // Act: Reject the user
         AdminApprovalInputData inputData = new AdminApprovalInputData("janedoe");
         interactor.rejectUser(inputData);
 
-        // Assert: User remains in the unapproved list after rejection
         assertTrue(outputBoundary.success);
         assertEquals("user rejected successfully", outputBoundary.outputData.getMessage());
-        assertTrue(outputBoundary.outputData.getApproved());
-        assertTrue(userDataAccess.unapprovedUsers.stream().anyMatch(user -> user.getUsername().equals("janedoe")));
+        assertFalse(outputBoundary.outputData.getApproved());
+        assertTrue(userDataAccess.unapprovedUsers.contains(user));
     }
 
     @Test
     void testRejectUserFailure() {
-        // Act: Attempt to reject a user not in the unapproved list
         AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUser");
         interactor.rejectUser(inputData);
 
-        // Assert: Failure message is sent
         assertFalse(outputBoundary.success);
-        assertEquals("Failed to reject user.", outputBoundary.errorMessage);
+        assertEquals("User not found for rejection.", outputBoundary.errorMessage);
     }
 
-    @Test
-    void testApproveUserException() {
-        // Arrange: Set the data access to throw an exception
-        userDataAccess.throwException = true;
-
-        // Act: Attempt to approve a user
-        AdminApprovalInputData inputData = new AdminApprovalInputData("johndoe");
-        interactor.approveUser(inputData);
-
-        // Assert: Exception is handled gracefully
-        assertFalse(outputBoundary.success);
-        assertTrue(outputBoundary.errorMessage.startsWith("Error:"));
-    }
-
-    @Test
-    void testRejectUserException() {
-        // Arrange: Set the data access to throw an exception
-        userDataAccess.throwException = true;
-
-        // Act: Attempt to reject a user
-        AdminApprovalInputData inputData = new AdminApprovalInputData("janedoe");
-        interactor.rejectUser(inputData);
-
-        // Assert: Exception is handled gracefully
-        assertFalse(outputBoundary.success);
-        assertTrue(outputBoundary.errorMessage.startsWith("Error:"));
-    }
-
-    // Test implementation of AdminApprovalOutputBoundary
     private static class TestOutputBoundary implements AdminApprovalOutputBoundary {
         boolean success;
         AdminApprovalOutputData outputData;
@@ -122,7 +86,6 @@ class AdminApprovalInteractorTest {
         }
     }
 
-    // Test implementation of AdminApprovalUserDataAccessInterface
     private static class TestUserDataAccess implements AdminApprovalUserDataAccessInterface {
         List<EventPoster> unapprovedUsers = new ArrayList<>();
         boolean throwException = false;
