@@ -52,7 +52,7 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
 
     @Override
     public boolean nameExists(String username) {
-        return false;
+        return users.containsKey(username);
     }
 
     @Override
@@ -60,8 +60,7 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
         users.put(user.getUsername(), user);}
 
     @Override
-    public Account get(String username) {
-        return null;
+    public Account get(String username) { return users.get(username);
     }
 
     @Override
