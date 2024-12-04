@@ -49,7 +49,7 @@ public class AdminApprovalInteractor implements AdminApprovalInputBoundary{
         List<EventPoster> unapprovedUsers = userDataAccess.getUnapprovedUsers();
 
         //create the output data
-        AdminApprovalOutputData outputData = new AdminApprovalOutputData(unapprovedUsers, "user rejected successfully", true);
+        AdminApprovalOutputData outputData = new AdminApprovalOutputData(unapprovedUsers, "user rejected successfully", false);
 
         // call the success presenter
         outputBoundary.presentSuccess(outputData);
