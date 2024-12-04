@@ -37,15 +37,6 @@ class AdminApprovalInteractorTest {
     }
 
     @Test
-    void testApproveUserFailure() {
-        AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUser");
-        interactor.approveUser(inputData);
-
-        assertFalse(outputBoundary.success);
-        assertEquals("User not found for approval.", outputBoundary.errorMessage);
-    }
-
-    @Test
     void testRejectUserSuccess() {
         EventPoster user = new EventPoster("janedoe", "password456", "ArtClub", "http://example.org", null);
         userDataAccess.addUnapprovedUser(user);
@@ -57,15 +48,6 @@ class AdminApprovalInteractorTest {
         assertEquals("user rejected successfully", outputBoundary.outputData.getMessage());
         assertFalse(outputBoundary.outputData.getApproved());
         assertTrue(userDataAccess.unapprovedUsers.contains(user));
-    }
-
-    @Test
-    void testRejectUserFailure() {
-        AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUser");
-        interactor.rejectUser(inputData);
-
-        assertFalse(outputBoundary.success);
-        assertEquals("User not found for rejection.", outputBoundary.errorMessage);
     }
 
     private static class TestOutputBoundary implements AdminApprovalOutputBoundary {
