@@ -22,7 +22,7 @@ public class Main {
                     .addGeneralUserSignupView()
                     .addEventPosterSignupView()
                     .addSignupUseCase()
-                    .addLogoutUseCase()
+                    .addMyEventsScreen()
                     .addNewEventPostUseCase()
                     .addHomeScreen()
                     .addEventSearchingUseCase()

@@ -268,47 +268,4 @@ public class MyEvents_screen extends JPanel implements PropertyChangeListener {
     public void setNewEventPostController(NewEventPostContoller newEventPostController) {
         this.newEventPostContoller = newEventPostController;
     }
-
-    public static void main(String[] args) {
-        // Sample event data
-        Event event1 = new Event("Tech Conference", "A conference about tech innovations.", "New York",
-                LocalDateTime.of(2024, 12, 1, 9, 0), LocalDateTime.of(2024, 12, 1, 17, 0), List.of("tag1", "tag2"));
-
-        Event event2 = new Event("Education Seminar", "A seminar on modern education techniques.", "Los Angeles",
-                LocalDateTime.of(2024, 12, 5, 10, 0), LocalDateTime.of(2024, 12, 5, 16, 0), List.of("tag1", "tag2", "tag3"));
-
-
-        Map<String, Event> eventMap = new HashMap<>();
-        eventMap.put(event1.getName(), event1);
-        eventMap.put(event2.getName(), event2);
-
-        EventPoster eventPoster = new EventPoster("john_doe", "password123", "TechCorp", "http://sop.link", eventMap);
-
-        LoggedInState loggedInState = new LoggedInState();
-        if (eventPoster.getEvents() != null) {
-            loggedInState.setEvents(eventPoster.getEvents());
-        } else {
-            loggedInState.setEvents(new HashMap<>());
-        }
-        loggedInState.setUsername(eventPoster.getUsername());
-        loggedInState.setPassword(eventPoster.getPassword());
-
-        LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
-        loggedInViewModel.setState(loggedInState);
-
-        MyEventsViewModel myEventsViewModel = new MyEventsViewModel();
-        DeleteEventDataAccessInterface dataAccess = new InMemoryUserDataAccessObject();
-        dataAccess.addAccount(eventPoster);
-        ViewManagerModel viewManagerModel = new ViewManagerModel();
-        DeleteEventPresenter deleteEventPresenter = new DeleteEventPresenter(viewManagerModel, myEventsViewModel);
-        DeleteEventInteractor deleteEventInteractor = new DeleteEventInteractor(dataAccess, deleteEventPresenter);
-        DeleteEventController controller = new DeleteEventController(deleteEventInteractor);
-
-        // Initialize MyEvents_screen and inject the DeleteEventController using setter
-        MyEvents_screen myEventsScreen = new MyEvents_screen(myEventsViewModel, loggedInViewModel);
-        myEventsScreen.setDeleteEventController(controller);
-
-        // Show the frame
-        SwingUtilities.invokeLater(() -> myEventsScreen.setVisible(true));
-    }
 }

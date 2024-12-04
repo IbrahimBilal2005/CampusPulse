@@ -198,23 +198,5 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
             }
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("New Event Post Test");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(600, 600);
-
-            // Create a simple ViewModel for testing
-            NewEventViewModel viewModel = new NewEventViewModel();
-            NewEventPostContoller controller = null; // No controller functionality needed for now
-            LoggedInViewModel loggedInViewModel = new LoggedInViewModel();
-
-            NewEventPostView view = new NewEventPostView(viewModel, controller, loggedInViewModel);
-
-            frame.add(view);
-            frame.setVisible(true);
-        });
-    }
 }
 

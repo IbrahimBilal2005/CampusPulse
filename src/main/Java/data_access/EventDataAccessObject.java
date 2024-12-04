@@ -9,11 +9,14 @@ import org.bson.Document;
 import use_case.filter.FilterDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EventDataAccessObject implements SearchDataAccessInterface,
                                               FilterDataAccessInterface {
@@ -100,7 +103,20 @@ public class EventDataAccessObject implements SearchDataAccessInterface,
      */
     @Override
     public List<Event> searchEvents(String query) {
-        return List.of();
+        String lowerCaseQuery = query.toLowerCase();
+
+        return events.values().stream()
+                .filter(event ->
+                        // Match event name using Levenshtein Distance or Cosine Similarity
+                        EventDAO.Levenshtein.isSimilar(event.getName(), lowerCaseQuery, 3) ||
+                                EventDAO.CosineSimilarity.isSimilar(event.getName(), lowerCaseQuery, 0.7) ||
+                                // Match event tags using Levenshtein or Cosine Similarity
+                                event.getTags().stream().anyMatch(tag ->
+                                        EventDAO.Levenshtein.isSimilar(tag, lowerCaseQuery, 3) ||
+                                                EventDAO.CosineSimilarity.isSimilar(tag, lowerCaseQuery, 0.7)
+                                )
+                )
+                .collect(Collectors.toList());
     }
 
     /**
@@ -112,7 +128,42 @@ public class EventDataAccessObject implements SearchDataAccessInterface,
      */
     @Override
     public List<Event> filterEvents(Map<String, Object> filterCriteria, List<Event> events) {
-        return List.of();
+        // Safely retrieve the duration and handle null values
+        Integer duration = (Integer) filterCriteria.getOrDefault("duration", 0);
+
+        // Retrieve other filters
+        String location = (String) filterCriteria.get("location");
+        List<String> tags = (List<String>) filterCriteria.getOrDefault("tags", Collections.emptyList());
+
+        // If no filters are selected, return all events
+        if (duration == 0 && location == null && tags.isEmpty()) {
+            return events; // Assuming `events` contains all stored events
+        }
+
+        // Apply filters
+        return events.stream()
+                .filter(event -> {
+                    // Filter by duration if specified
+                    boolean matchesDuration = true;
+                    if (duration != 0) {
+                        if (event.getStart() == null || event.getEnd() == null) {
+                            matchesDuration = false;
+                        } else {
+                            long eventDuration = Duration.between(event.getStart(), event.getEnd()).toHours();
+                            matchesDuration = duration == eventDuration;
+                        }
+                    }
+
+                    // Filter by location if specified
+                    boolean matchesLocation = location == null || event.getLocation().toLowerCase().contains(location.toLowerCase());
+
+                    // Filter by tags if specified
+                    boolean matchesTags = tags.isEmpty() || event.getTags().stream().anyMatch(tags::contains);
+
+                    // Return true if all filters match
+                    return matchesDuration && matchesLocation && matchesTags;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
