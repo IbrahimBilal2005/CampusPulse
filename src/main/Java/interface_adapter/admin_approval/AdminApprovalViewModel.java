@@ -1,13 +1,14 @@
 package interface_adapter.admin_approval;
 
-public class AdminApprovalViewModel {
-    private final AdminApprovalState state;
+import interface_adapter.ViewModel;
 
-    public AdminApprovalViewModel(AdminApprovalState state) {
-        this.state = state;
-    }
+/**
+ * View Model for the Admin Approval view.
+ */
+public class AdminApprovalViewModel extends ViewModel<AdminApprovalState> {
 
-    public String getMessage() {
-        return state.getMessage();
+    public AdminApprovalViewModel() {
+        super("Admin Approval");
+        setState(new AdminApprovalState());
     }
 }
