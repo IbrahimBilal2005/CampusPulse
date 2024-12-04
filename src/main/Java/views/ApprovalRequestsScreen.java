@@ -1,106 +1,142 @@
 package views;
 
-import entity.User;
+import data_access.InMemoryUserDataAccessObject;
+import entity.EventPoster;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.admin_approval.AdminApprovalController;
+import interface_adapter.admin_approval.AdminApprovalPresenter;
+import interface_adapter.admin_approval.AdminApprovalState;
+import interface_adapter.admin_approval.AdminApprovalViewModel;
+import use_case.admin_account_approval.AdminApprovalInteractor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
-public class ApprovalRequestsScreen extends JFrame {
-    private List<User> pendingRequests;
-    private AdminApprovalController approvalController;
+/**
+ * Approval Requests Screen for managing pending EventPoster approvals.
+ */
+public class ApprovalRequestsScreen extends JFrame implements PropertyChangeListener {
+    private static final String VIEW_NAME = "Approval Requests";
 
-    public ApprovalRequestsScreen(List<User> pendingRequests) {
-        this.pendingRequests = pendingRequests;
+    private final AdminApprovalViewModel adminApprovalViewModel;
+    private AdminApprovalController adminApprovalController;
 
-        // Frame setup
-        setTitle("Approval Requests");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
+    private final JPanel requestsPanel;
 
-        // Title
-        JLabel titleLabel = new JLabel("Pending Event Hoster Requests", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+    public ApprovalRequestsScreen(AdminApprovalViewModel adminApprovalViewModel) {
+        this.adminApprovalViewModel = adminApprovalViewModel;
+        this.adminApprovalViewModel.addPropertyChangeListener(this);
+
+        setTitle(VIEW_NAME);
+        setupFrame();
+
+        // Title label
+        JLabel titleLabel = new JLabel(VIEW_NAME, SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         add(titleLabel, BorderLayout.NORTH);
 
-        // Pending requests panel
-        JPanel requestsPanel = new JPanel();
+        // Requests panel with scroll functionality
+        requestsPanel = new JPanel();
         requestsPanel.setLayout(new BoxLayout(requestsPanel, BoxLayout.Y_AXIS));
-
-        for (User user : pendingRequests) {
-            JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JLabel userLabel = new JLabel(user.getUsername().toString());
-            JButton approveButton = new JButton("Approve");
-            JButton rejectButton = new JButton("Reject");
-
-            userPanel.add(userLabel);
-            userPanel.add(approveButton);
-            userPanel.add(rejectButton);
-            requestsPanel.add(userPanel);
-
-            // Approve Button Logic
-            approveButton.addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent evt) {
-                            if (evt.getSource().equals(approveButton)) {
-                                approvalController.approveUser(user.getUsername());
-                                refreshUI();
-                            }
-                        }
-                    }
-            );
-
-            // Reject Button Logic
-            rejectButton.addActionListener(
-                    new ActionListener() {
-                        public void actionPerformed(ActionEvent evt) {
-                            if (evt.getSource().equals(rejectButton)) {
-                                approvalController.rejectUser(user.getUsername());
-                                refreshUI();
-                            }
-                        }
-                    }
-            );
-        }
-
         JScrollPane scrollPane = new JScrollPane(requestsPanel);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
 
-        setVisible(true);
+        initializeRequests();
     }
 
-    private void refreshUI() {
-        dispose();
-        new ApprovalRequestsScreen(pendingRequests);
+    private void setupFrame() {
+        setSize(600, 400);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+    }
+
+    private void initializeRequests() {
+        loadRequests(adminApprovalViewModel.getState());
+    }
+
+    private void loadRequests(AdminApprovalState adminApprovalState) {
+        List<EventPoster> unapprovedUsers = adminApprovalState.getUnapprovedUsers();
+        requestsPanel.removeAll();
+
+        for (EventPoster user : unapprovedUsers) {
+            JPanel userPanel = createUserPanel(user);
+            requestsPanel.add(userPanel);
+        }
+
+        SwingUtilities.invokeLater(() -> {
+            requestsPanel.revalidate();
+            requestsPanel.repaint();
+        });
+    }
+
+    private JPanel createUserPanel(EventPoster user) {
+        JPanel userPanel = new JPanel();
+        userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.X_AXIS));
+        userPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        userPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel userLabel = new JLabel(user.getUsername());
+        userLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+
+        JButton approveButton = new JButton("Approve");
+        approveButton.addActionListener(e -> {
+            adminApprovalController.approveUser(user.getUsername());
+        });
+
+        JButton rejectButton = new JButton("Reject");
+        rejectButton.addActionListener(e -> {
+            adminApprovalController.rejectUser(user.getUsername());
+        });
+
+        userPanel.add(userLabel);
+        userPanel.add(Box.createHorizontalStrut(20)); // Space
+        userPanel.add(approveButton);
+        userPanel.add(Box.createHorizontalStrut(10)); // Space
+        userPanel.add(rejectButton);
+
+        return userPanel;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("state".equals(evt.getPropertyName())) {
+            AdminApprovalState newState = (AdminApprovalState) evt.getNewValue();
+            loadRequests(newState);
+        }
     }
 
     public void setAdminApprovalController(AdminApprovalController adminApprovalController) {
-        this.approvalController = adminApprovalController;
+        this.adminApprovalController = adminApprovalController;
     }
 
     public String getViewName() {
-        return "Event Poster Signup";
+        return VIEW_NAME;
     }
 
     public static void main(String[] args) {
-        // Dummy data
-        List<User> pending = new ArrayList<>();
-        pending.add(new User(
-                "dummyUsername",      // username
-                "dummyPassword",      // password
-                "Dummy",              // firstName
-                "User",               // lastName
-                25,                   // age
-                "Male",               // gender
-                List.of("sports", "tech") // interests
+        // Setup dummy data
+        AdminApprovalState adminApprovalState = new AdminApprovalState();
+        adminApprovalState.setUnapprovedUsers(List.of(
+                new EventPoster("johndoe", "password123", "TechOrg", "http://example.com", null),
+                new EventPoster("janedoe", "password456", "ArtClub", "http://example.org", null)
         ));
-        new ApprovalRequestsScreen(pending);
 
-        SwingUtilities.invokeLater(() -> new ApprovalRequestsScreen(pending).setVisible(true));
+        AdminApprovalViewModel adminApprovalViewModel = new AdminApprovalViewModel();
+        adminApprovalViewModel.setState(adminApprovalState);
+
+        AdminApprovalController adminApprovalController = new AdminApprovalController(new AdminApprovalInteractor(
+                new AdminApprovalPresenter(adminApprovalViewModel, new ViewManagerModel()),
+                new InMemoryUserDataAccessObject()
+        ));
+
+        ApprovalRequestsScreen approvalRequestsScreen = new ApprovalRequestsScreen(adminApprovalViewModel);
+        approvalRequestsScreen.setAdminApprovalController(adminApprovalController);
+
+        SwingUtilities.invokeLater(() -> approvalRequestsScreen.setVisible(true));
     }
 }

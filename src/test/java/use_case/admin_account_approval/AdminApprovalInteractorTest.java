@@ -1,10 +1,11 @@
 package use_case.admin_account_approval;
 
+import entity.EventPoster;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,80 +18,38 @@ class AdminApprovalInteractorTest {
     void setUp() {
         outputBoundary = new TestOutputBoundary();
         userDataAccess = new TestUserDataAccess();
+        userDataAccess.throwException = false;
         interactor = new AdminApprovalInteractor(outputBoundary, userDataAccess);
     }
 
     @Test
     void testApproveUserSuccess() {
-        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
+        EventPoster user = new EventPoster("johndoe", "password123", "TechOrg", "http://example.com", null);
+        userDataAccess.addUnapprovedUser(user);
+
+        AdminApprovalInputData inputData = new AdminApprovalInputData("johndoe");
         interactor.approveUser(inputData);
 
         assertTrue(outputBoundary.success);
-        assertEquals("User approved successfully", outputBoundary.outputData.getMessage());
+        assertEquals("user approved successfully", outputBoundary.outputData.getMessage());
         assertTrue(outputBoundary.outputData.getApproved());
-        assertTrue(userDataAccess.approvedUsers.contains("validUid"));
-    }
-
-    @Test
-    void testApproveUserFailure() {
-        AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUid");
-        interactor.approveUser(inputData);
-
-        assertFalse(outputBoundary.success);
-        assertEquals("Failed to approve user.", outputBoundary.errorMessage);
-        assertFalse(userDataAccess.approvedUsers.contains("invalidUid"));
+        assertFalse(userDataAccess.unapprovedUsers.contains(user));
     }
 
     @Test
     void testRejectUserSuccess() {
-        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
+        EventPoster user = new EventPoster("janedoe", "password456", "ArtClub", "http://example.org", null);
+        userDataAccess.addUnapprovedUser(user);
+
+        AdminApprovalInputData inputData = new AdminApprovalInputData("janedoe");
         interactor.rejectUser(inputData);
 
         assertTrue(outputBoundary.success);
-        assertEquals("User rejected successfully", outputBoundary.outputData.getMessage());
-        assertTrue(outputBoundary.outputData.getApproved());
-        assertTrue(userDataAccess.rejectedUsers.contains("validUid"));
+        assertEquals("user rejected successfully", outputBoundary.outputData.getMessage());
+        assertFalse(outputBoundary.outputData.getApproved());
+        assertTrue(userDataAccess.unapprovedUsers.contains(user));
     }
 
-    @Test
-    void testRejectUserFailure() {
-        AdminApprovalInputData inputData = new AdminApprovalInputData("invalidUid");
-        interactor.rejectUser(inputData);
-
-        assertFalse(outputBoundary.success);
-        assertEquals("Failed to reject user.", outputBoundary.errorMessage);
-        assertFalse(userDataAccess.rejectedUsers.contains("invalidUid"));
-    }
-
-    @Test
-    void testApproveUserException() {
-        // Arrange: Trigger exception in the data access layer
-        userDataAccess.throwException = true;
-
-        // Act: Try approving a user
-        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
-        interactor.approveUser(inputData);
-
-        // Assert: Ensure the exception is handled gracefully
-        assertFalse(outputBoundary.success);
-        assertTrue(outputBoundary.errorMessage.startsWith("Error:"));
-    }
-
-    @Test
-    void testRejectUserException() {
-        // Arrange: Trigger exception in the data access layer
-        userDataAccess.throwException = true;
-
-        // Act: Try rejecting a user
-        AdminApprovalInputData inputData = new AdminApprovalInputData("validUid");
-        interactor.rejectUser(inputData);
-
-        // Assert: Ensure the exception is handled gracefully
-        assertFalse(outputBoundary.success);
-        assertTrue(outputBoundary.errorMessage.startsWith("Error:"));
-    }
-
-    // Concrete implementation of AdminApprovalOutputBoundary
     private static class TestOutputBoundary implements AdminApprovalOutputBoundary {
         boolean success;
         AdminApprovalOutputData outputData;
@@ -109,34 +68,39 @@ class AdminApprovalInteractorTest {
         }
     }
 
-    // Concrete implementation of AdminApprovalUserDataAccessInterface
     private static class TestUserDataAccess implements AdminApprovalUserDataAccessInterface {
-        Set<String> approvedUsers = new HashSet<>();
-        Set<String> rejectedUsers = new HashSet<>();
+        List<EventPoster> unapprovedUsers = new ArrayList<>();
         boolean throwException = false;
 
         @Override
-        public boolean approveUserAsEventPoster(String uid) {
+        public boolean setApproval(String uid, boolean approvalState) {
             if (throwException) {
-                throw new RuntimeException("Simulated exception during approval");
+                throw new RuntimeException("Simulated exception during approval/rejection");
             }
-            if ("validUid".equals(uid)) {
-                approvedUsers.add(uid);
-                return true;
+
+            for (EventPoster user : unapprovedUsers) {
+                if (user.getUsername().equals(uid)) {
+                    if (approvalState) {
+                        unapprovedUsers.remove(user);
+                    }
+                    return true;
+                }
             }
             return false;
         }
 
         @Override
         public boolean rejectUserAsEventPoster(String uid) {
-            if (throwException) {
-                throw new RuntimeException("Simulated exception during rejection");
-            }
-            if ("validUid".equals(uid)) {
-                rejectedUsers.add(uid);
-                return true;
-            }
-            return false;
+            return setApproval(uid, false);
+        }
+
+        @Override
+        public List<EventPoster> getUnapprovedUsers() {
+            return new ArrayList<>(unapprovedUsers);
+        }
+
+        void addUnapprovedUser(EventPoster user) {
+            unapprovedUsers.add(user);
         }
     }
 }

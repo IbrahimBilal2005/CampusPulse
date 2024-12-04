@@ -22,7 +22,7 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
     private final JTextField startField = new JTextField(15);
     private final JTextField endField = new JTextField(15);
     private final JComboBox<String> tag1ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology", "Education", "Art", "Environment"});
-    private final JComboBox<String> tag2ComboBox = new JComboBox<>(new String[]{"Sports", "Music", "Technology", "Education", "Art", "Environment"});
+    private final JComboBox<String> tag2ComboBox = new JComboBox<>(new String[]{"Education", "Music", "Technology", "Sports", "Art", "Environment"});
     private final JButton postButton = new JButton("Post Event");
     private final JLabel feedbackLabel = new JLabel("");
 
@@ -73,7 +73,8 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
         // Retrieve the current state from the ViewModel
         NewEventPostInState currentState = viewModel.getState();
         final LoggedInState currentLoggedInState = loggedInViewModel.getState();
-
+        feedbackLabel.setText("Event successfully created!");
+        feedbackLabel.setForeground(Color.GREEN);
         // Pass the input data from the view's state to the controller
         controller.execute(
                 currentState.getEventName(),
@@ -192,8 +193,8 @@ public class NewEventPostView extends JPanel implements PropertyChangeListener {
             } else if (state.getEndError() != null) {
                 feedbackLabel.setText(state.getEndError());
             } else {
-                feedbackLabel.setText("Event successfully created!");
-                feedbackLabel.setForeground(Color.GREEN);
+//                feedbackLabel.setText("Event successfully created!");
+//                feedbackLabel.setForeground(Color.GREEN);
             }
         }
     }
