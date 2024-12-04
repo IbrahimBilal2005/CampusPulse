@@ -10,7 +10,6 @@ public class AdminApprovalController {
         this.inputBoundary = inputBoundary;
     }
 
-    public void initializeApprove()
     public void approveUser(String targetUid) {
         AdminApprovalInputData inputData = new AdminApprovalInputData(targetUid);
         inputBoundary.approveUser(inputData);
