@@ -3,6 +3,10 @@ package interface_adapter.change_password;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.change_password.ChangePasswordOutputData;
 
+/**
+ * The presenter for the Change Password Use Case.
+ */
+
 
 public class ChangePasswordPresenter implements ChangePasswordOutputBoundary {
     private final ChangePasswordViewModel viewModel;
