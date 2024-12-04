@@ -2,6 +2,7 @@ package views;
 
 import data_access.EventDAO;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.event_details.EventDetailsViewModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
@@ -44,17 +45,19 @@ public class Home_screen extends JPanel {
     private SearchViewModel searchViewModel;
     private FilterController filterController;
     private FilterViewModel filterViewModel;
+    private EventDetailsViewModel eventDetailsViewModel;
     private LogoutController logoutController;
 
     private SortController sortController;
     private SortViewModel sortViewModel;
     private HomeScreenViewModel homeScreenViewModel;
 
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterViewModel filterViewModel, SortViewModel sortViewModel, HomeScreenViewModel homeScreenViewModel) {
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterViewModel filterViewModel, SortViewModel sortViewModel, EventDetailsViewModel eventDetailsViewModel, HomeScreenViewModel homeScreenViewModel) {
         this.searchViewModel = searchViewModel;
         this.filterViewModel = filterViewModel;
         this.sortViewModel = sortViewModel;
         this.homeScreenViewModel = homeScreenViewModel;
+        this.eventDetailsViewModel = eventDetailsViewModel;
         this.searchController = searchController;
 
 
@@ -336,7 +339,7 @@ public class Home_screen extends JPanel {
     }
 
     private void onEventClicked(Event event) {
-        System.out.println("Event clicked: " + event.getName());
+        new EventDetails_screen(eventDetailsViewModel, event);
         // Trigger logic to navigate to Event Details screen
     }
 

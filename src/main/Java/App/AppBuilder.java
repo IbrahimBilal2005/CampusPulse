@@ -205,10 +205,11 @@ public class AppBuilder {
         searchViewModel = new SearchViewModel();
         filterViewModel = new FilterViewModel();
         sortViewModel = new SortViewModel();
+        eventDetailsViewModel = new EventDetailsViewModel();
         final SearchOutputBoundary eventSearchOutputBoundary = new SearchPresenter(searchViewModel, viewManagerModel);
         final SearchInputBoundary eventSearchInteractor = new SearchInteractor(eventDAO, eventSearchOutputBoundary);
         final SearchController eventSearchController = new SearchController(eventSearchInteractor);
-        homeView = new Home_screen(searchViewModel, eventSearchController, filterViewModel, sortViewModel, homeScreenViewModel);
+        homeView = new Home_screen(searchViewModel, eventSearchController, filterViewModel, sortViewModel, eventDetailsViewModel, homeScreenViewModel);
         cardPanel.add(homeView, homeScreenViewModel.getViewName());
         return this;
     }
@@ -371,7 +372,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Set the initial view to be displayed
-        viewManagerModel.setState(accountTypeViewModel.getViewName()); // Set the initial state to WelcomeScreen
+        viewManagerModel.setState(homeView.getName()); // Set the initial state to WelcomeScreen
         viewManagerModel.firePropertyChanged(); // Notify the model to update the view
 
         application.setSize(800, 600);
