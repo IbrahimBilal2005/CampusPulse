@@ -14,13 +14,16 @@ import java.util.List;
 public class NewEventPostInteractor implements NewEventPostInputBoundary{
     private final NewEventPostOutputBoundary presenter;
     private final NewEventPostUserDataAccessInterface dataAccessUser;
+    private final NewEventPostDataAccessInterface dataAccess;
 
     private static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public NewEventPostInteractor(NewEventPostOutputBoundary presenter,
-                                  NewEventPostUserDataAccessInterface dataAccessUser) {
+                                  NewEventPostUserDataAccessInterface dataAccessUser,
+                                  NewEventPostDataAccessInterface dataAccess) {
         this.presenter = presenter;
         this.dataAccessUser = dataAccessUser;
+        this.dataAccess = dataAccess;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
             return;
         }
 
-        if (dataAccessUser.existsByName(inputData.getEventName())) {
+        if (dataAccess.existsByName(inputData.getEventName())) {
             presenter.presentFailure("Event name is empty or already exists.");
             return;
         }
@@ -75,6 +78,7 @@ public class NewEventPostInteractor implements NewEventPostInputBoundary{
         );
 
         // Add the event to the data store
+        dataAccess.addEvents(newEvent);
         dataAccessUser.addtoMyevents(newEvent,inputData.getUsername());
         presenter.presentSuccess(new NewEventPostOutputData(newEvent));
 

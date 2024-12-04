@@ -39,7 +39,7 @@ class NewEventPostInteractorTest {
         presenter = new NewEventPostPresenter(viewModel, viewManager, myEventsViewModel);
 
         // Initialize interactor
-        interactor = new NewEventPostInteractor(presenter,dataAccess);
+        interactor = new NewEventPostInteractor(presenter,dataAccess, dataAccess);
     }
 
     @Test
@@ -180,6 +180,7 @@ class NewEventPostInteractorTest {
         );
 
         predefinedPoster.getEvents().put("Tech Talk", existingEvent);
+        dataAccess.addEvents(existingEvent);
         dataAccess.addtoMyevents(existingEvent, "abcd");
 
         NewEventPostInputData inputData = new NewEventPostInputData(
