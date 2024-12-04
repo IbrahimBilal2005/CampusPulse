@@ -1,55 +1,85 @@
 package use_case.loginTest;
 
 import data_access.InMemoryUserDataAccessObject;
+import entity.Account;
 import entity.User;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.home.HomeScreenViewModel;
-import interface_adapter.login.LoginPresenter;
-import interface_adapter.login.LoginViewModel;
-import use_case.login.LoginInputData;
-import use_case.login.LoginInteractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import use_case.login.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-public class LoginInteractorTest {
-    private LoginPresenter presenter;
+class LoginInteractorTest {
+    private InMemoryUserDataAccessObject mockUserDataAccess;
+    private LoginOutputBoundary mockPresenter;
     private LoginInteractor interactor;
-    private InMemoryUserDataAccessObject userDataAccess;
 
+    private String failMessage;
+    private boolean successCalled;
 
     @BeforeEach
     void setUp() {
-        // Initialize the in-memory data access, view model, and presenter
-        userDataAccess = new InMemoryUserDataAccessObject();
-        userDataAccess.addAccount(new User("Tanay06", "Pulselife", "Tanay", "Langhe", 18, "Male", null)); // Add test account
-        LoginViewModel viewModel = new LoginViewModel();
-        ViewManagerModel viewManagerModel = new ViewManagerModel();
-        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel();
-        presenter = new LoginPresenter(viewModel, viewManagerModel, homeScreenViewModel);  // Real presenter
-        interactor = new LoginInteractor(userDataAccess, presenter);
+        // Manually implement the mock-like dependencies
+        mockUserDataAccess = new InMemoryUserDataAccessObject();
+        mockUserDataAccess.addAccount(new User("Tanay06", "Pulselife", "Tanay", "Langhe", 18, "Male", null));
 
+        mockPresenter = new LoginOutputBoundary() {
+            @Override
+            public void prepareSuccessView(LoginOutputData outputData) {
+                if (!outputData.isUseCaseFailed()) {
+                    successCalled = true;
+                }
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                failMessage = errorMessage;
+            }
+        };
+
+        interactor = new LoginInteractor(mockUserDataAccess, mockPresenter);
+        failMessage = null;
+        successCalled = false;
     }
 
     @Test
-    void successUserLoggedInTest() {
-        LoginInputData inputData = new LoginInputData("Tanay06", "Pulselife");
+    void testExecute_UsernameDoesNotExist() {
+        // Arrange
+        LoginInputData inputData = new LoginInputData("nonexistentUser", "password");
+
+        // Act
         interactor.execute(inputData);
 
-
-
+        // Assert
+        assertNotNull(failMessage);
+        assertEquals("Account nonexistentUser does not exist.", failMessage);
+        assertFalse(successCalled);
     }
 
     @Test
-    void failurePasswordMismatchTest() {
+    void testExecute_IncorrectPassword() {
+        // Arrange
+        LoginInputData inputData = new LoginInputData("Tanay06", "IncorrectPassword");
 
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        assertNotNull(failMessage);
+        assertEquals("Incorrect password for \"Tanay06\".", failMessage);
+        assertFalse(successCalled);
     }
 
     @Test
-    void failureUserDoesNotExistTest() {
+    void testExecute_CorrectCredentials() {
+        // Arrange
+        LoginInputData inputData = new LoginInputData("Tanay06", "Pulselife");
 
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        assertNull(failMessage);
+        assertTrue(successCalled);
     }
 }

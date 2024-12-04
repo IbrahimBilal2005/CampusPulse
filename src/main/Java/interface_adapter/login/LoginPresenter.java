@@ -34,9 +34,9 @@ public class LoginPresenter implements LoginOutputBoundary {
     // Provides error message containing whether username or password is invallid
     @Override
     public void prepareFailView(String errorMessage) {
-        LoginState state = loginViewModel.getState();
-        state.setLoginError(errorMessage);
-        loginViewModel.setState(state);
+            LoginState state = loginViewModel.getState();
+            state.setLoginError(errorMessage);
+            loginViewModel.setState(state);
     }
 
     public String getViewModel() {
