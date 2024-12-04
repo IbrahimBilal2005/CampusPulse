@@ -16,7 +16,6 @@ import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.new_event_post.NewEventPostUserDataAccessInterface;
 import use_case.signup.UserSignupDataAccessInterface;
-import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
 
 /**
  * In-memory implementation of the DAO for storing user data. This implementation does
