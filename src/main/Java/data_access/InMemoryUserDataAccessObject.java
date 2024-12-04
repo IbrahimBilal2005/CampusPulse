@@ -12,6 +12,7 @@ import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
 import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_event.DeleteEventDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.logout.LogoutUserDataAccessInterface;
 import use_case.signup.UserSignupDataAccessInterface;
 import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
 
@@ -24,9 +25,10 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         DeleteEventDataAccessInterface,
-        AdminApprovalUserDataAccessInterface {
+        AdminApprovalUserDataAccessInterface, LogoutUserDataAccessInterface {
 
     private final Map<String, Account> users = new HashMap<>();
+    private String currentUserName;
 
     public InMemoryUserDataAccessObject() {
         Event event1 = new Event("Tech Conference", "A conference about tech innovations.", "New York",
@@ -142,5 +144,24 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
 
     }
 
+    /**
+     * Returns the username of the curren user of the application.
+     *
+     * @return the username of the current user
+     */
+    @Override
+    public String getCurrentUsername() {
+        return this.currentUserName;
+    }
+
+    /**
+     * Sets the username indicating who is the current user of the application.
+     *
+     * @param username the new current username
+     */
+    @Override
+    public void setCurrentUsername(String username) {
+        this.currentUserName = username;
+    }
 }
 
