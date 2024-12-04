@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import entity.Account;
 import entity.Event;
@@ -125,10 +126,21 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
         return eventPoster.getEvents().containsKey(event.getName());
     }
 
-    @Override
+
     public boolean approveUserAsEventPoster(String uid) {
         EventPoster eventPoster = (EventPoster) users.get(uid);
         eventPoster.setApproved(true);
+        users.put(uid, eventPoster);
+        return true;
+    }
+
+    @Override
+    public boolean setApproval(String uid, boolean approvalState) {
+        if (!users.containsKey(uid)) {
+            return false;
+        }
+        EventPoster eventPoster = (EventPoster) users.get(uid);
+        eventPoster.setApproved(approvalState);
         users.put(uid, eventPoster);
         return true;
     }
@@ -140,6 +152,15 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
         users.put(uid, eventPoster);
         return true;
 
+    }
+
+    @Override
+    public List<EventPoster> getUnapprovedUsers() {
+        return users.values().stream()
+                .filter(user -> user instanceof EventPoster)
+                .map(user -> (EventPoster) user)
+                .filter(eventPoster -> !eventPoster.isApproved())
+                .collect(Collectors.toList());
     }
 
 }
