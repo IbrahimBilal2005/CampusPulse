@@ -159,8 +159,14 @@ public class AppBuilder {
 
     public AppBuilder addWelcomeScreen() {
         WelcomeView welcomeScreen = new WelcomeView(
-                e -> viewManagerModel.setState(loginView.getViewName()), // Action for login button
-                e -> viewManagerModel.setState(generalUserSignupView.getViewName()) // Action for signup button
+                e -> {
+                    viewManagerModel.setState("Login"); // Set the state to Login
+                    viewManagerModel.firePropertyChanged(); // Notify the view manager to update the view
+                },
+                e -> {
+                    viewManagerModel.setState("ChooseAccountType"); // Set the state to Choose Account Type
+                    viewManagerModel.firePropertyChanged(); // Notify the view manager to update the view
+                }
         );
         cardPanel.add(welcomeScreen, welcomeScreen.getViewName());
         return this;
@@ -230,6 +236,11 @@ public class AppBuilder {
     }
 
     public AppBuilder addSignupUseCase() {
+        final AccountTypeOutputBoundary accountTypeOutputBoundary = new AccountTypePresenter(viewManagerModel, eventPosterSignupViewModel, userSignupViewModel);
+
+        final AccountTypeInputBoundary acccountTypeInteractor = new AccountTypeInteractor(accountTypeOutputBoundary);
+        final AccountTypeController accountTypeController = new AccountTypeController(acccountTypeInteractor);
+        chooseAccountTypeView.setAccountTypeController(accountTypeController);
         // Add signup for the chosen account type
         final UserSignupOutputBoundary userSignupOutputBoundary = new UserSignupPresenter(viewManagerModel, userSignupViewModel, loginViewModel);
 
@@ -360,7 +371,7 @@ public class AppBuilder {
         application.add(cardPanel);
 
         // Set the initial view to be displayed
-        viewManagerModel.setState("Welcome"); // Set the initial state to WelcomeScreen
+        viewManagerModel.setState(accountTypeViewModel.getViewName()); // Set the initial state to WelcomeScreen
         viewManagerModel.firePropertyChanged(); // Notify the model to update the view
 
         application.setSize(800, 600);

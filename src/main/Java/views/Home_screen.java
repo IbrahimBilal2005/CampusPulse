@@ -75,7 +75,7 @@ public class Home_screen extends JPanel {
         initializeSearchFunctionality();
 
         // Trigger an initial empty search to display all events
-        if (searchController != null && filterController != null && sortController != null) {
+        if (searchController != null) {
             triggerInitialSearch();
         }
     }
@@ -293,8 +293,6 @@ public class Home_screen extends JPanel {
 
     private void triggerInitialSearch() {
         searchController.search("");
-        filterController.executeFilter(new HashMap<>(), searchViewModel.getState().getResults());
-        sortController.sort("", searchViewModel.getState().getResults());
         homeScreenViewModel.getState().setEvents(searchViewModel.getState().getResults());
         updateEventsList(homeScreenViewModel.getState().getEvents());
     }

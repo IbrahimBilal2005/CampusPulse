@@ -18,12 +18,9 @@ public class Main {
 
             AppBuilder appBuilder = new AppBuilder(userFactory, viewManagerModel, userDataAccessObject, eventDAO);
             appBuilder
-                    .addWelcomeScreen() // Add the welcome screen
                     .addChooseAccountTypeView()
                     .addGeneralUserSignupView()
                     .addEventPosterSignupView()
-                    .addLoginView()
-                    .addLoginUseCase()
                     .addSignupUseCase()
                     .addLogoutUseCase()
                     .addNewEventPostUseCase()
