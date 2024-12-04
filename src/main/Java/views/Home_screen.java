@@ -2,14 +2,17 @@ package views;
 
 import data_access.EventDAO;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.event_details.EventDetailsViewModel;
 import interface_adapter.filter.FilterController;
 import interface_adapter.filter.FilterPresenter;
 import interface_adapter.filter.FilterViewModel;
 
 import interface_adapter.home.HomeScreenViewModel;
+import interface_adapter.logout.LogoutController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.signup.general_user_signup.UserSignupController;
 import interface_adapter.sort.SortController;
 import interface_adapter.sort.SortPresenter;
 import interface_adapter.sort.SortViewModel;
@@ -30,8 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Filter;
 
-public class Home_screen extends JFrame {
+public class Home_screen extends JPanel {
 
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private JButton myEventsButton;
@@ -41,22 +45,21 @@ public class Home_screen extends JFrame {
     private SearchViewModel searchViewModel;
     private FilterController filterController;
     private FilterViewModel filterViewModel;
+    private EventDetailsViewModel eventDetailsViewModel;
+    private LogoutController logoutController;
 
     private SortController sortController;
     private SortViewModel sortViewModel;
     private HomeScreenViewModel homeScreenViewModel;
 
-    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterController filterController, FilterViewModel filterViewModel, SortController sortController, SortViewModel sortViewModel, HomeScreenViewModel homeScreenViewModel) {
+    public Home_screen(SearchViewModel searchViewModel, SearchController searchController, FilterViewModel filterViewModel, SortViewModel sortViewModel, EventDetailsViewModel eventDetailsViewModel, HomeScreenViewModel homeScreenViewModel) {
         this.searchViewModel = searchViewModel;
-        this.searchController = searchController;
-        this.filterController = filterController;
         this.filterViewModel = filterViewModel;
-        this.sortController = sortController;
         this.sortViewModel = sortViewModel;
         this.homeScreenViewModel = homeScreenViewModel;
+        this.eventDetailsViewModel = eventDetailsViewModel;
+        this.searchController = searchController;
 
-        // Frame settings
-        setupFrame();
 
         // Main container
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -75,14 +78,9 @@ public class Home_screen extends JFrame {
         initializeSearchFunctionality();
 
         // Trigger an initial empty search to display all events
-        triggerInitialSearch();
-    }
-
-    private void setupFrame() {
-        setTitle("CampusPulse - Home");
-        setSize(screenSize.width, screenSize.height);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        if (searchController != null) {
+            triggerInitialSearch();
+        }
     }
 
     private JPanel createHeaderPanel() {
@@ -298,8 +296,6 @@ public class Home_screen extends JFrame {
 
     private void triggerInitialSearch() {
         searchController.search("");
-        filterController.executeFilter(new HashMap<>(), searchViewModel.getState().getResults());
-        sortController.sort("", searchViewModel.getState().getResults());
         homeScreenViewModel.getState().setEvents(searchViewModel.getState().getResults());
         updateEventsList(homeScreenViewModel.getState().getEvents());
     }
@@ -343,7 +339,7 @@ public class Home_screen extends JFrame {
     }
 
     private void onEventClicked(Event event) {
-        System.out.println("Event clicked: " + event.getName());
+        new EventDetails_screen(eventDetailsViewModel, event);
         // Trigger logic to navigate to Event Details screen
     }
 
@@ -368,27 +364,18 @@ public class Home_screen extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        EventDAO dataAccess = new EventDAO();
-        EventDAO sortDataAccess = new EventDAO();
-        FilterDataAccessInterface filterdao = dataAccess;
-        SearchViewModel viewModel = new SearchViewModel();
-        ViewManagerModel viewManagerModel = new ViewManagerModel();
-        SearchPresenter presenter = new SearchPresenter(viewModel, viewManagerModel);
-        SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
-        SearchController controller = new SearchController(interactor);
-        FilterViewModel filterViewModel = new FilterViewModel();
-        FilterPresenter filterPresenter = new FilterPresenter(filterViewModel, viewManagerModel);
-        FilterInteractor filterInteractor = new FilterInteractor(dataAccess, filterPresenter);
-        FilterController filterController = new FilterController(filterInteractor);
-
-        SortViewModel sortViewModel = new SortViewModel();
-        SortPresenter sortPresenter = new SortPresenter(sortViewModel, viewManagerModel);
-        SortInteractor sortInteractor = new SortInteractor(sortPresenter);
-        SortController sortController = new SortController(sortInteractor);
-
-        HomeScreenViewModel homeScreenViewModel = new HomeScreenViewModel();
-
-        SwingUtilities.invokeLater(() -> new Home_screen(viewModel, controller, filterController, filterViewModel, sortController, sortViewModel, homeScreenViewModel).setVisible(true));
+    public void setSearchController(SearchController searchController) {
+        this.searchController = searchController;
     }
+    public void setSortController(SortController sortController) {
+        this.sortController = sortController;
+    }
+    public void setFilterController(FilterController filterController) {
+        this.filterController = filterController;
+    }
+
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
+    }
+
 }

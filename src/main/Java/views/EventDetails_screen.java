@@ -5,6 +5,7 @@ import interface_adapter.event_details.EventDetailsController;
 import interface_adapter.event_details.EventDetailsViewModel;
 import entity.CustomImagePanel;
 import entity.Event;
+import interface_adapter.filter.FilterController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,14 +17,13 @@ import java.time.LocalDateTime;
 /**
  * The view for when the user is looking at an event
  */
-public class EventDetails_screen {
+public class EventDetails_screen extends JPanel {
 
-    private EventDetailsController controller;
+    private EventDetailsController eventDetailsController;
 
     public EventDetails_screen(EventDetailsViewModel view, Event event) {
         // Create a new frame
         JFrame frame = new JFrame("Event Details Screen"); // Create Frame and have it close when the x is clicked
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Set the screen size to a quarter the users screen and center it
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -111,7 +111,7 @@ public class EventDetails_screen {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (e.getSource().equals(backButton)) {
-                            controller.execute();
+                            eventDetailsController.execute();
                         }
                     }
                 }
@@ -135,6 +135,14 @@ public class EventDetails_screen {
     private static BufferedImage mapLoc(String loc) throws Exception {
         GeoapifyRequest locImage = new GeoapifyRequest("00b11d0dc6c34c75bb7f719c3d745872");
         return locImage.getMapImage(loc);
+    }
+
+    public String getViewName() {
+        return "Event Poster Signup";
+    }
+
+    public void setEventDetailsController(EventDetailsController eventDetailsController) {
+        this.eventDetailsController = eventDetailsController;
     }
 
 }
