@@ -11,7 +11,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login_screen implements ActionListener{
+/**
+ * The view for when the user is logging into their account
+ */
+public class Login_screen{
 
     private LoginController controller;
 
@@ -48,6 +51,7 @@ public class Login_screen implements ActionListener{
         password_panel.add(new JLabel(view.PASSWORD));
         JPasswordField password_input = new JPasswordField(20);
         password_panel.add(password_input);
+
         //Added in login button
         JPanel login_panel = new JPanel();
         JButton login = new JButton(view.LOG_IN);
@@ -65,22 +69,21 @@ public class Login_screen implements ActionListener{
         frame.setContentPane(main_panel);
         frame.setVisible(true);
 
+        // Action listener for login button that validates the username and password and then send them to the home screen
         login.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(login)) {
                             System.out.println("click");
                             final LoginState currentState = view.getState();
-//                            The below lines are used for useCase
-                            controller.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword()
+                            controller.execute(currentState.getUsername(), currentState.getPassword()
                             );
                         }
                     }
                 }
         );
 
+        // update itself everytime an action is done within the username field
         username_input.getDocument().addDocumentListener(new DocumentListener() {
             private void documentListenerHelper() {
                 final LoginState currentState = view.getState();
@@ -103,6 +106,7 @@ public class Login_screen implements ActionListener{
             }
         });
 
+        // update itself everytime an action is done within the password field
         password_input.getDocument().addDocumentListener(new DocumentListener() {
             private void documentListenerHelper() {
                 final LoginState currentState = view.getState();
@@ -113,7 +117,6 @@ public class Login_screen implements ActionListener{
             public void insertUpdate(DocumentEvent e) {
                 documentListenerHelper();
             }
-
             @Override
             public void removeUpdate(DocumentEvent e) {
                 documentListenerHelper();
@@ -126,9 +129,5 @@ public class Login_screen implements ActionListener{
         });
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
 }
 

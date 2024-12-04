@@ -20,6 +20,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.homeScreenViewModel = homeScreenViewModel;
     }
 
+    // Switches the view after the user succesfully logs in
     @Override
     public void prepareSuccessView(LoginOutputData outputData) {
         if (!outputData.isUseCaseFailed()) {
@@ -29,6 +30,7 @@ public class LoginPresenter implements LoginOutputBoundary {
         }
     }
 
+    // Provides error message containing whether username or password is invallid
     @Override
     public void prepareFailView(String errorMessage) {
         LoginState state = loginViewModel.getState();

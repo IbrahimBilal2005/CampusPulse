@@ -1,8 +1,8 @@
 package data_access;
 
+import data_access.geo.Location;
 import org.junit.jupiter.api.*;
-import data_access.GeoapifyGeocodingService;
-import data_access.Location;
+import data_access.geo.GeoapifyGeocodingService;
 
 import static org.junit.jupiter.api.Assertions.*;
 

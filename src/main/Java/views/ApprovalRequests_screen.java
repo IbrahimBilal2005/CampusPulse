@@ -41,7 +41,7 @@ public class ApprovalRequests_screen extends JFrame {
 
         for (User user : pendingRequests) {
             JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JLabel userLabel = new JLabel(user.toString());
+            JLabel userLabel = new JLabel(user.getUsername().toString());
             JButton approveButton = new JButton("Approve");
             JButton rejectButton = new JButton("Reject");
 

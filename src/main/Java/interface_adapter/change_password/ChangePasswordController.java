@@ -3,6 +3,10 @@ package interface_adapter.change_password;
 import use_case.change_password.ChangePasswordInputData;
 import use_case.change_password.ChangePasswordInputBoundary;
 
+/**
+ * The controller for the Change Password Use Case.
+ */
+
 public class ChangePasswordController {
     private final ChangePasswordInputBoundary interactor;
 

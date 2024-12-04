@@ -208,9 +208,6 @@ public class EventDAO implements SearchDataAccessInterface, FilterDataAccessInte
                 .collect(Collectors.toList());
     }
 
-
-
-
     // Search events based on the query using a basic string matching algorithm
     @Override
     public List<Event> searchEvents(String query) {

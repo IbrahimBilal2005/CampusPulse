@@ -2,6 +2,10 @@ package use_case.change_password;
 
 import entity.Account;
 
+/**
+ * The interactor for the Change Password Use Case.
+ */
+
 public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
     private final ChangePasswordUserDataAccessInterface userDataAccess;
     private final ChangePasswordOutputBoundary presenter;

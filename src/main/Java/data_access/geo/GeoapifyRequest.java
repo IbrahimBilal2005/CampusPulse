@@ -1,7 +1,5 @@
-package data_access;
+package data_access.geo;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;

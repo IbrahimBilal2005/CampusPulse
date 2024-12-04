@@ -1,4 +1,4 @@
-package data_access;
+package data_access.geo;
 
 import okhttp3.*;
 import org.json.JSONArray;
