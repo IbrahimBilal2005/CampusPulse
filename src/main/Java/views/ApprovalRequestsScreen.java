@@ -2,7 +2,6 @@ package views;
 
 import entity.User;
 import interface_adapter.admin_approval.AdminApprovalController;
-import interface_adapter.filter.FilterController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,11 +10,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApprovalRequests_screen extends JFrame {
+public class ApprovalRequestsScreen extends JFrame {
     private List<User> pendingRequests;
     private AdminApprovalController approvalController;
 
-    public ApprovalRequests_screen(List<User> pendingRequests) {
+    public ApprovalRequestsScreen(List<User> pendingRequests) {
         this.pendingRequests = pendingRequests;
 
         // Frame setup
@@ -77,7 +76,7 @@ public class ApprovalRequests_screen extends JFrame {
 
     private void refreshUI() {
         dispose();
-        new ApprovalRequests_screen(pendingRequests);
+        new ApprovalRequestsScreen(pendingRequests);
     }
 
     public void setAdminApprovalController(AdminApprovalController adminApprovalController) {
@@ -100,8 +99,8 @@ public class ApprovalRequests_screen extends JFrame {
                 "Male",               // gender
                 List.of("sports", "tech") // interests
         ));
-        new ApprovalRequests_screen(pending);
+        new ApprovalRequestsScreen(pending);
 
-        SwingUtilities.invokeLater(() -> new ApprovalRequests_screen(pending).setVisible(true));
+        SwingUtilities.invokeLater(() -> new ApprovalRequestsScreen(pending).setVisible(true));
     }
 }
