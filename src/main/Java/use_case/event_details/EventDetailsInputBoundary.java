@@ -8,5 +8,5 @@ public interface EventDetailsInputBoundary {
     /**
      * Executes the event details use case
      */
-    void execute(); 
+    void execute(EventDetailsInputData eventDetailsInputData);
 }

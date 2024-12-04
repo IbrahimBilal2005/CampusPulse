@@ -1,7 +1,6 @@
 package use_case.loginTest;
 
 import data_access.InMemoryUserDataAccessObject;
-import entity.Account;
 import entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

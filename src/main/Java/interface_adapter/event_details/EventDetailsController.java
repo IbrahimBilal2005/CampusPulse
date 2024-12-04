@@ -17,7 +17,7 @@ public class EventDetailsController {
      * Executes the event details use case
      */
     public void execute() {
-        final EventDetailsInputData eventDetailsInput = new EventDetailsInputData();
-        eventDetailsInteractor.execute();
+        final EventDetailsInputData eventDetailsInput = new EventDetailsInputData(true);
+        eventDetailsInteractor.execute(eventDetailsInput);
     }
 }
