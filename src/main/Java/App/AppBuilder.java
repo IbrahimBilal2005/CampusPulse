@@ -344,9 +344,9 @@ public class AppBuilder {
 
     public AppBuilder addEventDetailsUseCase() {
         final EventDetailsOutputBoundary eventDetailsOutputBoundary = new EventDetailsPresenter(viewManagerModel, homeScreenViewModel);
-        //final EventDetailsInputBoundary eventDetailsInteractor = new EventDetailsInteractor(eventDetailsOutputBoundary);
-        //final EventDetailsController eventDetailsController = new EventDetailsController(eventDetailsInteractor);
-        //eventDetailsview.setEventDetailsController(eventDetailsController);
+        final EventDetailsInputBoundary eventDetailsInteractor = new EventDetailsInteractor(eventDetailsOutputBoundary);
+        final EventDetailsController eventDetailsController = new EventDetailsController(eventDetailsInteractor);
+        eventDetailsview.setEventDetailsController(eventDetailsController);
         return this;
     }
 
