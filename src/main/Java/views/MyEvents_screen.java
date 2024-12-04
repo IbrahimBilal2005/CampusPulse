@@ -10,8 +10,10 @@ import java.util.List;
 import data_access.InMemoryUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.delete_event.*;
+import interface_adapter.filter.FilterController;
 import interface_adapter.logged_in.LoggedInState;
 import interface_adapter.logged_in.LoggedInViewModel;
+import interface_adapter.new_event_post.NewEventPostContoller;
 import org.jetbrains.annotations.NotNull;
 import entity.Event;
 import entity.EventPoster;
@@ -22,12 +24,13 @@ import java.util.Map;
 import java.util.HashMap;
 import java.time.LocalDateTime;
 
-public class MyEvents_screen extends JFrame implements PropertyChangeListener {
+public class MyEvents_screen extends JPanel implements PropertyChangeListener {
     private static final String VIEW_NAME = "My Events";
 
     private MyEventsViewModel myEventsViewModel;
     private LoggedInViewModel loggedInViewModel;
     private DeleteEventController deleteEventController;
+    private NewEventPostContoller newEventPostContoller;
 
     private final JPanel eventsPanel;
     private final JButton addEventButton;
@@ -37,10 +40,6 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         this.myEventsViewModel = myEventsViewModel;
         this.loggedInViewModel = loggedInViewModel;
         this.myEventsViewModel.addPropertyChangeListener(this);
-        this.loggedInViewModel.addPropertyChangeListener(this);
-
-        setTitle(VIEW_NAME);
-        setupFrame();
 
         // For title at the top
         JLabel titleLabel = new JLabel(VIEW_NAME, SwingConstants.CENTER);
@@ -67,7 +66,9 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         // Initialize events and add panels to the frame
-        initializeEvents();
+        if (loggedInViewModel !=null) {
+            initializeEvents();
+        }
 
         // Set the layout for the frame
         setLayout(new BorderLayout());
@@ -121,8 +122,6 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
         // Adjust window size to avoid taskbar overlap
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(screenSize.width, screenSize.height - taskbarHeight);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center window
     }
 
     /**
@@ -265,6 +264,9 @@ public class MyEvents_screen extends JFrame implements PropertyChangeListener {
 
     public void setDeleteEventController(DeleteEventController deleteEventController) {
         this.deleteEventController = deleteEventController;
+    }
+    public void setNewEventPostController(NewEventPostContoller newEventPostController) {
+        this.newEventPostContoller = newEventPostController;
     }
 
     public static void main(String[] args) {

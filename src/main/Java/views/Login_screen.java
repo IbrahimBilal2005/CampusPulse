@@ -1,5 +1,6 @@
 package views;
 
+import interface_adapter.filter.FilterController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.login.LoginController;
@@ -11,10 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * The view for when the user is logging into their account
- */
-public class Login_screen{
+public class Login_screen extends JPanel implements ActionListener{
 
     private LoginController controller;
 
@@ -129,5 +127,17 @@ public class Login_screen{
         });
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    public String getViewName() {
+        return "Event Poster Signup";
+    }
+
+    public void setLoginController(LoginController loginControllerController) {
+        this.controller = loginControllerController;
+    }
 }
 
