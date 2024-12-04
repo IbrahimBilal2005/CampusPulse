@@ -35,6 +35,7 @@ class EventPosterSignupInteractorTest {
             public void prepareSuccessView(EventPosterSignupOutputData eventPoster) {
                 assertEquals("username", eventPoster.getUsername());
                 assertTrue(userRepository.existsByName("username"));
+                assertFalse(eventPoster.isUseCaseFailed());
             }
 
             @Override
