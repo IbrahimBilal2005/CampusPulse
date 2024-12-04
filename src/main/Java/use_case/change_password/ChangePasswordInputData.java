@@ -1,5 +1,9 @@
 package use_case.change_password;
 
+/**
+ * The intput data for the Change Password Use Case.
+ */
+
 public class ChangePasswordInputData {
     private final String username;
     private final String currentPassword;

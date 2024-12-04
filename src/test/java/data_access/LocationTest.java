@@ -1,5 +1,6 @@
 package data_access;
 
+import data_access.geo.Location;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

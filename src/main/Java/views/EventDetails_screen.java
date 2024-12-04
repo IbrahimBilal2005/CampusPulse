@@ -1,6 +1,6 @@
 package views;
 
-import data_access.GeoapifyRequest;
+import data_access.geo.GeoapifyRequest;
 import interface_adapter.event_details.EventDetailsController;
 import interface_adapter.event_details.EventDetailsViewModel;
 import entity.CustomImagePanel;
@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 
 /**
- * The view for when the user is logging into their account
+ * The view for when the user is looking at an event
  */
 public class EventDetails_screen extends JFrame {
 

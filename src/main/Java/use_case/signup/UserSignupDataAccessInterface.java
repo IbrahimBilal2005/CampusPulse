@@ -2,6 +2,9 @@ package use_case.signup;
 
 import entity.Account;
 
+/**
+ * Data access interface for signup use case.
+ */
 public interface UserSignupDataAccessInterface {
     /**
      * Checks if the given username exists.

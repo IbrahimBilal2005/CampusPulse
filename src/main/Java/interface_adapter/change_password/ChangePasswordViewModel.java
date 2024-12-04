@@ -2,6 +2,10 @@ package interface_adapter.change_password;
 
 import interface_adapter.ViewModel;
 
+/**
+ * The view model for the Change Password Use Case.
+ */
+
 public class ChangePasswordViewModel extends ViewModel <ChangePasswordState> {
     public static final String TITLE_LABEL = "Change Password";
     public static final String USERNAME_LABEL = "Username";

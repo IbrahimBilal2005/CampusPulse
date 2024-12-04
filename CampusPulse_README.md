@@ -111,5 +111,10 @@ We appreciate contributions to the CampusPulse project! Here's how you can contr
 If the application crashes, check the console for error messages and report them in the issues section of the GitHub repository.
 
 ## Authors and Contributors
-- **Waleed Akrabi** (Main Developer)
+- **Waleed Akrabi** : Search, Filter, CreationStrategy, Map API
+- **Ibrahim Bilal** : Signup, Delete Event, Sort Events, Logout, Mongo DAO's
+- **Ahmed Ibrahim Waqas**: Change Password, post event
+- **Ali Towaiji**: Admin Approval, Home Screen - Event View
+- **Tanay Langhe**: Login, Event Details 
+- 
 - [Contributor Name(s)](Link to their GitHub or profile)

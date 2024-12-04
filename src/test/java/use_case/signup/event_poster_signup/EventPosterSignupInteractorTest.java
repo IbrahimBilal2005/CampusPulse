@@ -22,7 +22,6 @@ class EventPosterSignupInteractorTest {
         EventPosterSignupInputData inputData = new EventPosterSignupInputData("username", "password", "password", "Organization Name", "https://sopLink", new HashMap<>() {{
             put("Event1", new Event("Name", "Description", "location", LocalDateTime.now(), LocalDateTime.now(), List.of("tag1", "tag2")));
         }} );
-
         UserSignupDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
         EventPosterSignupInputBoundary interactor = getEventPosterSignupInputBoundary(userRepository);
         interactor.execute(inputData);

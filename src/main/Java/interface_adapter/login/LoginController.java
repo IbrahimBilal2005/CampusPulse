@@ -4,7 +4,7 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInputData;
 
 /**
- * COMPLETED FILE
+ * The controller for the login use case
  */
 public class LoginController {
     private final LoginInputBoundary loginUseCaseInteractor;
@@ -13,6 +13,9 @@ public class LoginController {
         this.loginUseCaseInteractor = loginUseCaseInteractor;
     }
 
+    /**
+     * Executes the login use case
+     */
     public void execute(String username, String password) {
         final LoginInputData loginInputData = new LoginInputData(username, password);
         loginUseCaseInteractor.execute(loginInputData);

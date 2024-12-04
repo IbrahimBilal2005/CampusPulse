@@ -1,5 +1,8 @@
 package use_case.login;
 
+/**
+ * Output data for the login use case
+ */
 public class LoginOutputData {
     private final boolean useCaseFailed;
 
@@ -7,6 +10,7 @@ public class LoginOutputData {
         this.useCaseFailed = useCaseFailed;
     }
 
+    // returns the value of useCaseFailed
     public boolean isUseCaseFailed() { return useCaseFailed; }
 
 }

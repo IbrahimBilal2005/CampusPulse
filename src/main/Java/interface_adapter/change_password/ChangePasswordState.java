@@ -1,5 +1,9 @@
 package interface_adapter.change_password;
 
+/**
+ * The state for the Change Password Use Case.
+ */
+
 public class ChangePasswordState {
     private String username = "";
     private String currentPassword = "";
