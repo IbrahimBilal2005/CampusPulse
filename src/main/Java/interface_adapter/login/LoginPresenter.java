@@ -1,6 +1,7 @@
 package interface_adapter.login;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.change_password.ChangePasswordViewModel;
 import interface_adapter.home.HomeScreenState;
 import interface_adapter.home.HomeScreenViewModel;
 import use_case.login.LoginOutputBoundary;
@@ -33,8 +34,12 @@ public class LoginPresenter implements LoginOutputBoundary {
     // Provides error message containing whether username or password is invallid
     @Override
     public void prepareFailView(String errorMessage) {
-        LoginState state = loginViewModel.getState();
-        state.setLoginError(errorMessage);
-        loginViewModel.setState(state);
+            LoginState state = loginViewModel.getState();
+            state.setLoginError(errorMessage);
+            loginViewModel.setState(state);
+    }
+
+    public String getViewModel() {
+        return viewManagerModel.getState();
     }
 }

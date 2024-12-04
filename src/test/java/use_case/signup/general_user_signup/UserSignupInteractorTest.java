@@ -24,6 +24,7 @@ class UserSignupInteractorTest {
             public void prepareSuccessView(UserSignupOutputData user) {
                 assertEquals("username", user.getUsername());
                 assertTrue(userRepository.existsByName("username"));
+                assertFalse(user.isUseCaseFailed());
             }
 
             @Override
