@@ -29,8 +29,6 @@ public class Main {
                     .addEventFilteringUseCase()
                     .addEventSortingUseCase()
                     .addMyEventsScreen()
-                    .addEventDetailsScreen()
-                    .addEventDetailsUseCase()
                     .addDeleteEventUseCase();
 
             JFrame applicationFrame = appBuilder.build();

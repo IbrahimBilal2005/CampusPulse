@@ -1,6 +1,8 @@
 package App;
 
 import java.awt.CardLayout;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -8,6 +10,7 @@ import javax.swing.WindowConstants;
 
 import data_access.EventDAO;
 import data_access.InMemoryUserDataAccessObject;
+import entity.Event;
 import entity.UserCreationStrategy;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.admin_approval.AdminApprovalController;
@@ -31,6 +34,10 @@ import interface_adapter.logged_in.LoggedInViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.new_event_post.NewEventPostContoller;
+import interface_adapter.new_event_post.NewEventPostPresenter;
 import interface_adapter.new_event_post.NewEventViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
@@ -65,6 +72,12 @@ import use_case.filter.FilterOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.logout.LogoutInputBoundary;
+import use_case.logout.LogoutInteractor;
+import use_case.logout.LogoutOutputBoundary;
+import use_case.new_event_post.NewEventPostInputBoundary;
+import use_case.new_event_post.NewEventPostInteractor;
+import use_case.new_event_post.NewEventPostOutputBoundary;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInteractor;
 import use_case.search.SearchOutputBoundary;
@@ -211,15 +224,22 @@ public class AppBuilder {
     }
 
     public AppBuilder addEventDetailsScreen() {
-        //eventDetailsViewModel = new EventDetailsViewModel();
-        //eventDetailsview = new EventDetails_screen(eventDetailsViewModel, );
-        //cardPanel.add(eventDetailsview);
+        eventDetailsViewModel = new EventDetailsViewModel();
+        eventDetailsview = new EventDetails_screen(eventDetailsViewModel, new Event(
+                "Football Tournament Finals",
+                "The final match of the university football tournament.",
+                "Sports Complex, Field 3",
+                LocalDateTime.of(2024, 12, 6, 18, 0),
+                LocalDateTime.of(2024, 12, 6, 20, 0),
+                Arrays.asList("Sports", "Football", "Tournament")
+        ));
+        cardPanel.add(eventDetailsview);
         return this;
     }
 
     public AppBuilder addApprovalRequestsScreen() {
-        //adminApprovalViewModel = new AdminApprovalViewModel(adminApprovalState);
-        //approvalRequestsView = new ApprovalRequests_screen(adminApprovalViewModel);
+        adminApprovalViewModel = new AdminApprovalViewModel();
+        approvalRequestsView = new ApprovalRequestsScreen(adminApprovalViewModel);
         cardPanel.add(approvalRequestsView);
         return this;
     }
@@ -286,23 +306,23 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addLogoutUseCase() {
-        //final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
-        //        loggedInViewModel, loginViewModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
+                loggedInViewModel, loginViewModel);
 
-        //final LogoutInputBoundary logoutInteractor =
-        //        new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
+        final LogoutInputBoundary logoutInteractor =
+                new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
 
-        //final LogoutController logoutController = new LogoutController(logoutInteractor);
-        //homeView.setLogoutController(logoutController);
+        final LogoutController logoutController = new LogoutController(logoutInteractor);
+        homeView.setLogoutController(logoutController);
         return this;
     }
 
     public AppBuilder addNewEventPostUseCase() {
-        //final NewEventPostOutputBoundary eventPostingOutputBoundary = new NewEventPostPresenter(newEventViewModel, viewManagerModel, myEventsViewModel);
-        //final NewEventPostInputBoundary eventPostingInteractor = new NewEventPostInteractor(eventPostingOutputBoundary, userDataAccessObject);
+        final NewEventPostOutputBoundary eventPostingOutputBoundary = new NewEventPostPresenter(newEventViewModel, viewManagerModel, myEventsViewModel);
+        final NewEventPostInputBoundary eventPostingInteractor = new NewEventPostInteractor(eventPostingOutputBoundary, userDataAccessObject);
 
-        //final NewEventPostContoller eventPostingController = new NewEventPostContoller(eventPostingInteractor);
-        //myEventsView.setNewEventPostController(eventPostingController);
+        final NewEventPostContoller eventPostingController = new NewEventPostContoller(eventPostingInteractor);
+        myEventsView.setNewEventPostController(eventPostingController);
         return this;
     }
 
@@ -347,7 +367,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addAdminAccountApprovalUseCase() {
-        final AdminApprovalOutputBoundary adminAccountApprovalOutputBoundary = new AdminApprovalPresenter(adminApprovalState);
+        final AdminApprovalOutputBoundary adminAccountApprovalOutputBoundary = new AdminApprovalPresenter(adminApprovalViewModel, viewManagerModel);
         final AdminApprovalInputBoundary adminAccountApprovalInteractor = new AdminApprovalInteractor(adminAccountApprovalOutputBoundary, userDataAccessObject);
         final AdminApprovalController adminAccountApprovalController = new AdminApprovalController(adminAccountApprovalInteractor);
         approvalRequestsView.setAdminApprovalController(adminAccountApprovalController);

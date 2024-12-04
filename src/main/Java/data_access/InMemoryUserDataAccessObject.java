@@ -14,6 +14,7 @@ import use_case.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.delete_event.DeleteEventDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.logout.LogoutUserDataAccessInterface;
+import use_case.new_event_post.NewEventPostUserDataAccessInterface;
 import use_case.signup.UserSignupDataAccessInterface;
 import use_case.admin_account_approval.AdminApprovalUserDataAccessInterface;
 
@@ -26,7 +27,7 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         DeleteEventDataAccessInterface,
-        AdminApprovalUserDataAccessInterface, LogoutUserDataAccessInterface {
+        AdminApprovalUserDataAccessInterface, LogoutUserDataAccessInterface, NewEventPostUserDataAccessInterface {
 
     private final Map<String, Account> users = new HashMap<>();
     private String currentUserName;
@@ -49,6 +50,11 @@ public class InMemoryUserDataAccessObject implements UserSignupDataAccessInterfa
     @Override
     public boolean existsByName(String identifier) {
         return users.containsKey(identifier);
+    }
+
+    @Override
+    public void addtoMyevents(Event event, String username) {
+
     }
 
     @Override

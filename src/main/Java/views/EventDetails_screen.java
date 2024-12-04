@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 /**
  * The view for when the user is looking at an event
  */
-public class EventDetails_screen extends JFrame {
+public class EventDetails_screen extends JPanel {
 
     private EventDetailsController eventDetailsController;
 
