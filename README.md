@@ -115,6 +115,6 @@ If the application crashes, check the console for error messages and report them
 - **Ibrahim Bilal** : Signup, Delete Event, Sort Events, Logout, Mongo DAO's
 - **Ahmed Ibrahim Waqas**: Change Password, post event
 - **Ali Towaiji**: Admin Approval, Home Screen - Event View
-- **Tanay Langhe**: Login, Event Details 
+- **Tanay Langhe**: Login, Event Details, Map API Integration 
 - 
 - [Contributor Name(s)](Link to their GitHub or profile)
